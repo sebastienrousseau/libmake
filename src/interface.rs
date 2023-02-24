@@ -42,34 +42,34 @@ pub fn replace_placeholders(
     let tpl = File::open(template_file)?;
     let tpl_reader = BufReader::new(tpl);
     let mut output = File::create(output_file)?;
-    let mut tpl_lines = tpl_reader.lines();
-    while let Some(line) = tpl_lines.next() {
+    let tpl_lines = tpl_reader.lines();
+    for line in tpl_lines {
         let line = line?;
         let replaced_line = line
-            .replace("{author}", &author.as_ref().unwrap_or(&"".to_string()))
+            .replace("{author}", author.as_ref().unwrap_or(&"".to_string()))
             .replace(
                 "{categories}",
-                &categories.as_ref().unwrap_or(&"".to_string()),
+                categories.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{csv}", &csv.as_ref().unwrap_or(&"".to_string()))
+            .replace("{csv}", csv.as_ref().unwrap_or(&"".to_string()))
             .replace(
                 "{description}",
-                &description.as_ref().unwrap_or(&"".to_string()),
+                description.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{email}", &email.as_ref().unwrap_or(&"".to_string()))
-            .replace("{keywords}", &keywords.as_ref().unwrap_or(&"".to_string()))
-            .replace("{license}", &license.as_ref().unwrap_or(&"".to_string()))
-            .replace("{name}", &name.as_ref().unwrap_or(&"".to_string()))
+            .replace("{email}", email.as_ref().unwrap_or(&"".to_string()))
+            .replace("{keywords}", keywords.as_ref().unwrap_or(&"".to_string()))
+            .replace("{license}", license.as_ref().unwrap_or(&"".to_string()))
+            .replace("{name}", name.as_ref().unwrap_or(&"".to_string()))
             .replace(
                 "{repository}",
-                &repository.as_ref().unwrap_or(&"".to_string()),
+                repository.as_ref().unwrap_or(&"".to_string()),
             )
             .replace(
                 "{rustversion}",
-                &rustversion.as_ref().unwrap_or(&"".to_string()),
+                rustversion.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{version}", &version.as_ref().unwrap_or(&"".to_string()))
-            .replace("{website}", &website.as_ref().unwrap_or(&"".to_string()));
+            .replace("{version}", version.as_ref().unwrap_or(&"".to_string()))
+            .replace("{website}", website.as_ref().unwrap_or(&"".to_string()));
         writeln!(output, "{}", replaced_line)?;
     }
     Ok(())

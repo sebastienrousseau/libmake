@@ -1,4 +1,3 @@
-extern crate figlet_rs;
 use figlet_rs::FIGfont;
 
 /// Generates ASCII art from the given text using the specified FIGfont

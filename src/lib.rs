@@ -27,14 +27,14 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     );
     let term_logger = TermLogger::new(
         LevelFilter::Info,
-        log_config.clone(),
+        log_config,
         TerminalMode::Mixed,
         simplelog::ColorChoice::Auto,
     );
-    let _combined_logger = CombinedLogger::init(vec![term_logger, file_logger])?;
+    CombinedLogger::init(vec![term_logger, file_logger])?;
 
     // Process the ascii art
-    let _ascii_art = ascii::generate_ascii_art("LibMake", "./resources/standard.flf");
+    ascii::generate_ascii_art("LibMake", "./resources/standard.flf");
 
     // Process the command-line arguments
     let matches = cli::build_cli()?;
