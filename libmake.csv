@@ -1,2 +1,2 @@
-author,categories,description,email,keywords,license,name,output,repository,rustversion,version,website
-Sebastian Rousseau,"['development-tools', 'code-generation']",A Rust library generator that helps create high-quality Rust libraries quickly and easily.,sebastian.rousseau@gmail.com,"['scaffolding', 'library', 'generator', 'code-generation', 'project-creation']",MIT OR Apache-2.0,libmake,libmake,https://github.com/sebastienrousseau/libmake.git,1.66.1,0.0.1,https://test.com
+author,categories,csv,description,email,keywords,license,name,output,repository,rustversion,version,website
+Sebastian Rousseau,"['development-tools', 'code-generation']","","A Rust library generator that helps create high-quality Rust libraries quickly and easily.",sebastian.rousseau@gmail.com,"['scaffolding', 'library', 'generator', 'code-generation', 'project-creation']",MIT OR Apache-2.0,libmake,libmake,https://github.com/sebastienrousseau/libmake.git,1.66.1,0.0.1,https://test.com

@@ -6,19 +6,19 @@ mod tests {
     #[test]
     fn test_build_cli_args() {
         let arg_specs = [
-            ("author", ""),
-            ("categories", ""),
+            ("author", "Me"),
+            ("categories", "['category 1', 'category 2']"),
             ("csv", ""),
-            ("description", ""),
-            ("email", ""),
-            ("keywords", ""),
+            ("description", "A library for doing things"),
+            ("email", "test@test.com"),
+            ("keywords", "['keyword1', 'keyword2']"),
             ("license", "MIT OR Apache-2.0"),
             ("name", "my_library"),
             ("output", "my_library"),
-            ("repository", ""),
-            ("rustversion", "1.66.1"),
-            ("version", "0.1.0"),
-            ("website", ""),
+            ("repository", "https://github.com/test/test"),
+            ("rustversion", "1.67.1"),
+            ("version", "0.0.1"),
+            ("website", "https://test.com"),
         ];
 
         let args = build_cli().unwrap();

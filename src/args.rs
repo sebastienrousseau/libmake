@@ -1,6 +1,6 @@
 use clap::ArgMatches;
 
-use super::generator::{generate_files, generate_via_csv};
+use super::generator::{generate_files, generate_via_csv, FileGenerationParams};
 
 /// Processes the command line arguments provided to the program.
 ///
@@ -25,24 +25,48 @@ pub fn process_arguments(matches: ArgMatches) {
 
     if matches.contains_id("csv") {
         if matches.get_one::<String>("csv") == Some(&"".to_string()) {
-            generate_files(
-                author.cloned(),      // The name of the package's author.
-                categories.cloned(),  // The categories that the package belongs to.
-                csv.cloned(),         // The csv file to use for the template.
-                description.cloned(), // The description of the package.
-                email.cloned(),       // The email address of the package's author.
-                keywords.cloned(),    // The keywords that describe the package.
-                license.cloned(),     // The license under which the package is released.
-                name.cloned(),        // The name of the package.
-                output.cloned(),      // The output directory for the generated files.
-                repository.cloned(),  // The URL of the package's repository.
-                rustversion.cloned(), // The minimum Rust version required to use the package.
-                version.cloned(),     // The version number of the package.
-                website.cloned(),     // The URL of the package's website.
-            )
-            .expect("Failed to generate the template files");
+            let params = FileGenerationParams {
+                author: author.cloned(),
+                categories: categories.cloned(),
+                csv: csv.cloned(),
+                description: description.cloned(),
+                email: email.cloned(),
+                keywords: keywords.cloned(),
+                license: license.cloned(),
+                name: name.cloned(),
+                output: output.cloned(),
+                repository: repository.cloned(),
+                rustversion: rustversion.cloned(),
+                version: version.cloned(),
+                website: website.cloned(),
+            };
+            generate_files(params).expect("Failed to generate the template files");
         } else if let Some(csv_file) = matches.get_one::<String>("csv") {
             generate_via_csv(csv_file).expect("Failed to generate the template files");
         }
     }
 }
+
+// if matches.contains_id("csv") {
+//     if matches.get_one::<String>("csv") == Some(&"".to_string()) {
+//         generate_files(
+//             author.cloned(),      // The name of the package's author.
+//             categories.cloned(),  // The categories that the package belongs to.
+//             csv.cloned(),         // The csv file to use for the template.
+//             description.cloned(), // The description of the package.
+//             email.cloned(),       // The email address of the package's author.
+//             keywords.cloned(),    // The keywords that describe the package.
+//             license.cloned(),     // The license under which the package is released.
+//             name.cloned(),        // The name of the package.
+//             output.cloned(),      // The output directory for the generated files.
+//             repository.cloned(),  // The URL of the package's repository.
+//             rustversion.cloned(), // The minimum Rust version required to use the package.
+//             version.cloned(),     // The version number of the package.
+//             website.cloned(),     // The URL of the package's website.
+//         )
+//         .expect("Failed to generate the template files");
+//     } else if let Some(csv_file) = matches.get_one::<String>("csv") {
+//         generate_via_csv(csv_file).expect("Failed to generate the template files");
+//     }
+// }
+// }

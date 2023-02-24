@@ -1,2 +1,2 @@
-author,categories,description,email,keywords,license,name,output,repository,rustversion,version,website
-Me,"['category 1', 'category 2']",A library for doing things,test@test.com,"['keyword1', 'keyword2']",MIT,my_library,my_library,https://github.com/test/test,1.66.0,0.0.1,https://test.com
+author,categories,csv,description,email,keywords,license,name,output,repository,rustversion,version,website
+Me,"['category 1', 'category 2']",,A library for doing things,test@test.com,"['keyword1', 'keyword2']",MIT OR Apache-2.0,my_library,my_library,https://github.com/test/test,1.67.1,0.0.1,https://test.com

@@ -47,14 +47,15 @@ mod tests {
         let expected_values = vec![
             "Me",
             "['category 1', 'category 2']",
+            "",
             "A library for doing things",
             "test@test.com",
             "['keyword1', 'keyword2']",
-            "MIT",
+            "MIT OR Apache-2.0",
             "my_library",
-            "0.1.0",
+            "my_library",
             "https://github.com/test/test",
-            "1.66.0",
+            "1.67.1",
             "0.0.1",
             "https://test.com",
         ];
@@ -67,5 +68,15 @@ mod tests {
             actual_values.push(field.to_string());
         }
         assert_eq!(actual_values, expected_values);
+    }
+
+    #[test]
+    fn test_cleanup_data_directory() {
+        let directory_path = "my_library";
+        let path = std::path::Path::new(directory_path);
+
+        if path.exists() && path.is_dir() {
+            std::fs::remove_dir_all(path).unwrap();
+        }
     }
 }

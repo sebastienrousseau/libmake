@@ -4,6 +4,8 @@ use std::{
     path::PathBuf,
 };
 
+use super::generator::FileGenerationParams;
+
 /// Replaces placeholders in a template file with given values
 ///
 /// # Arguments
@@ -26,18 +28,7 @@ use std::{
 pub fn replace_placeholders(
     template_file: &PathBuf,
     output_file: &PathBuf,
-    author: &Option<String>,
-    categories: &Option<String>,
-    csv: &Option<String>,
-    description: &Option<String>,
-    email: &Option<String>,
-    keywords: &Option<String>,
-    license: &Option<String>,
-    name: &Option<String>,
-    repository: &Option<String>,
-    rustversion: &Option<String>,
-    version: &Option<String>,
-    website: &Option<String>,
+    params: &FileGenerationParams,
 ) -> std::io::Result<()> {
     let tpl = File::open(template_file)?;
     let tpl_reader = BufReader::new(tpl);
@@ -46,30 +37,45 @@ pub fn replace_placeholders(
     for line in tpl_lines {
         let line = line?;
         let replaced_line = line
-            .replace("{author}", author.as_ref().unwrap_or(&"".to_string()))
+            .replace(
+                "{author}",
+                params.author.as_ref().unwrap_or(&"".to_string()),
+            )
             .replace(
                 "{categories}",
-                categories.as_ref().unwrap_or(&"".to_string()),
+                params.categories.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{csv}", csv.as_ref().unwrap_or(&"".to_string()))
+            .replace("{csv}", params.csv.as_ref().unwrap_or(&"".to_string()))
             .replace(
                 "{description}",
-                description.as_ref().unwrap_or(&"".to_string()),
+                params.description.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{email}", email.as_ref().unwrap_or(&"".to_string()))
-            .replace("{keywords}", keywords.as_ref().unwrap_or(&"".to_string()))
-            .replace("{license}", license.as_ref().unwrap_or(&"".to_string()))
-            .replace("{name}", name.as_ref().unwrap_or(&"".to_string()))
+            .replace("{email}", params.email.as_ref().unwrap_or(&"".to_string()))
+            .replace(
+                "{keywords}",
+                params.keywords.as_ref().unwrap_or(&"".to_string()),
+            )
+            .replace(
+                "{license}",
+                params.license.as_ref().unwrap_or(&"".to_string()),
+            )
+            .replace("{name}", params.name.as_ref().unwrap_or(&"".to_string()))
             .replace(
                 "{repository}",
-                repository.as_ref().unwrap_or(&"".to_string()),
+                params.repository.as_ref().unwrap_or(&"".to_string()),
             )
             .replace(
                 "{rustversion}",
-                rustversion.as_ref().unwrap_or(&"".to_string()),
+                params.rustversion.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{version}", version.as_ref().unwrap_or(&"".to_string()))
-            .replace("{website}", website.as_ref().unwrap_or(&"".to_string()));
+            .replace(
+                "{version}",
+                params.version.as_ref().unwrap_or(&"".to_string()),
+            )
+            .replace(
+                "{website}",
+                params.website.as_ref().unwrap_or(&"".to_string()),
+            );
         writeln!(output, "{}", replaced_line)?;
     }
     Ok(())

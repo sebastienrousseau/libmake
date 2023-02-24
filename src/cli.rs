@@ -26,9 +26,10 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
             "A Rust library generator that helps create high-quality Rust libraries
 quickly and easily.",
         )
+        // Me,"['category 1', 'category 2']",,description,test@test.com,"['keyword1', 'keyword2']",MIT,my_library,my_library,https://github.com/test/test,1.67.1,0.0.1,https://test.com
         .arg(
             Arg::new("author")
-                .default_value("")
+                .default_value("Me")
                 .help("Sets the author of the library")
                 .long("author")
                 .short('a')
@@ -36,7 +37,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("categories")
-                .default_value("")
+                .default_value("['category 1', 'category 2']")
                 .help("Sets the categories of the library")
                 .long("categories")
                 .short('c')
@@ -52,7 +53,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("description")
-                .default_value("")
+                .default_value("A library for doing things")
                 .help("Sets the description of the library")
                 .long("description")
                 .short('d')
@@ -60,7 +61,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("email")
-                .default_value("")
+                .default_value("test@test.com")
                 .help("Sets the email of the library author")
                 .long("email")
                 .short('e')
@@ -68,7 +69,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("keywords")
-                .default_value("")
+                .default_value("['keyword1', 'keyword2']")
                 .help("Sets the keywords of the library")
                 .long("keywords")
                 .short('k')
@@ -100,7 +101,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("repository")
-                .default_value("")
+                .default_value("https://github.com/test/test")
                 .help("Sets the GitHub repository of the library")
                 .long("repository")
                 .short('g')
@@ -108,7 +109,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("rustversion")
-                .default_value("1.66.1")
+                .default_value("1.67.1")
                 .help("Sets the Rust version of the library")
                 .long("rustversion")
                 .short('r')
@@ -116,7 +117,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("version")
-                .default_value("0.1.0")
+                .default_value("0.0.1")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')
@@ -124,7 +125,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("website")
-                .default_value("")
+                .default_value("https://test.com")
                 .help("Sets the website of the library author")
                 .long("website")
                 .short('w')
@@ -135,6 +136,5 @@ quickly and easily.",
         displaying the help information from --help or -h",
         )
         .get_matches();
-
     Ok(matches)
 }
