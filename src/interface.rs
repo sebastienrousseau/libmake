@@ -6,24 +6,15 @@ use std::{
 
 use super::generator::FileGenerationParams;
 
-/// Replaces placeholders in a template file with given values
+/// Replaces placeholders in a template file with values from a set of
+/// parameters
 ///
 /// # Arguments
 ///
-/// * template_file - A PathBuf pointing to the input template file
-/// * output_file - A PathBuf pointing to the output file to be created
-/// * author - An Option<String> containing the author name
-/// * categories - An Option<String> containing the categories
-/// * csv - An Option<String> containing the CSV file
-/// * description - An Option<String> containing the description
-/// * email - An Option<String> containing the email address
-/// * keywords - An Option<String> containing the keywords
-/// * license - An Option<String> containing the license
-/// * name - An Option<String> containing the name
-/// * repository - An Option<String> containing the repository URL
-/// * rustversion - An Option<String> containing the Rust version
-/// * version - An Option<String> containing the version
-/// * website - An Option<String> containing the website URL
+/// * `template_file` - A `PathBuf` representing the path to the input template file
+/// * `output_file` - A `PathBuf` representing the path to the output file that will be created
+/// * `params` - A reference to a `FileGenerationParams` struct containing the values to be
+///     substituted into the placeholders
 ///
 pub fn replace_placeholders(
     template_file: &PathBuf,
