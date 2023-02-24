@@ -31,9 +31,8 @@ A Rust library generator that helps create high-quality Rust libraries quickly a
 
 ## Features ✨
 
-- Feature 1
-- Feature 2
-- Feature 3
+- Generates a new Rust library manually
+- Generates a new Rust library from a CSV file.
 
 ## Installation 📦
 
@@ -139,7 +138,7 @@ this project.
 [11]: https://www.rust-lang.org/policies/code-of-conduct
 [12]: https://www.reddit.com/r/rust/
 
-[banner]: https://via.placeholder.com/1500x500.png/000000/FFFFFF?text=libmake "libmake Banner"
+[banner]: https://raw.githubusercontent.com/sebastienrousseau/vault/main/assets/libmake/logo/logo-libmake.svg "libmake Banner"
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
 [libs-badge]: https://img.shields.io/badge/lib.rs-v0.0.1-orange.svg?style=for-the-badge 'Lib.rs Badge'

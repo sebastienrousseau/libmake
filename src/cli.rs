@@ -26,7 +26,6 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
             "A Rust library generator that helps create high-quality Rust libraries
 quickly and easily.",
         )
-        // Me,"['category 1', 'category 2']",,description,test@test.com,"['keyword1', 'keyword2']",MIT,my_library,my_library,https://github.com/test/test,1.67.1,0.0.1,https://test.com
         .arg(
             Arg::new("author")
                 .default_value("Me")

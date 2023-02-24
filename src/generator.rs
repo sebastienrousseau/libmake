@@ -2,6 +2,7 @@ use std::{fs, path::PathBuf};
 
 use crate::interface::replace_placeholders;
 use prettytable::{row, Table};
+use serde::{Deserialize, Serialize};
 
 /// Structure for holding the parameters for generating files.
 /// The parameters are optional, but the output directory is required.
@@ -11,19 +12,34 @@ use prettytable::{row, Table};
 /// The template files are located in the template directory.
 /// The template files are copied to the output directory and the placeholders are replaced with the values of the parameters.
 /// The template files are Cargo.toml and README.md.
+#[non_exhaustive]
+#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct FileGenerationParams {
+    /// The author of the project (optional).
     pub author: Option<String>,
+    /// The categories that the project belongs to (optional).
     pub categories: Option<String>,
+    /// The CSV file to be used for generating the project (optional).
     pub csv: Option<String>,
+    /// A short description of the project (optional).
     pub description: Option<String>,
+    /// The email address of the author (optional).
     pub email: Option<String>,
+    /// Keywords that describe the project (optional).
     pub keywords: Option<String>,
+    /// The license under which the project is released (optional).
     pub license: Option<String>,
+    /// The name of the project (optional).
     pub name: Option<String>,
+    /// The output directory where the project files will be created (required).
     pub output: Option<String>,
+    /// The URL of the project's repository (optional).
     pub repository: Option<String>,
+    /// The minimum Rust version required by the project (optional).
     pub rustversion: Option<String>,
+    /// The initial version of the project (optional).
     pub version: Option<String>,
+    /// The website of the project (optional).
     pub website: Option<String>,
 }
 
