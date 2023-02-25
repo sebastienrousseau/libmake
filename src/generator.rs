@@ -128,7 +128,7 @@ pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
     fs::create_dir(&project_directory)?;
 
     // Creating the src directory
-    let mut src_directory = project_directory_str.clone();
+    let mut src_directory = project_directory_str;
     src_directory.push_str("/src");
     fs::create_dir(&src_directory)?;
 
