@@ -35,6 +35,14 @@ quickly and easily.",
                 .value_name("AUTHOR"),
         )
         .arg(
+            Arg::new("build")
+                .default_value("build.rs")
+                .help("Sets the build script that is used to perform additional build-time operations.")
+                .long("build")
+                .short('b')
+                .value_name("BUILD"),
+        )
+        .arg(
             Arg::new("categories")
                 .default_value("['category 1', 'category 2']")
                 .help("Sets the categories of the library")
@@ -59,12 +67,36 @@ quickly and easily.",
                 .value_name("DESCRIPTION"),
         )
         .arg(
+            Arg::new("documentation")
+                .default_value("https://lib.rs/crates/my_library")
+                .help("Sets the documentation URL of the library")
+                .long("documentation")
+                .short('u')
+                .value_name("DOCUMENTATION"),
+        )
+        .arg(
+            Arg::new("edition")
+                .default_value("2021")
+                .help("Sets the edition of the library")
+                .long("edition")
+                .short('e')
+                .value_name("EDITION"),
+        )
+        .arg(
             Arg::new("email")
                 .default_value("test@test.com")
                 .help("Sets the email of the library author")
                 .long("email")
-                .short('e')
+                .short('@')
                 .value_name("EMAIL"),
+        )
+        .arg(
+            Arg::new("homepage")
+                .default_value("https://test.com")
+                .help("Sets the homepage of the library")
+                .long("homepage")
+                .short('p')
+                .value_name("HOMEPAGE"),
         )
         .arg(
             Arg::new("keywords")
@@ -99,6 +131,14 @@ quickly and easily.",
                 .value_name("OUTPUT"),
         )
         .arg(
+            Arg::new("readme")
+                .default_value("README.md")
+                .help("Sets the README file for the library")
+                .long("readme")
+                .short('m')
+                .value_name("README"),
+        )
+        .arg(
             Arg::new("repository")
                 .default_value("https://github.com/test/test")
                 .help("Sets the GitHub repository of the library")
@@ -116,7 +156,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("version")
-                .default_value("0.0.2")
+                .default_value("0.0.3")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')

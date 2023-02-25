@@ -1,4 +1,4 @@
 fn main() {
-    // println!("cargo:rerun-if-changed=src/lib.rs");
-    // println!("cargo:rerun-if-changed=build.rs");
+    // Avoid unnecessary re-building.
+    println!("cargo:rerun-if-changed=build.rs");
 }

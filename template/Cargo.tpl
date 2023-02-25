@@ -1,15 +1,26 @@
 [package]
-authors = ["{author} <{email}>}"]
+authors = ["{author} <{email}>"]
+build = "{build}"
 categories = {categories}
 description = "{description}"
-edition = "2021"
-keywords = {keywords}
+documentation = "{documentation}"
+edition = "{edition}"
+exclude = [
+    "/.git/*",
+    "/.github/*",
+    "/.gitignore",
+    "/.vscode/*"
+    ]
+homepage = "{homepage}"
+keywords = ["{keywords}"]
 license = "{license}"
 name = "{name}"
+readme = "{readme}"
 repository = "{repository}"
 rust-version = "{rustversion}"
 version = "{version}"
 include = [
+    "../../CONTRIBUTING.md",
     "../../LICENSE-APACHE",
     "../../LICENSE-MIT",
     "/benches/**",

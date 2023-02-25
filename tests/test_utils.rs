@@ -46,17 +46,22 @@ mod tests {
         let file_path = "tests/data/mylibrary.csv";
         let expected_values = vec![
             "Me",
+            "build.rs",
             "['category 1', 'category 2']",
             "",
             "A library for doing things",
+            "https://lib.rs/crates/my_library",
+            "2021",
             "test@test.com",
+            "https://test.com",
             "['keyword1', 'keyword2']",
             "MIT OR Apache-2.0",
             "my_library",
             "my_library",
+            "README.md",
             "https://github.com/test/test",
             "1.67.1",
-            "0.0.2",
+            "0.0.3",
             "https://test.com",
         ];
         let mut actual_values = Vec::new();
