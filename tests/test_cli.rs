@@ -17,7 +17,7 @@ mod tests {
             ("output", "my_library"),
             ("repository", "https://github.com/test/test"),
             ("rustversion", "1.67.1"),
-            ("version", "0.0.1"),
+            ("version", "0.0.2"),
             ("website", "https://test.com"),
         ];
 

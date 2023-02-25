@@ -31,8 +31,10 @@ A Rust library generator that helps create high-quality Rust libraries quickly a
 
 ## Features ✨
 
-- Generates a new Rust library manually
+- Generates a new Rust library manually via the command line.
 - Generates a new Rust library from a CSV file.
+- Generates a new Rust library from a JSON file.
+- Generates a new Rust library from a YAML file.
 
 ## Installation 📦
 
@@ -66,7 +68,7 @@ To use the `libmake` library in your project, add the following to your
 
 ```toml
 [dependencies]
-libmake = "0.0.1"
+libmake = "0.0.2"
 ```
 
 Add the following to your `main.rs` file:
@@ -87,8 +89,31 @@ Library examples are located in the `examples` directory of the project.
 To run the examples, clone the repository and run the following command
 in your terminal from the project root directory.
 
+#### Generate a new library using a CSV file
+
+The following code uses the `generate_via_csv` function from the
+`libmake` crate to generate a library template from a CSV file.
+
 ```shell
-cargo run --example libmake
+cargo run --example generate_via_csv
+```
+
+#### Generate a new library using a JSON file
+
+The following code uses the `generate_via_json` function from the
+`libmake` crate to generate a library template from a JSON file.
+
+```shell
+cargo run --example generate_via_json
+```
+
+#### Generate a new library using a YAML file
+
+The following code uses the `generate_via_yaml` function from the
+`libmake` crate to generate a library template from a YAML file.
+
+```shell
+cargo run --example generate_via_yaml
 ```
 
 ## Semantic Versioning Policy 🚥
@@ -124,23 +149,23 @@ help and support. A special thank you goes to the [Rust Reddit][12]
 community for providing a lot of useful suggestions on how to improve
 this project.
 
-[0]: https://test.com
+[0]: https://libmake.com
 [1]: https://opensource.org/license/apache-2-0/
 [2]: http://opensource.org/licenses/MIT
-[3]: https://github.com/sebastienrousseau/libmake.git/libmake/issues
-[4]: https://github.com/sebastienrousseau/libmake.git/libmake/blob/main/contributing.md
-[5]: https://github.com/sebastienrousseau/libmake.git/libmake/graphs/contributors
+[3]: https://github.com/sebastienrousseau/libmake/issues
+[4]: https://github.com/sebastienrousseau/libmake/blob/main/contributing.md
+[5]: https://github.com/sebastienrousseau/libmake/graphs/contributors
 [6]: http://semver.org/
 [7]: https://crates.io/crates/libmake
 [8]: https://docs.rs/libmake
 [9]: https://lib.rs/crates/libmake
-[10]: https://github.com/sebastienrousseau/libmake.git/libmake/actions
+[10]: https://github.com/sebastienrousseau/libmake/actions
 [11]: https://www.rust-lang.org/policies/code-of-conduct
 [12]: https://www.reddit.com/r/rust/
 
 [banner]: https://raw.githubusercontent.com/sebastienrousseau/vault/main/assets/libmake/logo/logo-libmake.svg "libmake Banner"
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.0.1-orange.svg?style=for-the-badge 'Lib.rs Badge'
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.0.2-orange.svg?style=for-the-badge 'Lib.rs Badge'
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'

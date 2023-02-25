@@ -14,7 +14,7 @@ license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.67.1"
-version = "0.0.1"
+version = "0.0.2"
 include = [
     "../../LICENSE-APACHE",
     "../../LICENSE-MIT",
@@ -42,6 +42,8 @@ figlet-rs = "0.1.5"
 log = "0.4.17"
 prettytable-rs = "0.10.0"
 serde = { version = "1.0.152", features = ["derive"] }
+serde_yaml = "0.9.17"
+serde_json = "1.0.93"
 simplelog = "0.12.0"
 
 

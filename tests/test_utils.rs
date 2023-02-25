@@ -56,7 +56,7 @@ mod tests {
             "my_library",
             "https://github.com/test/test",
             "1.67.1",
-            "0.0.1",
+            "0.0.2",
             "https://test.com",
         ];
         let mut actual_values = Vec::new();

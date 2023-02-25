@@ -27,9 +27,10 @@
 //!
 //! ## Features
 //!
-//! - Generates a new Rust library manually.
+//! - Generates a new Rust library manually via the command line.
 //! - Generates a new Rust library from a CSV file.
-//!
+//! - Generates a new Rust library from a JSON file.
+//! - Generates a new Rust library from a YAML file.
 //!
 //! ## Usage
 //!

@@ -116,7 +116,7 @@ quickly and easily.",
         )
         .arg(
             Arg::new("version")
-                .default_value("0.0.1")
+                .default_value("0.0.2")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')

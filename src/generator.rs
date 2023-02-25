@@ -3,6 +3,8 @@ use std::{fs, path::PathBuf};
 use crate::interface::replace_placeholders;
 use prettytable::{row, Table};
 use serde::{Deserialize, Serialize};
+use serde_json;
+use serde_yaml;
 
 /// Structure for holding the parameters for generating files.
 /// The parameters are optional, but the output directory is required.
@@ -46,6 +48,8 @@ pub struct FileGenerationParams {
 /// Generates files for a new Rust project based on given arguments.
 ///
 /// # Arguments
+///
+/// The arguments have the following format:
 ///
 /// - `author` - The author of the project (optional).
 /// - `categories` - The categories that the project belongs to (optional).
@@ -117,6 +121,9 @@ pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
 /// Generates files for a new Rust project based on a CSV file.
 ///
 /// # Arguments
+///
+/// The CSV file must contain the following columns:
+///
 /// - `author` - the author of the project (optional).
 /// - `categories` - the categories that the project belongs to (optional).
 /// - `csv` - the CSV file to be used for generating the project (optional).
@@ -152,5 +159,60 @@ pub fn generate_via_csv(path: &str) -> std::io::Result<()> {
         };
         generate_files(params)?;
     }
+    Ok(())
+}
+
+/// Generates files for a new Rust project based on a JSON file.
+///
+/// # Arguments
+///
+/// The JSON file must contain a single object with the following
+/// properties:
+///
+/// - `author` - the author of the project (optional).
+/// - `categories` - the categories that the project belongs to (optional).
+/// - `csv` - the CSV file to be used for generating the project (optional).
+/// - `description` - a short description of the project (optional).
+/// - `email` - the email address of the author (optional).
+/// - `keywords` - keywords that describe the project (optional).
+/// - `license` - the license under which the project is released (optional).
+/// - `name` - the name of the project (optional).
+/// - `output` - the output directory where the project files will be created (required).
+/// - `repository` - the url of the project's repository (optional).
+/// - `rustversion` - the minimum Rust version required by the project (optional).
+/// - `version` - the initial version of the project (optional).
+/// - `website` - the website of the project (optional).
+///
+pub fn generate_via_json(path: &str) -> std::io::Result<()> {
+    let contents = fs::read_to_string(path)?;
+    let params: FileGenerationParams = serde_json::from_str(&contents)?;
+    generate_files(params)?;
+    Ok(())
+}
+
+/// Generates files for a new Rust project based on a YAML file.
+///
+/// The YAML file must contain a single object with the following
+/// properties:
+///
+/// - `author` - the author of the project (optional).
+/// - `categories` - the categories that the project belongs to (optional).
+/// - `csv` - the CSV file to be used for generating the project (optional).
+/// - `description` - a short description of the project (optional).
+/// - `email` - the email address of the author (optional).
+/// - `keywords` - keywords that describe the project (optional).
+/// - `license` - the license under which the project is released (optional).
+/// - `name` - the name of the project (optional).
+/// - `output` - the output directory where the project files will be created (required).
+/// - `repository` - the url of the project's repository (optional).
+/// - `rustversion` - the minimum Rust version required by the project (optional).
+/// - `version` - the initial version of the project (optional).
+/// - `website` - the website of the project (optional).
+///
+pub fn generate_via_yaml(path: &str) -> std::io::Result<()> {
+    let contents = fs::read_to_string(path)?;
+    let params: FileGenerationParams = serde_yaml::from_str(&contents)
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+    generate_files(params)?;
     Ok(())
 }
