@@ -83,6 +83,9 @@ mod tests {
         if path.exists() && path.is_dir() {
             std::fs::remove_dir_all(path).unwrap();
             assert!(!path.exists(), "Directory still exists after cleanup");
+        } else {
+            assert!(path.exists(), "Directory does not exist after cleanup");
         }
+        assert!(!path.exists(), "Directory still exists after cleanup");
     }
 }
