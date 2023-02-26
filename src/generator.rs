@@ -164,7 +164,7 @@ pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
     let website = params.website.unwrap_or_default();
 
     // Displaying the argument and value pairs
-    println!("{:<15}{}", "Argument", "Value");
+    println!("{:<15}Value", "Argument");
     println!("{:<15}{}", "author", author);
     println!("{:<15}{}", "build", build);
     println!("{:<15}{}", "categories", categories);
