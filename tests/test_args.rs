@@ -195,12 +195,6 @@ mod tests {
         process_arguments(matches);
 
         // Assert that the result of process_arguments is Ok(())
-        assert!(!generate_via_csv("/tests/data/mylibrary.csv").is_ok());
-
-        // Assert that the generate_files function was not called
-        // assert_eq!(
-        //     generate_files(FileGenerationParams::default()).is_ok(),
-        //     false
-        // );
+        assert!(generate_via_csv("/tests/data/mylibrary.csv").is_err());
     }
 }
