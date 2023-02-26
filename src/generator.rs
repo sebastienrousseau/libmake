@@ -1,7 +1,6 @@
 use std::{fs, io, path::PathBuf};
 
 use crate::interface::replace_placeholders;
-use prettytable::{row, Table};
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_yaml;
@@ -144,31 +143,46 @@ pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
     copy_and_replace_template("README.tpl", "README.md", &project_directory, &params)?;
     copy_and_replace_template("lib.tpl", "src/lib.rs", &project_directory, &params)?;
 
-    // Print a table of the arguments and values
-    let mut table = Table::new();
-    table.add_row(row![b => "Argument", "Value"]);
-    table.add_row(row!["author", params.author.unwrap_or_default()]);
-    table.add_row(row!["build", params.build.unwrap_or_default()]);
-    table.add_row(row!["categories", params.categories.unwrap_or_default()]);
-    table.add_row(row!["csv", params.csv.unwrap_or_default()]);
-    table.add_row(row!["description", params.description.unwrap_or_default()]);
-    table.add_row(row![
-        "documentation",
-        params.documentation.unwrap_or_default()
-    ]);
-    table.add_row(row!["edition", params.edition.unwrap_or_default()]);
-    table.add_row(row!["email", params.email.unwrap_or_default()]);
-    table.add_row(row!["homepage", params.homepage.unwrap_or_default()]);
-    table.add_row(row!["keywords", params.keywords.unwrap_or_default()]);
-    table.add_row(row!["license", params.license.unwrap_or_default()]);
-    table.add_row(row!["name", params.name.unwrap_or_default()]);
-    table.add_row(row!["output", params.output.unwrap()]);
-    table.add_row(row!["readme", params.readme.unwrap_or_default()]);
-    table.add_row(row!["repository", params.repository.unwrap_or_default()]);
-    table.add_row(row!["rustversion", params.rustversion.unwrap_or_default()]);
-    table.add_row(row!["version", params.version.unwrap_or_default()]);
-    table.add_row(row!["website", params.website.unwrap_or_default()]);
-    table.printstd();
+    // Storing values of the command-line arguments into variables
+    let author = params.author.unwrap_or_default();
+    let build = params.build.unwrap_or_default();
+    let categories = params.categories.unwrap_or_default();
+    let csv = params.csv.unwrap_or_default();
+    let description = params.description.unwrap_or_default();
+    let documentation = params.documentation.unwrap_or_default();
+    let edition = params.edition.unwrap_or_default();
+    let email = params.email.unwrap_or_default();
+    let homepage = params.homepage.unwrap_or_default();
+    let keywords = params.keywords.unwrap_or_default();
+    let license = params.license.unwrap_or_default();
+    let name = params.name.unwrap_or_default();
+    let output = params.output.unwrap();
+    let readme = params.readme.unwrap_or_default();
+    let repository = params.repository.unwrap_or_default();
+    let rustversion = params.rustversion.unwrap_or_default();
+    let version = params.version.unwrap_or_default();
+    let website = params.website.unwrap_or_default();
+
+    // Displaying the argument and value pairs
+    println!("{:<15}{}", "Argument", "Value");
+    println!("{:<15}{}", "author", author);
+    println!("{:<15}{}", "build", build);
+    println!("{:<15}{}", "categories", categories);
+    println!("{:<15}{}", "csv", csv);
+    println!("{:<15}{}", "description", description);
+    println!("{:<15}{}", "documentation", documentation);
+    println!("{:<15}{}", "edition", edition);
+    println!("{:<15}{}", "email", email);
+    println!("{:<15}{}", "homepage", homepage);
+    println!("{:<15}{}", "keywords", keywords);
+    println!("{:<15}{}", "license", license);
+    println!("{:<15}{}", "name", name);
+    println!("{:<15}{}", "output", output);
+    println!("{:<15}{}", "readme", readme);
+    println!("{:<15}{}", "repository", repository);
+    println!("{:<15}{}", "rustversion", rustversion);
+    println!("{:<15}{}", "version", version);
+    println!("{:<15}{}", "website", website);
 
     Ok(())
 }

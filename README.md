@@ -35,6 +35,9 @@ structure with all the necessary files, layouts, build configurations,
 code, tests, benchmarks, documentation, and much more in a matter of
 seconds.
 
+The library is designed to be used as a command-line tool. It is
+available on [Crates.io][7] and [Lib.rs][8].
+
 ## Features ✨
 
 `LibMake` offers the following features and benefits:

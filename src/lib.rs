@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 //!
-//! # A code generator to reduce repetitive tasks and build high-quality Rust libraries.
+//! # A code generator to reduce repetitive tasks and build high-quality Rust libraries
 //!
 //! [![Rust](https://raw.githubusercontent.com/sebastienrousseau/vault/main/assets/libmake/logo/logo-libmake.svg)](https://libmake.com)
 //!
@@ -18,19 +18,37 @@
 //!
 //! ## Overview
 //!
-//! The LibMake (libmake) library is a Rust library generator that helps
-//! create high-quality Rust libraries quickly and easily.
+//! `LibMake` is a tool designed to quickly help creating high-quality
+//! Rust libraries by generating a set of pre-filled and pre-defined
+//! templated files. This opinionated boilerplate scaffolding tool aims
+//! to greatly reduces development time and minimizes repetitive tasks,
+//! allowing you to focus on your business logic while enforcing
+//! standards, best practices, consistency, and providing style guides
+//! for your library.
+//!
+//! With `LibMake`, you can easily generate a new Rust library code base
+//! structure with all the necessary files, layouts, build
+//! configurations, code, tests, benchmarks, documentation, and much
+//! more in a matter of seconds.
 //!
 //! The library is designed to be used as a command-line tool. It is
-//! available on [crates.io](https://crates.io/crates/libmake) and
-//! [lib.rs](https://lib.rs/crates/libmake).
+//! available on [Crates.io](https://crates.io/crates/libmake) and
+//! [Lib.rs](https://lib.rs/crates/libmake).
 //!
 //! ## Features
 //!
-//! - Generates a new Rust library manually via the command line.
-//! - Generates a new Rust library from a CSV file.
-//! - Generates a new Rust library from a JSON file.
-//! - Generates a new Rust library from a YAML file.
+//! `LibMake` offers the following features and benefits:
+//!
+//! - Create your Rust library with ease using the command line
+//!   interface or by providing a configuration file in CSV, JSON, or
+//!   YAML format.
+//! - Rapidly generate new library projects with a pre-defined structure
+//!   and boilerplate code that you can customize with your own template.
+//! - Automatically generate basic functions, methods, and macros to get
+//!   you started with your Rust library.
+//! - Enforce best practices and standards with starter documentation,
+//!   test suites, and benchmark suites that are designed to help you
+//!   get up and running quickly.
 //!
 //! ## Usage
 //!
