@@ -29,7 +29,12 @@ mod tests {
         let args = build_cli().unwrap();
         for (arg_name, expected_value) in arg_specs.iter() {
             let arg_value: Option<&String> = args.get_one(arg_name);
-            assert_eq!(Some(&expected_value.to_string()), arg_value);
+            assert_eq!(
+                Some(&expected_value.to_string()),
+                arg_value,
+                "Incorrect value for argument {}",
+                arg_name
+            );
         }
     }
 }
