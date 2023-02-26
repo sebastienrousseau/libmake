@@ -1,10 +1,7 @@
 #[cfg(test)]
 mod tests {
     use clap::{Arg, Command};
-    use libmake::{
-        args::process_arguments,
-        generator::{generate_files, generate_via_csv, FileGenerationParams},
-    };
+    use libmake::args::process_arguments;
 
     #[test]
     fn test_process_arguments() {
