@@ -1,7 +1,7 @@
 [package]
 authors = ["Sebastian Rousseau <sebastian.rousseau@gmail.com>}"]
 categories = ['development-tools', 'command-line-utilities', 'template-engine']
-description = "A Rust library generator that helps create high-quality Rust libraries quickly and easily."
+description = "A code generator to reduce repetitive tasks and build high-quality Rust libraries."
 edition = "2021"
 keywords = [
     'scaffolding',
@@ -14,7 +14,7 @@ license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.67.1"
-version = "0.0.3"
+version = "0.0.4"
 include = [
     "../../LICENSE-APACHE",
     "../../LICENSE-MIT",

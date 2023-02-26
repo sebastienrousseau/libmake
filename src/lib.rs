@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 //!
-//! # A Rust library generator that helps create high-quality Rust libraries quickly and easily.
+//! # A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 //!
 //! [![Rust](https://raw.githubusercontent.com/sebastienrousseau/vault/main/assets/libmake/logo/logo-libmake.svg)](https://libmake.com)
 //!
@@ -10,7 +10,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.0.3-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.0.4-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -101,6 +101,9 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     ascii::generate_ascii_art("LibMake", "./resources/standard.flf");
 
     // Process the command-line arguments
+    // let args: Vec<String> = env::args().collect();
+    // println!("{:?}", args);
+
     let matches = cli::build_cli()?;
     args::process_arguments(matches);
 
