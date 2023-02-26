@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use clap::{Arg, Command};
-    use libmake::args::process_arguments;
+    use libmake::{args::process_arguments, generator::generate_via_csv};
 
     #[test]
     fn test_process_arguments() {
@@ -194,11 +194,8 @@ mod tests {
         // Call the process_arguments function with the ArgMatches instance
         process_arguments(matches);
 
-        // ensure that the function did not encounter any errors
-        assert!(true);
-
-        // Assert that the generate_via_csv function was called with the correct file name
-        // assert_eq!(generate_via_csv("tests/data/mylibrary.csv").is_ok(), false);
+        // Assert that the result of process_arguments is Ok(())
+        assert_eq!(generate_via_csv("/tests/data/mylibrary.csv").is_ok(), false);
 
         // Assert that the generate_files function was not called
         // assert_eq!(
