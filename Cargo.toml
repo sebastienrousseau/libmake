@@ -14,15 +14,16 @@ license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.67.1"
-version = "0.0.4"
+version = "0.0.5"
 include = [
-    "../../LICENSE-APACHE",
-    "../../LICENSE-MIT",
-    "/benches/**",
     "/build.rs",
     "/Cargo.toml",
+    "/CONTRIBUTING.md",
     "/examples/**",
+    "/LICENSE-APACHE",
+    "/LICENSE-MIT",
     "/README.md",
+    "/resources/**",
     "/src/**",
     "/tests/**",
 ]
