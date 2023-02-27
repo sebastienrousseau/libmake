@@ -73,7 +73,7 @@ strip = false
 
 [profile.release]
 codegen-units = 1        # Compile crates one after another so the compiler can optimize better
-debug = true             # Disable debug information
+debug = false            # Disable debug information
 debug-assertions = false # Disable debug assertions
 incremental = false      # Disable incremental compilation
 lto = true               # Enables link to optimizations
