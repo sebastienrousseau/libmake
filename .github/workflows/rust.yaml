@@ -62,7 +62,7 @@ jobs:
           # Install tarpaulin
           cargo install cargo-tarpaulin
           # Run tarpaulin and generate the code coverage report
-          cargo tarpaulin --release --avoid-cfg-tarpaulin --all-features --skip-clean --out Xml
+          cargo tarpaulin --avoid-cfg-tarpaulin --all-features --skip-clean --out Xml
 
       - name: Upload to codecov.io 📊
         id: run-upload-codecov
