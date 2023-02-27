@@ -5,9 +5,8 @@ mod tests {
     #[test]
     fn test_generate_ascii_art() {
         let text = "Hello, world!";
-        let font_file = "./resources/standard.flf";
         assert!(std::panic::catch_unwind(|| {
-            generate_ascii_art(text, font_file);
+            generate_ascii_art(text);
         })
         .is_ok());
     }

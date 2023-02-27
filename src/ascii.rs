@@ -14,17 +14,9 @@ use figlet_rs::FIGfont;
 /// This function panics if the FIGfont file cannot be loaded or if the
 /// conversion from text to ASCII art fails.
 ///
-/// # Examples
-///
-/// ```
-/// use libmake::ascii;
-/// ascii::generate_ascii_art("LibMake", "./resources/standard.flf");
-/// ```
-///
-pub fn generate_ascii_art(text: &str, font_file: &str) {
-    let font_file = font_file;
-    let small_font = FIGfont::from_file(font_file).unwrap();
-    let figure = small_font.convert(text);
+pub fn generate_ascii_art(text: &str) {
+    let standard_font = FIGfont::standard().unwrap();
+    let figure = standard_font.convert(text);
     assert!(figure.is_some());
     println!("{}", figure.unwrap());
 }

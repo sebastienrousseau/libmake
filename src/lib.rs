@@ -116,7 +116,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     CombinedLogger::init(vec![term_logger, file_logger])?;
 
     // Process the ascii art
-    ascii::generate_ascii_art("LibMake", "../resources/standard.flf");
+    ascii::generate_ascii_art("LibMake");
 
     // Process the command-line arguments
     // let args: Vec<String> = env::args().collect();
