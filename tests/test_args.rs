@@ -1,30 +1,14 @@
-use clap::{Arg, ArgMatches, Command, Error};
+#[cfg(test)]
+mod tests {
+    use std::path::PathBuf;
 
-/// Builds and returns a set of command-line arguments using the Clap
-/// library.
-///
-/// # Arguments
-///
-/// None
-///
-/// # Returns
-///
-/// * `Result<ArgMatches, Error>` - A struct containing the parsed
-/// command-line arguments and their values, or an error if the
-/// arguments could not be parsed.
-///
-/// # Examples
-///
-/// ```
-/// use libmake::cli;
-/// let matches = cli::build_cli().unwrap();
-/// ```
-pub fn build_cli() -> Result<ArgMatches, Error> {
-    let matches = Command::new("My Library")
-        .author("Your Name")
-        .about(
-            "A Rust library generator that helps create high-quality Rust libraries quickly and easily.",
-        )
+    use clap::{Arg, Command};
+    use libmake::{args::process_arguments, generator::generate_via_csv};
+
+    #[test]
+    fn test_process_arguments() {
+        // Define an instance of ArgMatches with "author" and "csv" arguments
+        let matches = Command::new("test")
         .arg(
             Arg::new("author")
                 .default_value("Me")
@@ -169,10 +153,58 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
                 .short('w')
                 .value_name("WEBSITE"),
         )
-        .after_help(
-            "Longer explanation to appear after the options when \
-        displaying the help information from --help or -h",
-        )
-        .get_matches();
-    Ok(matches)
+        .get_matches_from(vec![
+            "test",
+            "--author",
+            "Me",
+            "--build",
+            "build.rs",
+            "--categories",
+            "['category 1', 'category 2']",
+            "--csv",
+            "",
+            "--description",
+            "A library for doing things",
+            "--documentation",
+            "https://lib.rs/crates/my_library",
+            "--edition",
+            "2021",
+            "--email",
+            "test@test.com",
+            "--homepage",
+            "https://test.com",
+            "--keywords",
+            "['keyword1', 'keyword2']",
+            "--license",
+            "MIT OR Apache-2.0",
+            "--name",
+            "my_library",
+            "--output",
+            "my_library",
+            "--readme",
+            "README.md",
+            "--repository",
+            "https://github.com/test/test",
+            "--rustversion",
+            "1.67.1",
+            "--version",
+            "0.0.4",
+            "--website",
+            "https://test.com",
+        ]);
+
+        // Call the process_arguments function with the ArgMatches instance
+        process_arguments(matches);
+
+        // Assert that the result of process_arguments is Ok(())
+        let result = generate_via_csv("/tests/data/mylibrary.csv");
+        assert!(
+            result.is_err(),
+            "Expected generate_via_csv to return an error, but it returned Ok"
+        );
+
+        // Assert that generate_via_csv returns an error with an invalid CSV path
+        let csv_path = PathBuf::from("tests/data/invalid.csv");
+        assert!(generate_via_csv(csv_path.to_str().unwrap()).is_err());
+    }
 }

@@ -62,7 +62,8 @@ jobs:
           # Install tarpaulin
           cargo install cargo-tarpaulin
           # Run tarpaulin and generate the code coverage report
-          cargo tarpaulin --all --all-features --workspace --out Xml
+          cargo tarpaulin --release --avoid-cfg-tarpaulin --all-features --skip-clean --out Xml
+
       - name: Upload to codecov.io 📊
         id: run-upload-codecov
         uses: codecov/codecov-action@v3
@@ -72,7 +73,7 @@ jobs:
           verbose: false
 
   build-targets:
-    name: Build ${{ matrix.target }}
+    name: Build targets 🛠️
     runs-on: ${{ matrix.os }}
     needs: build-project
     strategy:
@@ -167,6 +168,7 @@ jobs:
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+
       - name: Create Release 🚀
         id: create_release
         uses: actions/create-release@v1

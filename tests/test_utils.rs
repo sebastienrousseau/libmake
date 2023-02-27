@@ -75,17 +75,16 @@ mod tests {
         assert_eq!(actual_values, expected_values);
     }
 
-    // #[test]
-    // fn test_cleanup_data_directory() {
-    //     let directory_path = "my_library";
-    //     let path = std::path::Path::new(directory_path);
+    #[test]
+    fn test_cleanup_data_directory() {
+        let directory_path = "my_library";
+        let path = std::path::Path::new(directory_path);
 
-    //     if path.exists() && path.is_dir() {
-    //         std::fs::remove_dir_all(path).unwrap();
-    //         assert!(!path.exists(), "Directory still exists after cleanup");
-    //     } else {
-    //         assert!(path.exists(), "Directory does not exist after cleanup");
-    //     }
-    //     assert!(!path.exists(), "Directory still exists after cleanup");
-    // }
+        if path.exists() && path.is_dir() {
+            std::fs::remove_dir_all(path).unwrap();
+            assert!(!path.exists(), "Directory still exists after cleanup");
+        } else {
+            assert!(path.exists(), "Directory does not exist after cleanup");
+        }
+    }
 }
