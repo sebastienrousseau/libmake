@@ -70,7 +70,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
-          verbose: false
+          verbose: true
 
   build-targets:
     name: Build targets 🛠️

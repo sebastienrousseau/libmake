@@ -61,7 +61,7 @@ mod tests {
             "README.md",
             "https://github.com/test/test",
             "1.67.1",
-            "0.0.5",
+            "0.0.6",
             "https://test.com",
         ];
         let mut actual_values = Vec::new();
