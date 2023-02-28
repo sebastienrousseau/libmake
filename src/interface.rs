@@ -37,7 +37,6 @@ pub fn replace_placeholders(
                 "{categories}",
                 params.categories.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{csv}", params.csv.as_ref().unwrap_or(&"".to_string()))
             .replace(
                 "{description}",
                 params.description.as_ref().unwrap_or(&"".to_string()),

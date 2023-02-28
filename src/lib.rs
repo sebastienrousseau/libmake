@@ -124,6 +124,11 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     let matches = cli::build_cli()?;
     args::process_arguments(matches);
+    eprintln!(
+        "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
+    );
 
-    Ok(())
+    Err("Unable to get the command-line arguments"
+        .to_string()
+        .into())
 }

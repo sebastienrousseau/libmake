@@ -51,8 +51,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("csv")
-                .default_value("")
-                .help("Generates a project from a CSV file")
+                .help("Sets the CSV file to use for generating the library")
                 .long("csv")
                 .short('f')
                 .value_name("CSV"),
@@ -155,7 +154,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("version")
-                .default_value("0.0.6")
+                .default_value("0.0.7")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')

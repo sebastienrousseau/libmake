@@ -1,6 +1,6 @@
 use clap::ArgMatches;
 
-use super::generator::{generate_files, generate_via_csv, FileGenerationParams};
+use super::generator::{generate_files, generate_files_from_csv, FileGenerationParams};
 
 /// Processes the command line arguments provided to the program.
 ///
@@ -12,7 +12,6 @@ pub fn process_arguments(matches: ArgMatches) {
     let author = matches.get_one::<String>("author");
     let build = matches.get_one::<String>("build");
     let categories = matches.get_one::<String>("categories");
-    let csv = matches.get_one::<String>("csv");
     let description = matches.get_one::<String>("description");
     let documentation = matches.get_one::<String>("documentation");
     let edition = matches.get_one::<String>("edition");
@@ -34,7 +33,6 @@ pub fn process_arguments(matches: ArgMatches) {
                 author: author.cloned(),
                 build: build.cloned(),
                 categories: categories.cloned(),
-                csv: csv.cloned(),
                 description: description.cloned(),
                 documentation: documentation.cloned(),
                 edition: edition.cloned(),
@@ -52,7 +50,9 @@ pub fn process_arguments(matches: ArgMatches) {
             };
             generate_files(params).expect("Failed to generate the template files");
         } else if let Some(csv_file) = matches.get_one::<String>("csv") {
-            generate_via_csv(csv_file).expect("Failed to generate the template files");
+            if let Err(e) = generate_files_from_csv(csv_file) {
+                eprintln!("Failed to generate the template files: {}", e);
+            }
         }
     }
 }

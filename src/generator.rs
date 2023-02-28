@@ -1,4 +1,7 @@
-use std::{fs, io, path::PathBuf};
+use std::{
+    fs, io,
+    path::{Path, PathBuf},
+};
 
 use crate::interface::replace_placeholders;
 use serde::{Deserialize, Serialize};
@@ -25,8 +28,6 @@ pub struct FileGenerationParams {
     pub build: Option<String>,
     /// The categories that the project belongs to (optional).
     pub categories: Option<String>,
-    /// The CSV file to be used for generating the project (optional).
-    pub csv: Option<String>,
     /// A short description of the project (optional).
     pub description: Option<String>,
     /// The documentation URL of the project (optional).
@@ -55,6 +56,20 @@ pub struct FileGenerationParams {
     pub version: Option<String>,
     /// The website of the project (optional).
     pub website: Option<String>,
+}
+
+/// Creates a directory if it does not exist. If the directory already
+/// exists, the function will return `Ok(())`.
+///
+/// # Arguments
+///
+/// - `path` - The path to the directory.
+///
+fn create_directory(path: &Path) -> io::Result<()> {
+    fs::create_dir(path).or_else(|e| match e.kind() {
+        io::ErrorKind::AlreadyExists => Ok(()),
+        _ => Err(e),
+    })
 }
 
 /// Copies a template file to the output directory and replaces the
@@ -103,7 +118,6 @@ fn copy_and_replace_template(
 /// - `author` - The author of the project (optional).
 /// - `build` - The build command to be used for building the project (optional).
 /// - `categories` - The categories that the project belongs to (optional).
-/// - `csv` - The CSV file to be used for generating the project (optional).
 /// - `description` - A short description of the project (optional).
 /// - `documentation` - The documentation URL of the project (optional).
 /// - `edition` - The edition of the project (optional).
@@ -119,17 +133,15 @@ fn copy_and_replace_template(
 /// - `version` - The initial version of the project (optional).
 /// - `website` - The website of the project (optional).
 ///
-pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
-    let project_directory_str = params.output.clone().unwrap();
-    let project_directory = PathBuf::from(project_directory_str.clone());
+pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
+    let project_directory = PathBuf::from(params.output.clone().unwrap());
 
     // Creating the project directory
-    fs::create_dir(&project_directory)?;
+    create_directory(&project_directory)?;
 
     // Creating the src directory
-    let mut src_directory = project_directory_str;
-    src_directory.push_str("/src");
-    fs::create_dir(&src_directory)?;
+    let src_directory = project_directory.join("src");
+    create_directory(&src_directory)?;
 
     // Copying the template files to the new library directory
     copy_and_replace_template("gitignore.tpl", ".gitignore", &project_directory, &params)?;
@@ -143,46 +155,45 @@ pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
     copy_and_replace_template("README.tpl", "README.md", &project_directory, &params)?;
     copy_and_replace_template("lib.tpl", "src/lib.rs", &project_directory, &params)?;
 
-    // Storing values of the command-line arguments into variables
-    let author = params.author.unwrap_or_default();
-    let build = params.build.unwrap_or_default();
-    let categories = params.categories.unwrap_or_default();
-    let csv = params.csv.unwrap_or_default();
-    let description = params.description.unwrap_or_default();
-    let documentation = params.documentation.unwrap_or_default();
-    let edition = params.edition.unwrap_or_default();
-    let email = params.email.unwrap_or_default();
-    let homepage = params.homepage.unwrap_or_default();
-    let keywords = params.keywords.unwrap_or_default();
-    let license = params.license.unwrap_or_default();
-    let name = params.name.unwrap_or_default();
-    let output = params.output.unwrap();
-    let readme = params.readme.unwrap_or_default();
-    let repository = params.repository.unwrap_or_default();
-    let rustversion = params.rustversion.unwrap_or_default();
-    let version = params.version.unwrap_or_default();
-    let website = params.website.unwrap_or_default();
-
     // Displaying the argument and value pairs
     println!("{:<15}Value", "Argument");
-    println!("{:<15}{}", "author", author);
-    println!("{:<15}{}", "build", build);
-    println!("{:<15}{}", "categories", categories);
-    println!("{:<15}{}", "csv", csv);
-    println!("{:<15}{}", "description", description);
-    println!("{:<15}{}", "documentation", documentation);
-    println!("{:<15}{}", "edition", edition);
-    println!("{:<15}{}", "email", email);
-    println!("{:<15}{}", "homepage", homepage);
-    println!("{:<15}{}", "keywords", keywords);
-    println!("{:<15}{}", "license", license);
-    println!("{:<15}{}", "name", name);
-    println!("{:<15}{}", "output", output);
-    println!("{:<15}{}", "readme", readme);
-    println!("{:<15}{}", "repository", repository);
-    println!("{:<15}{}", "rustversion", rustversion);
-    println!("{:<15}{}", "version", version);
-    println!("{:<15}{}", "website", website);
+    println!("{:<15}{}", "author", params.author.unwrap_or_default());
+    println!("{:<15}{}", "build", params.build.unwrap_or_default());
+    println!(
+        "{:<15}{}",
+        "categories",
+        params.categories.unwrap_or_default()
+    );
+    println!(
+        "{:<15}{}",
+        "description",
+        params.description.unwrap_or_default()
+    );
+    println!(
+        "{:<15}{}",
+        "documentation",
+        params.documentation.unwrap_or_default()
+    );
+    println!("{:<15}{}", "edition", params.edition.unwrap_or_default());
+    println!("{:<15}{}", "email", params.email.unwrap_or_default());
+    println!("{:<15}{}", "homepage", params.homepage.unwrap_or_default());
+    println!("{:<15}{}", "keywords", params.keywords.unwrap_or_default());
+    println!("{:<15}{}", "license", params.license.unwrap_or_default());
+    println!("{:<15}{}", "name", params.name.unwrap_or_default());
+    println!("{:<15}{}", "output", params.output.unwrap());
+    println!("{:<15}{}", "readme", params.readme.unwrap_or_default());
+    println!(
+        "{:<15}{}",
+        "repository",
+        params.repository.unwrap_or_default()
+    );
+    println!(
+        "{:<15}{}",
+        "rustversion",
+        params.rustversion.unwrap_or_default()
+    );
+    println!("{:<15}{}", "version", params.version.unwrap_or_default());
+    println!("{:<15}{}", "website", params.website.unwrap_or_default());
 
     Ok(())
 }
@@ -196,7 +207,6 @@ pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
 /// - `author` - the author of the project (optional).
 /// - `build` - the build command to be used for building the project (optional).
 /// - `categories` - the categories that the project belongs to (optional).
-/// - `csv` - the CSV file to be used for generating the project (optional).
 /// - `description` - a short description of the project (optional).
 /// - `documentation` - the documentation URL of the project (optional).
 /// - `edition` - the edition of the project (optional).
@@ -212,30 +222,30 @@ pub fn generate_files(params: FileGenerationParams) -> std::io::Result<()> {
 /// - `version` - the initial version of the project (optional).
 /// - `website` - the website of the project (optional).
 ///
-pub fn generate_via_csv(path: &str) -> std::io::Result<()> {
-    let mut reader = csv::Reader::from_path(path)?;
+pub fn generate_files_from_csv(csv_path: &str) -> io::Result<()> {
+    let mut reader = csv::Reader::from_path(csv_path)?;
     for result in reader.records() {
         let record = result?;
         let params = FileGenerationParams {
             author: record.get(0).map(|s| s.to_string()),
             build: record.get(1).map(|s| s.to_string()),
             categories: record.get(2).map(|s| s.to_string()),
-            csv: record.get(3).map(|s| s.to_string()),
-            description: record.get(4).map(|s| s.to_string()),
-            documentation: record.get(5).map(|s| s.to_string()),
-            edition: record.get(6).map(|s| s.to_string()),
-            email: record.get(7).map(|s| s.to_string()),
-            homepage: record.get(8).map(|s| s.to_string()),
-            keywords: record.get(9).map(|s| s.to_string()),
-            license: record.get(10).map(|s| s.to_string()),
-            name: record.get(11).map(|s| s.to_string()),
-            output: record.get(12).map(|s| s.to_string()),
-            readme: record.get(13).map(|s| s.to_string()),
-            repository: record.get(14).map(|s| s.to_string()),
-            rustversion: record.get(15).map(|s| s.to_string()),
-            version: record.get(16).map(|s| s.to_string()),
-            website: record.get(17).map(|s| s.to_string()),
+            description: record.get(3).map(|s| s.to_string()),
+            documentation: record.get(4).map(|s| s.to_string()),
+            edition: record.get(5).map(|s| s.to_string()),
+            email: record.get(6).map(|s| s.to_string()),
+            homepage: record.get(7).map(|s| s.to_string()),
+            keywords: record.get(8).map(|s| s.to_string()),
+            license: record.get(9).map(|s| s.to_string()),
+            name: record.get(10).map(|s| s.to_string()),
+            output: record.get(11).map(|s| s.to_string()),
+            readme: record.get(12).map(|s| s.to_string()),
+            repository: record.get(13).map(|s| s.to_string()),
+            rustversion: record.get(14).map(|s| s.to_string()),
+            version: record.get(15).map(|s| s.to_string()),
+            website: record.get(16).map(|s| s.to_string()),
         };
+        // println!("Params: {:?}", params);
         generate_files(params)?;
     }
     Ok(())
@@ -251,7 +261,6 @@ pub fn generate_via_csv(path: &str) -> std::io::Result<()> {
 /// - `author` - the author of the project (optional).
 /// - `build` - the build command to be used for building the project (optional).
 /// - `categories` - the categories that the project belongs to (optional).
-/// - `csv` - the CSV file to be used for generating the project (optional).
 /// - `description` - a short description of the project (optional).
 /// - `documentation` - the documentation URL of the project (optional).
 /// - `edition` - the edition of the project (optional).
@@ -282,7 +291,6 @@ pub fn generate_via_json(path: &str) -> std::io::Result<()> {
 /// - `author` - the author of the project (optional).
 /// - `build` - the build command to be used for building the project (optional).
 /// - `categories` - the categories that the project belongs to (optional).
-/// - `csv` - the CSV file to be used for generating the project (optional).
 /// - `description` - a short description of the project (optional).
 /// - `documentation` - the documentation URL of the project (optional).
 /// - `edition` - the edition of the project (optional).

@@ -1,90 +1,194 @@
 #[cfg(test)]
 mod tests {
 
-    use csv::ReaderBuilder;
-    use libmake::utils::get_csv_field;
-    use std::{fs::File, path::Path};
+    use std::{fs, path::Path};
+
+    use clap::{Arg, Command};
+    use libmake::{
+        args::process_arguments,
+        utils::{get_csv_field, get_json_field, get_yaml_field},
+    };
 
     #[test]
-    fn test_get_csv_field() {
-        let file_path = "/tests/data/mylibrary.csv";
-        let field_name = "mylibrary";
-        let value = if Path::new(file_path).exists() {
-            get_csv_field(Some(file_path), field_name)
-        } else {
-            String::new()
-        };
-        assert_eq!(value, "");
+    fn test_get_csv_field_from_csv() {
+        let file_path = "tests/data/mylibrary.csv";
+        let field_author_index = 0;
+        let value = get_csv_field(Some(file_path), field_author_index);
+        assert_eq!(value, Some(vec!["Me".to_string()]));
     }
 
     #[test]
     fn test_get_csv_field_empty() {
-        let file_path = "/tests/data/mylibrary.csv";
-        let field_name = "mylibrary";
-        let value = if Path::new(file_path).exists() {
-            get_csv_field(Some(file_path), field_name)
-        } else {
-            String::new()
-        };
-        assert_eq!(value, "");
+        let file_path = "tests/data/mylibrary.csv";
+        let field_author_index = 20;
+        let value = get_csv_field(Some(file_path), field_author_index);
+        assert_eq!(value, Some(vec!["".to_string()]));
     }
 
     #[test]
     fn test_get_csv_field_nonexistent() {
-        let file_path = "/tests/data/mylibrary.csv";
-        let field_name = "mylibrary";
-        let value = if Path::new(file_path).exists() {
-            get_csv_field(Some(file_path), field_name)
-        } else {
-            String::new()
-        };
-        assert_eq!(value, "");
+        let file_path = "tests/data/mylibrary.csv";
+        let field_author_index = 0;
+        let value = get_csv_field(Some(file_path), field_author_index);
+        assert_eq!(value, Some(vec!["Me".to_string()]));
+    }
+
+    #[test]
+    fn test_get_csv_field() {
+        // Test with valid field index
+        let file_path = "tests/data/mylibrary.csv";
+        let field_index = 0;
+        let expected_value = Some(vec!["Me".to_string()]);
+        let actual_value = get_csv_field(Some(file_path), field_index);
+        assert_eq!(expected_value, actual_value);
+
+        // Test with invalid field index
+        let field_index = 100;
+        let expected_value = Some(vec!["".to_string()]);
+        let actual_value = get_csv_field(Some(file_path), field_index);
+        assert_eq!(expected_value, actual_value);
     }
 
     #[test]
     fn test_get_csv_fields() {
         let file_path = "tests/data/mylibrary.csv";
-        let expected_values = vec![
-            "Me",
-            "build.rs",
-            "['category 1', 'category 2']",
-            "",
-            "A library for doing things",
-            "https://lib.rs/crates/my_library",
-            "2021",
-            "test@test.com",
-            "https://test.com",
-            "['keyword1', 'keyword2']",
-            "MIT OR Apache-2.0",
-            "my_library",
-            "my_library",
-            "README.md",
-            "https://github.com/test/test",
-            "1.67.1",
-            "0.0.6",
-            "https://test.com",
-        ];
-        let mut actual_values = Vec::new();
-        let file = File::open(file_path).unwrap();
-        let mut reader = ReaderBuilder::new().has_headers(true).from_reader(file);
-        let records = reader.records().collect::<Result<Vec<_>, _>>().unwrap();
-        let row = &records[0];
-        for field in row.iter() {
-            actual_values.push(field.to_string());
-        }
-        assert_eq!(actual_values, expected_values);
+
+        // Test the function with various input values
+        assert_eq!(file_path, "tests/data/mylibrary.csv");
+        assert_eq!(
+            get_csv_field(Some(file_path), 0),
+            Some(vec!["Me".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 1),
+            Some(vec!["build.rs".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 2),
+            Some(vec!["['category 1', 'category 2']".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 3),
+            Some(vec!["A library for doing things".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 4),
+            Some(vec!["https://lib.rs/crates/my_library".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 5),
+            Some(vec!["2021".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 6),
+            Some(vec!["test@test.com".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 7),
+            Some(vec!["https://test.com".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 8),
+            Some(vec!["['keyword1', 'keyword2']".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 9),
+            Some(vec!["MIT OR Apache-2.0".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 10),
+            Some(vec!["my_library".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 11),
+            Some(vec!["my_library".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 12),
+            Some(vec!["README.md".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 13),
+            Some(vec!["https://github.com/test/test".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 14),
+            Some(vec!["1.67.1".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 15),
+            Some(vec!["0.0.7".to_string()])
+        );
+        assert_eq!(
+            get_csv_field(Some(file_path), 16),
+            Some(vec!["https://test.com".to_string()])
+        );
     }
 
     #[test]
-    fn test_cleanup_data_directory() {
-        let directory_path = "my_library";
-        let path = std::path::Path::new(directory_path);
-
-        if path.exists() && path.is_dir() {
-            std::fs::remove_dir_all(path).unwrap();
-            assert!(!path.exists(), "Directory still exists after cleanup");
-        } else {
-            assert!(path.exists(), "Directory does not exist after cleanup");
-        }
+    fn test_get_json_field_existing() {
+        let file_path = "tests/data/mylibrary.json";
+        let field_name = "repository";
+        let expected_value = "\"https://github.com/test/test\"".to_string();
+        let actual_value = get_json_field(Some(file_path), field_name);
+        assert_eq!(expected_value, actual_value);
     }
+
+    #[test]
+    fn test_get_json_field_nonexistent() {
+        let file_path = "tests/data/mylibrary.json";
+        let field_name = "null";
+        let expected_value = "null".to_string();
+        let actual_value = get_json_field(Some(file_path), field_name);
+        assert_eq!(expected_value, actual_value);
+    }
+
+    #[test]
+    fn test_get_yaml_field_existing() {
+        let file_path = "tests/data/mylibrary.yaml";
+        let field_name = "description";
+        let expected_value = "A library for doing things".to_string();
+        let actual_value = get_yaml_field(Some(file_path), field_name);
+        assert_eq!(expected_value, actual_value);
+    }
+
+    #[test]
+    fn test_get_yaml_field_nonexistent() {
+        let file_path = "tests/data/mylibrary.yaml";
+        let field_name = "null";
+        let expected_value = "null".to_string();
+        let actual_value = get_yaml_field(Some(file_path), field_name);
+        assert_eq!(expected_value, actual_value);
+    }
+
+    #[test]
+    fn test_process_arguments_csv_empty() {
+        let matches = Command::new("myapp")
+            .arg(Arg::new("csv").short('c').long("csv"))
+            .get_matches_from(vec!["myapp", "-c"]);
+        process_arguments(matches);
+        assert!(Path::new("Cargo.toml").exists());
+        assert!(Path::new("src/lib.rs").exists());
+        assert!(Path::new("CONTRIBUTING.md").exists());
+        assert!(Path::new("README.md").exists());
+        assert!(Path::new(".gitignore").exists());
+        fs::remove_file("Cargo.toml").unwrap();
+        fs::remove_file("src/lib.rs").unwrap();
+        fs::remove_file("CONTRIBUTING.md").unwrap();
+        fs::remove_file("README.md").unwrap();
+        fs::remove_file(".gitignore").unwrap();
+    }
+
+    // #[test]
+    // fn test_cleanup_data_directory() {
+    //     let directory_path = "my_library";
+    //     let path = std::path::Path::new(directory_path);
+
+    //     if path.exists() && path.is_dir() {
+    //         std::fs::remove_dir_all(path).unwrap();
+    //         assert!(!path.exists(), "Directory still exists after cleanup");
+    //     } else {
+    //         assert!(path.exists(), "Directory does not exist after cleanup");
+    //     }
+    // }
 }

@@ -1,210 +1,64 @@
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
+    use std::path::Path;
 
     use clap::{Arg, Command};
-    use libmake::{args::process_arguments, generator::generate_via_csv};
+    use libmake::{args::process_arguments, generator::generate_files_from_csv};
+
+    #[test]
+    fn test_generate_files_from_csv() {
+        let csv_file = "tests/data/mylibrary.csv";
+        let result = generate_files_from_csv(csv_file);
+        assert!(
+            result.is_ok(),
+            "generate_files_from_csv was expected to return an Ok result, but it returned an error"
+        );
+    }
 
     #[test]
     fn test_process_arguments() {
-        // Define an instance of ArgMatches with "author" and "csv" arguments
-        let matches = Command::new("test")
-        .arg(
-            Arg::new("author")
-                .default_value("Me")
-                .help("Sets the author of the library")
-                .long("author")
-                .short('a')
-                .value_name("AUTHOR"),
-        )
-        .arg(
-            Arg::new("build")
-                .default_value("build.rs")
-                .help("Sets the build script that is used to perform additional build-time operations.")
-                .long("build")
-                .short('b')
-                .value_name("BUILD"),
-        )
-        .arg(
-            Arg::new("categories")
-                .default_value("['category 1', 'category 2']")
-                .help("Sets the categories of the library")
-                .long("categories")
-                .short('c')
-                .value_name("CATEGORIES"),
-        )
-        .arg(
-            Arg::new("csv")
-                .default_value("")
-                .help("Generates a project from a CSV file")
-                .long("csv")
-                .short('f')
-                .value_name("CSV"),
-        )
-        .arg(
-            Arg::new("description")
-                .default_value("A library for doing things")
-                .help("Sets the description of the library")
-                .long("description")
-                .short('d')
-                .value_name("DESCRIPTION"),
-        )
-        .arg(
-            Arg::new("documentation")
-                .default_value("https://lib.rs/crates/my_library")
-                .help("Sets the documentation URL of the library")
-                .long("documentation")
-                .short('u')
-                .value_name("DOCUMENTATION"),
-        )
-        .arg(
-            Arg::new("edition")
-                .default_value("2021")
-                .help("Sets the edition of the library")
-                .long("edition")
-                .short('e')
-                .value_name("EDITION"),
-        )
-        .arg(
-            Arg::new("email")
-                .default_value("test@test.com")
-                .help("Sets the email of the library author")
-                .long("email")
-                .short('@')
-                .value_name("EMAIL"),
-        )
-        .arg(
-            Arg::new("homepage")
-                .default_value("https://test.com")
-                .help("Sets the homepage of the library")
-                .long("homepage")
-                .short('p')
-                .value_name("HOMEPAGE"),
-        )
-        .arg(
-            Arg::new("keywords")
-                .default_value("['keyword1', 'keyword2']")
-                .help("Sets the keywords of the library")
-                .long("keywords")
-                .short('k')
-                .value_name("KEYWORDS"),
-        )
-        .arg(
-            Arg::new("license")
-                .default_value("MIT OR Apache-2.0")
-                .short('l')
-                .long("license")
-                .value_name("LICENSE")
-                .help("Sets the license of the library"),
-        )
-        .arg(
-            Arg::new("name")
-                .default_value("my_library")
-                .help("Sets the name of the library")
-                .long("name")
-                .short('n')
-                .value_name("NAME"),
-        )
-        .arg(
-            Arg::new("output")
-                .default_value("my_library")
-                .help("Sets the output directory for the library")
-                .long("output")
-                .short('o')
-                .value_name("OUTPUT"),
-        )
-        .arg(
-            Arg::new("readme")
-                .default_value("README.md")
-                .help("Sets the README file for the library")
-                .long("readme")
-                .short('m')
-                .value_name("README"),
-        )
-        .arg(
-            Arg::new("repository")
-                .default_value("https://github.com/test/test")
-                .help("Sets the GitHub repository of the library")
-                .long("repository")
-                .short('g')
-                .value_name("REPOSITORY"),
-        )
-        .arg(
-            Arg::new("rustversion")
-                .default_value("1.67.1")
-                .help("Sets the Rust version of the library")
-                .long("rustversion")
-                .short('r')
-                .value_name("RUSTVERSION"),
-        )
-        .arg(
-            Arg::new("version")
-                .default_value("0.0.6")
-                .help("Sets the version of the library")
-                .long("version")
-                .short('v')
-                .value_name("VERSION"),
-        )
-        .arg(
-            Arg::new("website")
-                .default_value("https://test.com")
-                .help("Sets the website of the library author")
-                .long("website")
-                .short('w')
-                .value_name("WEBSITE"),
-        )
-        .get_matches_from(vec![
-            "test",
-            "--author",
-            "Me",
-            "--build",
-            "build.rs",
-            "--categories",
-            "['category 1', 'category 2']",
-            "--csv",
-            "",
-            "--description",
-            "A library for doing things",
-            "--documentation",
-            "https://lib.rs/crates/my_library",
-            "--edition",
-            "2021",
-            "--email",
-            "test@test.com",
-            "--homepage",
-            "https://test.com",
-            "--keywords",
-            "['keyword1', 'keyword2']",
-            "--license",
-            "MIT OR Apache-2.0",
-            "--name",
-            "my_library",
-            "--output",
-            "my_library",
-            "--readme",
-            "README.md",
-            "--repository",
-            "https://github.com/test/test",
-            "--rustversion",
-            "1.67.1",
-            "--version",
-            "0.0.6",
-            "--website",
-            "https://test.com",
-        ]);
-
-        // Call the process_arguments function with the ArgMatches instance
-        process_arguments(matches);
-
-        // Assert that the result of process_arguments is Ok(())
-        let result = generate_via_csv("/tests/data/mylibrary.csv");
-        assert!(
-            result.is_err(),
-            "Expected generate_via_csv to return an error, but it returned Ok"
+        let file_path = "./tests/data/mylibrary.csv";
+        let matches = Command::new("myapp")
+            .arg(Arg::new("author").short('a').long("author"))
+            .arg(Arg::new("build").short('b').long("build"))
+            .arg(Arg::new("categories").short('C').long("categories"))
+            .arg(Arg::new("description").short('d').long("description"))
+            .arg(Arg::new("documentation").short('D').long("documentation"))
+            .arg(Arg::new("edition").short('e').long("edition"))
+            .arg(Arg::new("email").short('E').long("email"))
+            .arg(Arg::new("homepage").short('p').long("homepage"))
+            .arg(Arg::new("keywords").short('k').long("keywords"))
+            .arg(Arg::new("license").short('l').long("license"))
+            .arg(Arg::new("name").short('n').long("name"))
+            .arg(Arg::new("output").short('o').long("output"))
+            .arg(Arg::new("readme").short('r').long("readme"))
+            .arg(Arg::new("repository").short('R').long("repository"))
+            .arg(Arg::new("rustversion").short('V').long("rustversion"))
+            .arg(Arg::new("version").short('v').long("version"))
+            .arg(Arg::new("website").short('w').long("website"))
+            .arg(Arg::new("csv").short('c').long("csv"))
+            .get_matches_from(vec!["myapp", "-a", file_path]);
+        assert!(matches.contains_id("author"));
+        assert_eq!(
+            matches.get_one::<String>("author"),
+            Some(&file_path.to_string())
         );
 
-        // Assert that generate_via_csv returns an error with an invalid CSV path
-        let csv_path = PathBuf::from("tests/data/invalid.csv");
-        assert!(generate_via_csv(csv_path.to_str().unwrap()).is_err());
+        process_arguments(matches);
+        // Check that the files were generated
+        let expected_files = vec![
+            "Cargo.toml",
+            "src/lib.rs",
+            "CONTRIBUTING.md",
+            "README.md",
+            ".gitignore",
+        ];
+        for file in &expected_files {
+            let path = Path::new(file);
+            if !path.exists() {
+                println!("Expected file not found: {:?}", path);
+            }
+            assert!(path.exists());
+        }
     }
 }

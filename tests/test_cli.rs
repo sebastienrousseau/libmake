@@ -9,7 +9,6 @@ mod tests {
             ("author", "Me"),
             ("build", "build.rs"),
             ("categories", "['category 1', 'category 2']"),
-            ("csv", ""),
             ("description", "A library for doing things"),
             ("documentation", "https://lib.rs/crates/my_library"),
             ("edition", "2021"),
@@ -22,7 +21,7 @@ mod tests {
             ("readme", "README.md"),
             ("repository", "https://github.com/test/test"),
             ("rustversion", "1.67.1"),
-            ("version", "0.0.6"),
+            ("version", "0.0.7"),
             ("website", "https://test.com"),
         ];
 
