@@ -14,7 +14,7 @@ license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.67.1"
-version = "0.0.7"
+version = "0.0.8"
 include = [
     "/build.rs",
     "/Cargo.toml",
@@ -25,6 +25,7 @@ include = [
     "/README.md",
     "/src/**",
     "/tests/**",
+    "/templates/**",
 ]
 
 # [[bench]]
