@@ -48,7 +48,8 @@ jobs:
         shell: /bin/bash -e {0}
 
       - name: Add cargo bin to PATH 🦀
-        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
+        run: |
+          echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
 
       - name: Run Cargo Format 🦀
         id: run-check-format
@@ -177,7 +178,8 @@ jobs:
         shell: /bin/bash -e {0}
 
       - name: Add cargo bin to PATH 🦀
-        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
+        run: |
+          echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
 
       - name: Build targets 🏗
         id: build-targets
