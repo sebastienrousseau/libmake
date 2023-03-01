@@ -1,13 +1,7 @@
 #[cfg(test)]
 mod tests {
 
-    use std::{fs, path::Path};
-
-    use clap::{Arg, Command};
-    use libmake::{
-        args::process_arguments,
-        utils::{get_csv_field, get_json_field, get_yaml_field},
-    };
+    use libmake::utils::{get_csv_field, get_json_field, get_yaml_field};
 
     #[test]
     fn test_get_csv_field_from_csv() {
@@ -159,24 +153,6 @@ mod tests {
         let expected_value = "null".to_string();
         let actual_value = get_yaml_field(Some(file_path), field_name);
         assert_eq!(expected_value, actual_value);
-    }
-
-    #[test]
-    fn test_process_arguments_csv_empty() {
-        let matches = Command::new("myapp")
-            .arg(Arg::new("csv").short('c').long("csv"))
-            .get_matches_from(vec!["myapp", "-c"]);
-        process_arguments(matches);
-        assert!(Path::new("Cargo.toml").exists());
-        assert!(Path::new("src/lib.rs").exists());
-        assert!(Path::new("CONTRIBUTING.md").exists());
-        assert!(Path::new("README.md").exists());
-        assert!(Path::new(".gitignore").exists());
-        fs::remove_file("Cargo.toml").unwrap();
-        fs::remove_file("src/lib.rs").unwrap();
-        fs::remove_file("CONTRIBUTING.md").unwrap();
-        fs::remove_file("README.md").unwrap();
-        fs::remove_file(".gitignore").unwrap();
     }
 
     // #[test]

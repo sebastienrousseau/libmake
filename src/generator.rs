@@ -134,7 +134,17 @@ fn copy_and_replace_template(
 /// - `website` - The website of the project (optional).
 ///
 pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
-    let project_directory = PathBuf::from(params.output.clone().unwrap());
+    let output = match params.output {
+        Some(ref output) => output,
+        None => {
+            return Err(io::Error::new(
+                io::ErrorKind::Other,
+                "Output directory is not specified",
+            ))
+        }
+    };
+
+    let project_directory = PathBuf::from(output.clone());
 
     // Creating the project directory
     create_directory(&project_directory)?;
@@ -180,7 +190,7 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     println!("{:<15}{}", "keywords", params.keywords.unwrap_or_default());
     println!("{:<15}{}", "license", params.license.unwrap_or_default());
     println!("{:<15}{}", "name", params.name.unwrap_or_default());
-    println!("{:<15}{}", "output", params.output.unwrap());
+    println!("{:<15}{}", "output", output.clone());
     println!("{:<15}{}", "readme", params.readme.unwrap_or_default());
     println!(
         "{:<15}{}",
