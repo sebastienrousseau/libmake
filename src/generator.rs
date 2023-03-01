@@ -20,7 +20,18 @@ use std::{
 ///
 ///
 #[non_exhaustive]
-#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Debug,
+    Default,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Serialize,
+    Deserialize,
+)]
 pub struct FileGenerationParams {
     /// The author of the project (optional).
     pub author: Option<String>,
@@ -65,14 +76,14 @@ pub struct FileGenerationParams {
 ///
 /// - `path` - The path to the directory.
 ///
-fn create_directory(path: &Path) -> io::Result<()> {
+pub fn create_directory(path: &Path) -> io::Result<()> {
     fs::create_dir(path).or_else(|e| match e.kind() {
         io::ErrorKind::AlreadyExists => Ok(()),
         _ => Err(e),
     })
 }
-
-fn create_template_folder() -> io::Result<()> {
+/// Creates the template directory and downloads the template files.
+pub fn create_template_folder() -> io::Result<()> {
     let current_dir = std::env::current_dir()?;
     let template_dir_path = current_dir.join("template");
     create_directory(&template_dir_path)?;
@@ -127,7 +138,7 @@ fn create_template_folder() -> io::Result<()> {
 /// was successful, the result will be `Ok(())`. If the operation failed,
 /// the result will be `Err(io::Error)`.
 ///
-fn copy_and_replace_template(
+pub fn copy_and_replace_template(
     template_file: &str,
     dest_file: &str,
     project_directory: &PathBuf,
@@ -214,8 +225,18 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         &project_directory,
         &params,
     )?;
-    copy_and_replace_template("build.tpl", "build.rs", &project_directory, &params)?;
-    copy_and_replace_template("Cargo.tpl", "Cargo.toml", &project_directory, &params)?;
+    copy_and_replace_template(
+        "build.tpl",
+        "build.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "Cargo.tpl",
+        "Cargo.toml",
+        &project_directory,
+        &params,
+    )?;
     copy_and_replace_template(
         "CONTRIBUTING.tpl",
         "CONTRIBUTING.md",
@@ -228,11 +249,36 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         &project_directory,
         &params,
     )?;
-    copy_and_replace_template("gitignore.tpl", ".gitignore", &project_directory, &params)?;
-    copy_and_replace_template("lib.tpl", "src/lib.rs", &project_directory, &params)?;
-    copy_and_replace_template("main.tpl", "src/main.rs", &project_directory, &params)?;
-    copy_and_replace_template("README.tpl", "README.md", &project_directory, &params)?;
-    copy_and_replace_template("test.tpl", "tests/test.rs", &project_directory, &params)?;
+    copy_and_replace_template(
+        "gitignore.tpl",
+        ".gitignore",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "lib.tpl",
+        "src/lib.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "main.tpl",
+        "src/main.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "README.tpl",
+        "README.md",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "test.tpl",
+        "tests/test.rs",
+        &project_directory,
+        &params,
+    )?;
 
     // Displaying the argument and value pairs
     println!("{:<15}Value", "Argument");
@@ -255,8 +301,16 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     );
     println!("{:<15}{}", "edition", params.edition.unwrap_or_default());
     println!("{:<15}{}", "email", params.email.unwrap_or_default());
-    println!("{:<15}{}", "homepage", params.homepage.unwrap_or_default());
-    println!("{:<15}{}", "keywords", params.keywords.unwrap_or_default());
+    println!(
+        "{:<15}{}",
+        "homepage",
+        params.homepage.unwrap_or_default()
+    );
+    println!(
+        "{:<15}{}",
+        "keywords",
+        params.keywords.unwrap_or_default()
+    );
     println!("{:<15}{}", "license", params.license.unwrap_or_default());
     println!("{:<15}{}", "name", params.name.unwrap_or_default());
     println!("{:<15}{}", "output", output.clone());
@@ -388,7 +442,9 @@ pub fn generate_via_json(path: &str) -> std::io::Result<()> {
 pub fn generate_via_yaml(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_yaml::from_str(&contents)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        .map_err(|e| {
+            std::io::Error::new(std::io::ErrorKind::Other, e)
+        })?;
     generate_files(params)?;
     Ok(())
 }

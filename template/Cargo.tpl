@@ -35,7 +35,7 @@ include = [
 [[bench]]
 name = "benchmark"
 harness = false
-path = "benches/criterion.rs"
+path = "benches/bench.rs"
 
 [profile.bench]
 debug = true

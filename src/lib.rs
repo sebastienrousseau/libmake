@@ -87,6 +87,8 @@ pub mod generator;
 /// The `interface` module contains functions for displaying the
 /// interface.
 pub mod interface;
+/// The `macros` module contains functions for generating macros.
+pub mod macros;
 /// The `utils` module contains a function for reading a CSV file at the
 /// given file path and returns the value of the given field.
 pub mod utils;
@@ -124,11 +126,13 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     let matches = cli::build_cli()?;
     args::process_arguments(matches);
-    eprintln!(
-        "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
-    );
 
-    Err("Unable to get the command-line arguments"
-        .to_string()
-        .into())
+    // Print the welcome message if no arguments were passed
+    if std::env::args().len() == 1 {
+        eprintln!(
+            "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
+        );
+    }
+
+    Ok(())
 }
