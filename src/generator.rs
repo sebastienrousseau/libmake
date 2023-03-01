@@ -78,15 +78,15 @@ fn create_template_folder() -> io::Result<()> {
     create_directory(&template_dir_path)?;
     let url = "https://raw.githubusercontent.com/sebastienrousseau/libmake/main/template/";
     let files = [
-        "bench.tpl",
-        // "build.tpl",
-        "Cargo.tpl",
         "CONTRIBUTING.tpl",
+        "Cargo.tpl",
+        "README.tpl",
+        "bench.tpl",
+        "build.tpl",
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
-        // "main.tpl",
-        "README.tpl",
+        "main.tpl",
         "test.tpl",
     ];
     for file in &files {
