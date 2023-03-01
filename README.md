@@ -119,7 +119,7 @@ To use `LibMake` library in your project, add the following to your
 
 ```toml
 [dependencies]
-libmake = "0.0.6"
+libmake = "0.0.7"
 ```
 
 Add the following to your `main.rs` file:
@@ -247,6 +247,6 @@ this project.
 [codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/cmn?style=for-the-badge&token=DMNW4DN0LO 'Codecov'
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.0.6-orange.svg?style=for-the-badge 'Lib.rs Badge'
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.0.7-orange.svg?style=for-the-badge 'Lib.rs Badge'
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'
