@@ -5,6 +5,7 @@ mod tests {
 
     #[test]
     fn test_{name}() {
-
+        let {name} = {name}::new();
+        assert_eq!({name}, {name}::default());
     }
 }

@@ -37,16 +37,6 @@
 //! let json = serde_json::to_string(&my_data).unwrap();
 //! ```
 //!
-//! Use the following code to deserialize a JSON string into a data structure:
-//!
-//! ```rust
-//! use {name}::{name};
-//! use serde_json;
-//!
-//! let json = r#"{"foo": "bar"}"#;
-//! let my_data: {name} = serde_json::from_str(json).unwrap();
-//! ```
-//!
 #![forbid(unsafe_code)]
 #![warn(unreachable_pub)]
 #![deny(missing_debug_implementations)]
@@ -60,16 +50,26 @@
 #![crate_type = "lib"]
 
 use serde::{Deserialize, Serialize};
-pub use self::error::Error;
-mod error;
-
+use std::error::Error;
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq, Hash, Clone)]
+#[allow(non_camel_case_types)]
+/// {name} is a data structure that ...
 pub struct {name} {
     // Add any data fields needed here
 }
 
+/// This is the main entry point for the my_library library.
+pub fn run() -> Result<(), Box<dyn Error>> {
+    // Add your code here
+    let name = "my_library";
+    println!("Hello, {}!", { name }.to_uppercase());
+    Ok(())
+}
+
+
 impl {name} {
+    /// Creates a new instance of {name}
     pub fn new() -> Self {
         Self {
             // Initialize any data fields here
@@ -78,7 +78,10 @@ impl {name} {
 }
 
 impl Default for {name} {
+    /// Creates a new instance of {name} with default values
     fn default() -> Self {
         Self::new()
     }
 }
+
+
