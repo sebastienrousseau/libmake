@@ -47,9 +47,6 @@ jobs:
           cargo clean --verbose
         shell: /bin/bash -e {0}
 
-      - name: Add cargo bin to PATH 🦀
-        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
-
       - name: Run Cargo Format 🦀
         id: run-check-format
         run: |
@@ -171,13 +168,10 @@ jobs:
         id: run-install-cross
         run: |
           # Install cross
-          cargo install cross
+          cargo install --git https://github.com/rust-embedded/cross.git
           # Clean the build artifacts
           cargo clean --verbose
         shell: /bin/bash -e {0}
-
-      - name: Add cargo bin to PATH 🦀
-        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
 
       - name: Build targets 🏗
         id: build-targets
