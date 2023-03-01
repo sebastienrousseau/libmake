@@ -4,17 +4,17 @@ categories = ['development-tools', 'command-line-utilities', 'template-engine']
 description = "A code generator to reduce repetitive tasks and build high-quality Rust libraries."
 edition = "2021"
 keywords = [
-    'scaffolding',
-    'library',
-    'generator',
     'code-generation',
+    'generator',
+    'library',
     'project-creation',
+    'scaffolding',
 ]
 license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.67.1"
-version = "0.0.9"
+version = "0.1.0"
 include = [
     "/build.rs",
     "/Cargo.toml",
@@ -51,7 +51,6 @@ zip = "0.6.4"
 
 [dev-dependencies]
 criterion = "0.4.0"
-
 
 [lib]
 crate-type = ["lib"]

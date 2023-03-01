@@ -111,7 +111,7 @@ mod tests {
         );
         assert_eq!(
             get_csv_field(Some(file_path), 15),
-            Some(vec!["0.0.9".to_string()])
+            Some(vec!["0.1.0".to_string()])
         );
         assert_eq!(
             get_csv_field(Some(file_path), 16),

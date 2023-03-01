@@ -43,7 +43,6 @@ debug = true
 [dependencies]
 serde = { version = "1.0.152", features = ["derive"] }
 
-
 [dev-dependencies]
 criterion = "0.4.0"
 

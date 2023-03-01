@@ -44,37 +44,41 @@ jobs:
         id: run-check-format
         run: |
           cargo check --all --all-features --release --verbose
+
       - name: Run Clippy 🦀
         id: run-check-clippy
         run: |
           cargo clippy --all-targets --all-features --release -- -D warnings
+
       - name: Run Cargo Doc 🦀
         id: run-check-doc
         run: |
           cargo doc --color always --no-deps --all-features --release --verbose
+
       - name: Run Cargo Test 🦀
         id: run-check-test
         run: |
           cargo test --all-targets --workspace --all-features
-      - name: Run Cargo Code Coverage 🦀
-        id: run-check-code-coverage
-        run: |
-          # Install tarpaulin
-          cargo install cargo-tarpaulin
-          # Run tarpaulin and generate the code coverage report
-          cargo tarpaulin --all --all-features --workspace --out Xml
 
-      - name: Upload to codecov.io 📊
-        id: run-upload-codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-          verbose: true
+      # - name: Run Cargo Code Coverage 🦀
+      #   id: run-check-code-coverage
+      #   run: |
+      #     # Install tarpaulin
+      #     cargo install cargo-tarpaulin
+      #     # Run tarpaulin and generate the code coverage report
+      #     cargo tarpaulin --all --all-features --workspace --out Xml
+
+      # - name: Upload to codecov.io 📊
+      #   id: run-upload-codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     fail_ci_if_error: false
+      #     verbose: true
 
   build-targets:
     name: Build targets 🛠️
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     needs: build-project
     strategy:
       fail-fast: false
@@ -198,7 +202,6 @@ jobs:
           asset_path: ${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz
           asset_name: ${{ matrix.target }}.tar.gz
           asset_content_type: application/gzip
-
 
   # deploy-release:
   #   runs-on: ubuntu-latest
