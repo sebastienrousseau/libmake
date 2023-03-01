@@ -21,7 +21,7 @@ mod tests {
             ("readme", "README.md"),
             ("repository", "https://github.com/test/test"),
             ("rustversion", "1.67.1"),
-            ("version", "0.0.8"),
+            ("version", "0.0.9"),
             ("website", "https://test.com"),
         ];
 

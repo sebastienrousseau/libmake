@@ -1,12 +1,12 @@
+use crate::interface::replace_placeholders;
+use assert_cmd::Command;
+use serde::{Deserialize, Serialize};
+use serde_json;
+use serde_yaml;
 use std::{
     fs, io,
     path::{Path, PathBuf},
 };
-
-use crate::interface::replace_placeholders;
-use serde::{Deserialize, Serialize};
-use serde_json;
-use serde_yaml;
 
 /// Structure for holding the parameters for generating the project files.
 ///
@@ -70,6 +70,44 @@ fn create_directory(path: &Path) -> io::Result<()> {
         io::ErrorKind::AlreadyExists => Ok(()),
         _ => Err(e),
     })
+}
+
+fn create_template_folder() -> io::Result<()> {
+    let current_dir = std::env::current_dir()?;
+    let template_dir_path = current_dir.join("template");
+    create_directory(&template_dir_path)?;
+    let url = "https://raw.githubusercontent.com/sebastienrousseau/libmake/main/template/";
+    let files = [
+        "bench.tpl",
+        "Cargo.tpl",
+        "CONTRIBUTING.tpl",
+        "error.tpl",
+        "example.tpl",
+        "gitignore.tpl",
+        "lib.tpl",
+        "README.tpl",
+        "test.tpl",
+    ];
+    for file in &files {
+        let file_url = format!("{}{}", url, file);
+        let file_path = template_dir_path.join(file);
+        let output = Command::new("curl")
+            .arg("-L")
+            .arg("-o")
+            .arg(file_path.as_os_str())
+            .arg(file_url)
+            .output()?;
+        if !output.status.success() {
+            return Err(io::Error::new(
+                io::ErrorKind::Other,
+                format!(
+                    "Failed to download template file: {}",
+                    String::from_utf8_lossy(&output.stderr)
+                ),
+            ));
+        }
+    }
+    Ok(())
 }
 
 /// Copies a template file to the output directory and replaces the
@@ -148,6 +186,9 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 
     // Creating the project directory
     create_directory(&project_directory)?;
+
+    // Creating the template directory
+    create_template_folder()?;
 
     // Creating the src directory
     let src_directory = project_directory.join("src");
