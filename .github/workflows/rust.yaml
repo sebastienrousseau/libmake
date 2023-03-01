@@ -47,6 +47,9 @@ jobs:
           cargo clean --verbose
         shell: /bin/bash -e {0}
 
+      - name: Add cargo bin to PATH 🦀
+        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
+
       - name: Run Cargo Format 🦀
         id: run-check-format
         run: |
@@ -165,13 +168,16 @@ jobs:
         shell: /bin/bash -e {0}
 
       - name: Install Cross 🦀
-        id: install-cross
+        id: run-install-cross
         run: |
           # Install cross
           cargo install cross
           # Clean the build artifacts
           cargo clean --verbose
         shell: /bin/bash -e {0}
+
+      - name: Add cargo bin to PATH 🦀
+        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
 
       - name: Build targets 🏗
         id: build-targets
