@@ -27,16 +27,6 @@
 //! serde_json = "1.0"
 //! ```
 //!
-//! Use the following code to serialize a data structure to JSON format:
-//!
-//! ```rust
-//! use {name}::{name};
-//! use serde_json;
-//!
-//! let my_data = {name}::new();
-//! let json = serde_json::to_string(&my_data).unwrap();
-//! ```
-//!
 #![forbid(unsafe_code)]
 #![warn(unreachable_pub)]
 #![deny(missing_debug_implementations)]
