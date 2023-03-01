@@ -79,12 +79,13 @@ fn create_template_folder() -> io::Result<()> {
     let url = "https://raw.githubusercontent.com/sebastienrousseau/libmake/main/template/";
     let files = [
         "bench.tpl",
+        // "build.tpl",
         "Cargo.tpl",
         "CONTRIBUTING.tpl",
-        "error.tpl",
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
+        // "main.tpl",
         "README.tpl",
         "test.tpl",
     ];
@@ -194,8 +195,21 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     let src_directory = project_directory.join("src");
     create_directory(&src_directory)?;
 
+    // Creating the benches directory
+    let benches_directory = project_directory.join("benches");
+    create_directory(&benches_directory)?;
+
+    // Creating the examples directory
+    let examples_directory = project_directory.join("examples");
+    create_directory(&examples_directory)?;
+
+    // Creating the tests directory
+    let tests_directory = project_directory.join("tests");
+    create_directory(&tests_directory)?;
+
     // Copying the template files to the new library directory
-    copy_and_replace_template("gitignore.tpl", ".gitignore", &project_directory, &params)?;
+    copy_and_replace_template("bench.tpl", "benches/bench.rs", &project_directory, &params)?;
+    copy_and_replace_template("build.tpl", "build.rs", &project_directory, &params)?;
     copy_and_replace_template("Cargo.tpl", "Cargo.toml", &project_directory, &params)?;
     copy_and_replace_template(
         "CONTRIBUTING.tpl",
@@ -203,8 +217,17 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         &project_directory,
         &params,
     )?;
-    copy_and_replace_template("README.tpl", "README.md", &project_directory, &params)?;
+    copy_and_replace_template(
+        "example.tpl",
+        "examples/example.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template("gitignore.tpl", ".gitignore", &project_directory, &params)?;
     copy_and_replace_template("lib.tpl", "src/lib.rs", &project_directory, &params)?;
+    copy_and_replace_template("main.tpl", "src/main.rs", &project_directory, &params)?;
+    copy_and_replace_template("README.tpl", "README.md", &project_directory, &params)?;
+    copy_and_replace_template("test.tpl", "tests/test.rs", &project_directory, &params)?;
 
     // Displaying the argument and value pairs
     println!("{:<15}Value", "Argument");

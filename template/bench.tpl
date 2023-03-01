@@ -2,15 +2,15 @@
 extern crate criterion;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
-extern crate {{LIBNAME}};
-use self::{{LIBNAME}};
+extern crate {name};
+use self::{name};
 
-fn {{LIBNAME}}_benchmark(c: &mut Criterion) {
-    c.bench_function("{{LIBNAME}}", |b| b.iter(|| {{LIBNAME}}::{{LIBNAME}}(black_box(42))));
+fn {name}_benchmark(c: &mut Criterion) {
+    c.bench_function("{name}", |b| b.iter(|| {name}::{name}(black_box(42))));
 }
 
 criterion_group!(
     benches,
-    {{LIBNAME}}_benchmark,
+    {name}_benchmark,
 );
 criterion_main!(benches);
