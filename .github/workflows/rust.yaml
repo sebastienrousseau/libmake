@@ -45,9 +45,10 @@ jobs:
           cargo install cross
           # Clean the build artifacts
           cargo clean --verbose
-          # Add the cargo bin directory to the PATH
-          echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
+
+      - name: Add cargo bin to PATH 🦀
+        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
 
       - name: Run Cargo Format 🦀
         id: run-check-format
@@ -173,9 +174,10 @@ jobs:
           cargo install cross
           # Clean the build artifacts
           cargo clean --verbose
-          # Add the cargo bin directory to the PATH
-          echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
+
+      - name: Add cargo bin to PATH 🦀
+        run: echo "$PATH:~/.cargo/bin" >> $GITHUB_ENV
 
       - name: Build targets 🏗
         id: build-targets
