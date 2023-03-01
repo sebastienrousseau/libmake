@@ -32,10 +32,10 @@ include = [
     "/tests/**",
 ]
 
-# [[bench]]
-# name = "benchmark"
-# harness = false
-# path = "benches/bench.rs"
+[[bench]]
+name = "benchmark"
+harness = false
+path = "benches/bench.rs"
 
 [profile.bench]
 debug = true
