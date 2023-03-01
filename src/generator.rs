@@ -81,7 +81,7 @@ fn create_template_folder() -> io::Result<()> {
         "CONTRIBUTING.tpl",
         "Cargo.tpl",
         "README.tpl",
-        "bench.tpl",
+        "criterion.ion.tpl",
         "build.tpl",
         "example.tpl",
         "gitignore.tpl",
@@ -208,7 +208,12 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     create_directory(&tests_directory)?;
 
     // Copying the template files to the new library directory
-    copy_and_replace_template("bench.tpl", "benches/bench.rs", &project_directory, &params)?;
+    copy_and_replace_template(
+        "criterion.tpl",
+        "benches/criterion.rs",
+        &project_directory,
+        &params,
+    )?;
     copy_and_replace_template("build.tpl", "build.rs", &project_directory, &params)?;
     copy_and_replace_template("Cargo.tpl", "Cargo.toml", &project_directory, &params)?;
     copy_and_replace_template(

@@ -119,7 +119,7 @@ To use `LibMake` library in your project, add the following to your
 
 ```toml
 [dependencies]
-libmake = "0.1.0"
+libmake = "0.1.1"
 ```
 
 Add the following to your `main.rs` file:
@@ -165,7 +165,7 @@ The CSV file contains the following header columns:
 - `readme` - The README file name (e.g. `README.md`)
 - `repository` - The repository of the library (e.g. `https://github.com/mylibrary/mylibrary`)
 - `rustversion` - The Rust version of the library (e.g. `1.56.0`)
-- `version` - The version of the library (e.g. `0.1.0`)
+- `version` - The version of the library (e.g. `0.1.1`)
 - `website` - The website of the author of the library (e.g. `https://johndoe.com`)
 
 Then you need to create a row in your CSV file with the values for each
@@ -247,6 +247,6 @@ this project.
 [codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/cmn?style=for-the-badge&token=DMNW4DN0LO 'Codecov'
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.0-orange.svg?style=for-the-badge 'Lib.rs Badge'
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.1-orange.svg?style=for-the-badge 'Lib.rs Badge'
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'
