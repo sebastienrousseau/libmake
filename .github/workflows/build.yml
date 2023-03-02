@@ -272,14 +272,17 @@ jobs:
 
       - name: Create Release 🚀
         id: create-release
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
-          body_path: ${{ github.workspace }}/CHANGELOG.md
+          body: |
+            $(cat ${{ github.workspace }}/CHANGELOG.md)
+
+            ###### Uploaded Artifacts
+            $(for filename in target/package/*.tar.gz; do echo "* [$filename]($filename)"; done)
           draft: true
           prerelease: false
 
@@ -289,11 +292,11 @@ jobs:
       #     name: release-upload-url
       #     path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
 
-      - name: Download release upload URL artifact 📦
-        uses: actions/download-artifact@v2
-        with:
-          name: ${{ matrix.target }}.tar.gz
-          path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
+      # - name: Download release upload URL artifact 📦
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: ${{ matrix.target }}.tar.gz
+      #     path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
 
 
   coverage:
