@@ -21,9 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
+        id: checkout
         uses: actions/checkout@v3
 
       - name: Install stable toolchain
+        id: toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -31,6 +33,7 @@ jobs:
           override: true
 
       - name: Cache dependencies
+        id: cache
         uses: actions/cache@v2
         with:
           path: ~/.cargo
@@ -38,6 +41,7 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - name: Run cargo check
+        id: run-check
         uses: actions-rs/cargo@v1
         with:
           command: check
@@ -54,9 +58,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources 🛎️
+        id: checkout
         uses: actions/checkout@v2
 
       - name: Install stable toolchain 🦀
+        id: toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -64,6 +70,7 @@ jobs:
           override: true
 
       - name: Cache dependencies 📦
+        id: cache
         uses: actions/cache@v2
         with:
           path: ~/.cargo
@@ -71,6 +78,7 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - name: Install cargo-hack 🦀
+        id: install-cargo-hack
         uses: taiki-e/install-action@cargo-hack
 
       - name: Run Cargo Test 🦀
@@ -107,8 +115,8 @@ jobs:
           - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                             ✅ Tested
 
           # Windows targets 🪟
-          # - i686-pc-windows-msvc # 32-bit Windows                                               ❌ Tested
-          # - x86_64-pc-windows-msvc # 64-bit Windows                                             ❌ Tested
+          - i686-pc-windows-msvc # 32-bit Windows                                               ❌ Tested
+          - x86_64-pc-windows-msvc # 64-bit Windows                                             ❌ Tested
 
         include:
           # Linux targets 🐧
@@ -161,25 +169,29 @@ jobs:
             cross: true
 
           # Windows targets 🪟
-          # - target: i686-pc-windows-msvc # 32-bit Windows
-          # os: windows-latest
-          # cross: true
-          # - target: x86_64-pc-windows-msvc # 64-bit Windows
-          #   os: windows-latest
-          #   cross: true
+          - target: i686-pc-windows-msvc # 32-bit Windows
+            os: windows-latest
+            cross: true
+          - target: x86_64-pc-windows-msvc # 64-bit Windows
+            os: windows-latest
+            cross: true
+
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout sources 📥
+        id: checkout
         uses: actions/checkout@v2
 
       - name: Install stable toolchain
+        id: install-toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
       - name: Cache dependencies 📦
+        id: cache-dependencies
         uses: actions/cache@v2
         with:
           path: ~/.cargo
@@ -187,6 +199,7 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - name: Install target 🦀
+        id: install-target
         run: rustup target add ${{ matrix.target }}
 
       - name: Update version number 🧮
@@ -218,13 +231,13 @@ jobs:
 
       - name: Run Cargo Format 🦀
         id: run-check-format
-        if: github.ref == !github.event.check_run.conclusion
+        # if: github.ref == !github.event.check_run.conclusion
         run: |
           cargo check --all --all-features --workspace --verbose
 
       - name: Run Clippy 🦀
         id: run-check-clippy
-        if: github.ref == !github.event.check_run.conclusion
+        # if: github.ref == !github.event.check_run.conclusion
         run: |
           cargo clippy --all-targets --all-features --workspace -- -D warnings
 
@@ -234,11 +247,6 @@ jobs:
           CARGO_HOME: ${{ runner.workspace }}/.cargo
         working-directory: .
 
-      - name: Upload artifact 📤
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.target }}
-          path: target/package/*.crate
 
       # - name: Generate Changelog 📜
       #   id: generate-changelog
@@ -267,6 +275,14 @@ jobs:
           # body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
+          asset_paths: ${{ steps.upload-artifact.outputs.artifact_paths }}
+
+      - name: Upload artifact 📤
+        id: upload-artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.target }}
+          path: target/package/*.crate
 
   coverage:
     name: Coverage
