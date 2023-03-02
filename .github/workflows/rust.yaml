@@ -39,11 +39,10 @@ jobs:
         shell: /bin/bash -e {0}
 
       - name: Install Cross 🦀
-        id: run-install-cross
+        id: install-cross
         run: |
-          # Install cross
-          export PATH=$PATH:~/.cargo/bin
-          cargo install cross
+          # Install cross as a cargo plugin
+          cargo install cargo-cross
           # Clean the build artifacts
           cargo clean --verbose
         shell: /bin/bash -e {0}
