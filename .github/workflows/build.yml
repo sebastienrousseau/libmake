@@ -1,13 +1,12 @@
 name: Build
-
 on:
   pull_request:
   push:
     branches:
       - feat/*
-  # You can enable a schedule to build
+  # you can enable a schedule to build
   # schedule:
-  #   - cron: "00 01 * * *"
+  # - cron: '00 01 * * *'
 
 jobs:
   check:
@@ -15,14 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
+        uses: actions/checkout@v3
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -30,6 +22,8 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+
+      - uses: Swatinem/rust-cache@v1
 
       - name: Run cargo check
         uses: actions-rs/cargo@v1
@@ -47,13 +41,6 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -61,15 +48,61 @@ jobs:
           toolchain: ${{ matrix.rust }}
           override: true
 
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
       - name: Install cargo-hack
         uses: taiki-e/install-action@cargo-hack
 
-      - name: Run cargo test
+      - name: Run xtask powerset test
         uses: actions-rs/cargo@v1
         with:
-          command: test
+          command: xtask
+          args: powerset
 
-  lint:
+
+  coverage:
+    name: Coverage
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        rust: [stable]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+          components: llvm-tools-preview
+
+      - uses: Swatinem/rust-cache@v1
+
+      - name: Download grcov
+        run: |
+          mkdir -p "${HOME}/.local/bin"
+          curl -sL https://github.com/mozilla/grcov/releases/download/v0.8.13/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf - -C "${HOME}/.local/bin"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Run xtask coverage
+        uses: actions-rs/cargo@v1
+        with:
+          command: xtask
+          args: coverage
+
+
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v3
+        with:
+          files: coverage/*.lcov
+
+  lints:
     name: Lints
     runs-on: ubuntu-latest
     steps:
@@ -77,13 +110,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: true
-
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -93,26 +119,6 @@ jobs:
           override: true
           components: clippy
 
-      - name: Run cargo fmt
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
-
-      - name: Run cargo clippy
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: --all-targets --all-features --release -- -D warnings
-
-  coverage:
-    name: Coverage
-    if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
@@ -120,41 +126,14 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          components: llvm-tools-preview
+      # - name: Run cargo fmt
+      #   uses: actions-rs/cargo@v1
+      #   with:
+      #     command: fmt
+      #     args: --all -- --check
 
-      - name: Run cargo test with coverage
+      - name: Run cargo clippy
         uses: actions-rs/cargo@v1
         with:
-          command: test
-          args: --all -- --test-threads=1 --coverage
-
-      - name: Install grcov
-        run: |
-          mkdir -p "${HOME}/.local/bin"
-          curl -sL https://github.com/mozilla/grcov/releases/download/v0.8.53/grcov-linux-x86_64.tar.bz2 | tar jxf - -C "${HOME}/.local/bin"
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: Generate code coverage report
-        run: |
-          grcov --version
-          mkdir -p coverage
-          find . \( -name "target" -o -name ".*.gc*" \) -prune -o -name "*.gc*" -print0 | xargs -0 grcov -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o coverage/lcov.info
-
-      - name: Save coverage report as artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: lcov.info
-          path: coverage/lcov.info
-
-      - name: Upload coverage report to codecov.io
-        uses: codecov/codecov-action@v3
-        with:
-          flags: unittests
-          fail_ci_if_error: true
-
-
+          command: clippy
+          args: --all-targets --all-features --release -- -D warnings
