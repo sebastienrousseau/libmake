@@ -9,213 +9,351 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-project:
-    name: Build project 🛠️
-    runs-on: ubuntu-latest
+  publish-crate:
+    name: Publish Crate
+    runs-on: ubuntu-20.04
     steps:
-      - name: Cache Rust dependencies
-        uses: actions/cache@v2
-        with:
-          path: "~/.cargo"
-          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-rust-
+    - name: Clone
+      uses: actions/checkout@v2
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.rustup
+          target
+        key: ${{ runner.os }}-stable
+    - name: Setup
+      run: |
+        rustup install stable
+    - name: Build
+      run: cargo build --verbose
+    - name: Run tests
+      run: cargo test
+    - name: Publish
+      run: cargo publish
+      env:
+        CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
-      - name: Checkout repository 🛎️
-        id: run-checkout-repository
-        uses: actions/checkout@v3
-        with: { submodules: true }
-
-      - name: Installing Rust 🦀
-        id: run-install-rust
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        shell: /bin/bash -e {0}
-
-      - name: Update version number 🧮
-        id: run-update-version
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-        shell: /bin/bash -e {0}
-
-      - name: Install Cross 🦀
-        id: install-cross
-        run: |
-          # Install cross as a cargo plugin
-          cargo install cargo-cross
-          # Clean the build artifacts
-          cargo clean --verbose
-        shell: /bin/bash -e {0}
-
-      - name: Run Cargo Format 🦀
-        id: run-check-format
-        run: |
-          cargo check --all --all-features --release --verbose
-
-      - name: Run Clippy 🦀
-        id: run-check-clippy
-        run: |
-          cargo clippy --all-targets --all-features --release -- -D warnings
-
-      - name: Run Cargo Doc 🦀
-        id: run-check-doc
-        run: |
-          cargo doc --color always --no-deps --all-features --release --verbose
-
-      - name: Run Cargo Test 🦀
-        id: run-check-test
-        run: |
-          cargo test --all-targets --workspace --all-features
-
-      # - name: Run Cargo Code Coverage 🦀
-      #   id: run-check-code-coverage
-      #   run: |
-      #     # Install tarpaulin
-      #     cargo install cargo-tarpaulin
-      #     # Run tarpaulin and generate the code coverage report
-      #     cargo tarpaulin --all --all-features --workspace --out Xml
-
-      # - name: Upload to codecov.io 📊
-      #   id: run-upload-codecov
-      #   uses: codecov/codecov-action@v3
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     fail_ci_if_error: false
-      #     verbose: true
-
-  build-targets:
-    name: Build targets 🛠️
-    runs-on: ubuntu-latest
-    needs: build-project
+  publish-to-github:
+    name: Publish to Github
+    runs-on: ${{matrix.os}}
     strategy:
-      fail-fast: false
       matrix:
-        target:
-          # Linux targets 🐧
-          - aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture                ✅ Tested
-          - aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture               ✅ Tested
-          - arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)                    ✅ Tested
-          - armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)     ✅ Tested
-          - i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)                    ✅ Tested
-          - i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)                     ✅ Tested
-          - x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)               ✅ Tested
-          - x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)                ✅ Tested
-
-          # macOS targets 🍎
-          - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                             ✅ Tested
-
         include:
-          # Linux targets 🐧
-          - target: aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-          - target: aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-          - target: arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-          - target: armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-          - target: i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-          - target: i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-          - target: x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-          - target: x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)
-            os: ubuntu-latest
-            cross: true
-            needs: build-linux
-
-          # macOS targets 🍎
-          - target: x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)
-            os: macos-latest
-            cross: true
-            needs: build-linux
-
+        - build: linux
+          os: ubuntu-latest
+          rust: stable
+          target: x86_64-unknown-linux-musl
+          cross: false
+        - build: arm-v7
+          os: ubuntu-latest
+          rust: stable
+          target: armv7-unknown-linux-gnueabihf
+          linker: gcc-arm-linux-gnueabihf
+          cross: true
+        - build: aarch64
+          os: ubuntu-latest
+          rust: stable
+          target: aarch64-unknown-linux-gnu
+          linker: gcc-aarch64-linux-gnu
+          cross: true
+        - build: macos
+          os: macos-latest
+          rust: stable
+          target: x86_64-apple-darwin
+          cross: false
     steps:
-      - name: Checkout repository 🛎️
-        id: checkout-repository
-        uses: actions/checkout@v3
-        with: { submodules: true }
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
 
-      - name: Installing Rust 🦀
-        id: install-rust
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        shell: /bin/bash -e {0}
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.rustup
+          target
+        key: ${{ runner.os }}-${{ matrix.rust }}
 
-      - name: Update version number 🧮
-        id: update-version
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-        shell: /bin/bash -e {0}
+    - name: Install Linker
+      if: matrix.cross
+      run: |
+        sudo apt update
+        sudo apt install ${{ matrix.linker }}
+        cat .cargo/config.github >> .cargo/config
 
-      # - name: Install Cross 🦀
-      #   id: run-install-cross
-      #   run: |
-      #     # Install cross
-      #     cargo install cross
-      #     # Clean the build artifacts
-      #     cargo clean --verbose
-      #   shell: /bin/bash -e {0}
+    - name: Install Rust
+      run: |
+        rustup install ${{ matrix.rust }}
+        rustup target add ${{ matrix.target }}
+        rustup show
 
-      - name: Build targets 🏗
-        id: build-targets
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: ${{ matrix.cross }}
-          command: cross
-          args: --verbose --release --target ${{ matrix.target }}
+    - name: Build
+      run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Package the binary 📦
-        id: package-binary
-        run: |
-          mkdir -p target/package
-          tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+    - name: Package Artifacts
+      run: |
+        src=$(pwd)
+        stage=
+        case $RUNNER_OS in
+            Linux)
+                stage=$(mktemp -d)
+                ;;
+            macOS)
+                stage=$(mktemp -d -t tmp)
+                ;;
+        esac
 
-      - name: Create Release 🚀
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.VERSION }}
-          release_name: LibMake 🦀 v${{ env.VERSION }}
-          body_path: ${{ github.workspace }}/README.md
-          draft: true
-          prerelease: false
+        cp target/${{ matrix.target }}/release/LibMake $stage/
+        cd $stage
 
-      - name: Deploy binary 🚀
-        id: deploy-binary
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.target }}.tar.gz
-          path: target/package/${{ matrix.target }}.tar.gz
+        RELEASE_VERSION=${GITHUB_REF#refs/tags/}
+        ASSET_NAME="LibMake-$RELEASE_VERSION-${{ matrix.target }}.tar.gz"
+        ASSET_PATH="$src/$ASSET_NAME"
+        CHECKSUM_PATH="$ASSET_PATH.sha256"
 
-      - name: Upload Release Asset 📦
-        id: upload_release_asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz
-          asset_name: ${{ matrix.target }}.tar.gz
-          asset_content_type: application/gzip
+        echo "ASSET_PATH=$ASSET_PATH" >> $GITHUB_ENV
+        echo "CHECKSUM_PATH=$CHECKSUM_PATH" >> $GITHUB_ENV
+
+        tar czf $ASSET_PATH *
+
+        cd $src
+
+        case $RUNNER_OS in
+            Linux)
+                sha256sum $ASSET_NAME > $CHECKSUM_PATH
+                ;;
+            macOS)
+                shasum -a 256 $ASSET_NAME > $CHECKSUM_PATH
+                ;;
+        esac
+
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          ${{ env.ASSET_PATH }}
+          ${{ env.CHECKSUM_PATH }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# env:
+#   CARGO_TERM_COLOR: always
+
+# jobs:
+#   build-project:
+#     name: Build project 🛠️
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Cache Rust dependencies
+#         uses: actions/cache@v2
+#         with:
+#           path: "~/.cargo"
+#           key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
+#           restore-keys: ${{ runner.os }}-rust-
+
+#       - name: Checkout repository 🛎️
+#         id: run-checkout-repository
+#         uses: actions/checkout@v3
+#         with: { submodules: true }
+
+#       - name: Installing Rust 🦀
+#         id: run-install-rust
+#         run: |
+#           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+#         shell: /bin/bash -e {0}
+
+#       - name: Update version number 🧮
+#         id: run-update-version
+#         run: |
+#           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+#           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+#         shell: /bin/bash -e {0}
+
+#       - name: Install Cross 🦀
+#         id: run-install-cross
+#         run: |
+#           # Install cross
+#           cargo install cross
+#           # Clean the build artifacts
+#           cargo clean --verbose
+#         shell: /bin/bash -e {0}
+
+#       - name: Run Cargo Format 🦀
+#         id: run-check-format
+#         run: |
+#           cargo check --all --all-features --release --verbose
+
+#       - name: Run Clippy 🦀
+#         id: run-check-clippy
+#         run: |
+#           cargo clippy --all-targets --all-features --release -- -D warnings
+
+#       - name: Run Cargo Doc 🦀
+#         id: run-check-doc
+#         run: |
+#           cargo doc --color always --no-deps --all-features --release --verbose
+
+#       - name: Run Cargo Test 🦀
+#         id: run-check-test
+#         run: |
+#           cargo test --all-targets --workspace --all-features
+
+#       # - name: Run Cargo Code Coverage 🦀
+#       #   id: run-check-code-coverage
+#       #   run: |
+#       #     # Install tarpaulin
+#       #     cargo install cargo-tarpaulin
+#       #     # Run tarpaulin and generate the code coverage report
+#       #     cargo tarpaulin --all --all-features --workspace --out Xml
+
+#       # - name: Upload to codecov.io 📊
+#       #   id: run-upload-codecov
+#       #   uses: codecov/codecov-action@v3
+#       #   with:
+#       #     token: ${{ secrets.CODECOV_TOKEN }}
+#       #     fail_ci_if_error: false
+#       #     verbose: true
+
+#   build-targets:
+#     name: Build targets 🛠️
+#     runs-on: ubuntu-latest
+#     needs: build-project
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         target:
+#           # Linux targets 🐧
+#           - aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture                ✅ Tested
+#           - aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture               ✅ Tested
+#           - arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)                    ✅ Tested
+#           - armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)     ✅ Tested
+#           - i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)                    ✅ Tested
+#           - i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)                     ✅ Tested
+#           - x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)               ✅ Tested
+#           - x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)                ✅ Tested
+
+#           # macOS targets 🍎
+#           - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                             ✅ Tested
+
+#         include:
+#           # Linux targets 🐧
+#           - target: aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+#           - target: aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+#           - target: arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+#           - target: armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+#           - target: i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+#           - target: i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+#           - target: x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+#           - target: x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)
+#             os: ubuntu-latest
+#             cross: true
+#             needs: build-linux
+
+#           # macOS targets 🍎
+#           - target: x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)
+#             os: macos-latest
+#             cross: true
+#             needs: build-linux
+
+#     steps:
+#       - name: Checkout repository 🛎️
+#         id: checkout-repository
+#         uses: actions/checkout@v3
+#         with: { submodules: true }
+
+#       - name: Installing Rust 🦀
+#         id: install-rust
+#         run: |
+#           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+#         shell: /bin/bash -e {0}
+
+#       - name: Update version number 🧮
+#         id: update-version
+#         run: |
+#           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+#           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+#         shell: /bin/bash -e {0}
+
+#       - name: Install Cross 🦀
+#         id: run-install-cross
+#         run: |
+#           # Install cross
+#           cargo install cross
+#           # Clean the build artifacts
+#           cargo clean --verbose
+#         shell: /bin/bash -e {0}
+
+#       - name: Build targets 🏗
+#         id: build-targets
+#         uses: actions-rs/cargo@v1
+#         with:
+#           use-cross: ${{ matrix.cross }}
+#           command: cross
+#           args: --verbose --release --target ${{ matrix.target }}
+
+#       - name: Package the binary 📦
+#         id: package-binary
+#         run: |
+#           mkdir -p target/package
+#           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+
+#       - name: Create Release 🚀
+#         id: create_release
+#         uses: actions/create-release@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           tag_name: v${{ env.VERSION }}
+#           release_name: LibMake 🦀 v${{ env.VERSION }}
+#           body_path: ${{ github.workspace }}/README.md
+#           draft: true
+#           prerelease: false
+
+#       - name: Deploy binary 🚀
+#         id: deploy-binary
+#         uses: actions/upload-artifact@v3
+#         with:
+#           name: ${{ matrix.target }}.tar.gz
+#           path: target/package/${{ matrix.target }}.tar.gz
+
+#       - name: Upload Release Asset 📦
+#         id: upload_release_asset
+#         uses: actions/upload-release-asset@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           upload_url: ${{ steps.create_release.outputs.upload_url }}
+#           asset_path: ${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz
+#           asset_name: ${{ matrix.target }}.tar.gz
+#           asset_content_type: application/gzip
 
   # deploy-release:
   #   runs-on: ubuntu-latest
