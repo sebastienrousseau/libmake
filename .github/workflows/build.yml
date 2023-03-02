@@ -272,16 +272,17 @@ jobs:
 
       - name: Create Release 🚀
         id: create-release
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
-          body: |
+          body_path: |
             $(cat ${{ github.workspace }}/CHANGELOG.md)
 
-            ###### Uploaded Artifacts
+            ## Uploaded Artifacts 🎁
             $(for filename in target/package/*.tar.gz; do echo "* [$filename]($filename)"; done)
           draft: true
           prerelease: false
