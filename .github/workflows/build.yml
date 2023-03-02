@@ -137,10 +137,23 @@ jobs:
         run: cargo build --release --target ${{ matrix.target }}
 
       - name: Package library
-        run: zip -j ${{ matrix.target }}.zip target/${{ matrix.target }}/release/lib*.a
-        working-directory: .
+        run: cargo package --allow-dirty
         env:
-          TARGET: ${{ matrix.target }}
+          CARGO_HOME: ${{ runner.workspace }}/.cargo
+        working-directory: .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.target }}
+          path: target/package/*.crate
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: |
+            target/package/*.crate
 
   coverage:
     name: Coverage
