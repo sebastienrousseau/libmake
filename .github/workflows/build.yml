@@ -133,6 +133,9 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
+      - name: Install target
+        run: rustup target add ${{ matrix.target }}
+
       - name: Build library
         run: cargo build --release --target ${{ matrix.target }}
 
