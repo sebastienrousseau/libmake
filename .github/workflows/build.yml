@@ -18,7 +18,6 @@ jobs:
           - rust: stable
             target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-        rust: [stable]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -52,7 +51,6 @@ jobs:
           - rust: stable
             target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-        rust: [stable]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -216,5 +214,5 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all-targets --all-features --release -- -D warnings
+          args: --all-targets --all-features -- -D warnings
 
