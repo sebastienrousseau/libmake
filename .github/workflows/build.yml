@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - feat/*
   # you can enable a schedule to build
   # schedule:
   # - cron: '00 01 * * *'
