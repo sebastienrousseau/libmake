@@ -117,6 +117,12 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - name: Install dependencies
+        if: startsWith(matrix.target, 'arm')
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libbz2-dev gcc-arm-linux-gnueabihf
+
       - name: Checkout sources
         uses: actions/checkout@v2
 
@@ -135,6 +141,18 @@ jobs:
 
       - name: Install target
         run: rustup target add ${{ matrix.target }}
+
+      - name: Install aarch64 toolchain
+        run: rustup target add aarch64-unknown-linux-gnu
+        if: matrix.target == 'aarch64-unknown-linux-gnu' # Only for the aarch64 target
+
+      - name: Install GCC for ARM64
+        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+        if: matrix.target == 'aarch64-unknown-linux-gnu' # Only for the aarch64 target
+
+      - name: Install libbz2-dev
+        run: sudo apt-get install libbz2-dev
+        if: matrix.target == 'armv7-unknown-linux-gnueabihf' # Only for the armv7 target
 
       - name: Build library
         run: cargo build --release --target ${{ matrix.target }}
