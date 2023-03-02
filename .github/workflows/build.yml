@@ -38,10 +38,49 @@ jobs:
   test:
     name: Test Suite
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        target:
+          # Linux targets 🐧
+          - aarch64-unknown-linux-gnu
+          - aarch64-unknown-linux-musl
+          - arm-unknown-linux-gnueabi
+          - armv7-unknown-linux-gnueabihf
+          - i686-unknown-linux-gnu
+          - i686-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+          # macOS targets 🍎
+          - x86_64-apple-darwin
+          - aarch64-apple-darwin
+          - armv7-apple-ios
+          - armv7s-apple-ios
+          - aarch64-apple-ios
+          - x86_64-apple-ios
+          - aarch64-apple-tvos
+          - x86_64-apple-tvos
+          # Windows targets 🖥️
+          - i686-pc-windows-msvc # 32-bit Windows
+          - x86_64-pc-windows-msvc # 64-bit Windows
+          - i686-pc-windows-gnu # 32-bit Windows
+          - x86_64-pc-windows-gnu # 64-bit Windows
+          #FreeBSD targets 🐬
+          - x86_64-unknown-freebsd
+          # Android targets 🤖
+          - armv7-linux-androideabi
+          - aarch64-linux-android
+          - i686-linux-android
+          - x86_64-linux-android
+
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+
         rust: [stable]
+
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
@@ -73,9 +112,17 @@ jobs:
   coverage:
     name: Coverage
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        target:
+          # Linux targets 🐧
+          - x86_64-unknown-linux-gnu
+
+        os:
+          - ubuntu-latest
+
         rust: [stable]
+
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout sources

@@ -359,6 +359,7 @@ pub fn generate_files_from_csv(csv_path: &str) -> io::Result<()> {
     let mut reader = csv::Reader::from_path(csv_path)?;
     for result in reader.records() {
         let record = result?;
+        println!("{:?}", record);
         let params = FileGenerationParams {
             author: record.get(0).map(|s| s.to_string()),
             build: record.get(1).map(|s| s.to_string()),
