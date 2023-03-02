@@ -7,7 +7,7 @@ mod tests {
 
     #[test]
     fn test_get_csv_field_from_csv() {
-        let file_path = "tests/data/mylibrary.csv";
+        let file_path = "./data/mylibrary.csv";
         let field_author_index = 0;
         let value = get_csv_field(Some(file_path), field_author_index);
         assert_eq!(value, Some(vec!["Me".to_string()]));
@@ -15,7 +15,7 @@ mod tests {
 
     #[test]
     fn test_get_csv_field_empty() {
-        let file_path = "tests/data/mylibrary.csv";
+        let file_path = "./data/mylibrary.csv";
         let field_author_index = 20;
         let value = get_csv_field(Some(file_path), field_author_index);
         assert_eq!(value, Some(vec!["".to_string()]));
@@ -23,7 +23,7 @@ mod tests {
 
     #[test]
     fn test_get_csv_field_nonexistent() {
-        let file_path = "tests/data/mylibrary.csv";
+        let file_path = "./data/mylibrary.csv";
         let field_author_index = 0;
         let value = get_csv_field(Some(file_path), field_author_index);
         assert_eq!(value, Some(vec!["Me".to_string()]));
@@ -32,7 +32,7 @@ mod tests {
     #[test]
     fn test_get_csv_field() {
         // Test with valid field index
-        let file_path = "tests/data/mylibrary.csv";
+        let file_path = "./data/mylibrary.csv";
         let field_index = 0;
         let expected_value = Some(vec!["Me".to_string()]);
         let actual_value = get_csv_field(Some(file_path), field_index);
@@ -47,10 +47,10 @@ mod tests {
 
     #[test]
     fn test_get_csv_fields() {
-        let file_path = "tests/data/mylibrary.csv";
+        let file_path = "./data/mylibrary.csv";
 
         // Test the function with various input values
-        assert_eq!(file_path, "tests/data/mylibrary.csv");
+        assert_eq!(file_path, "./data/mylibrary.csv");
         assert_eq!(
             get_csv_field(Some(file_path), 0),
             Some(vec!["Me".to_string()])
@@ -121,18 +121,19 @@ mod tests {
         );
     }
 
-    // #[test]
-    // fn test_get_json_field_existing() {
-    //     let file_path = "tests/data/mylibrary.json";
-    //     let field_name = "repository";
-    //     let expected_value = "\"https://github.com/test/test\"".to_string();
-    //     let actual_value = get_json_field(Some(file_path), field_name);
-    //     assert_eq!(expected_value, actual_value);
-    // }
+    #[test]
+    fn test_get_json_field_existing() {
+        let file_path = "./data/mylibrary.json";
+        let field_name = "repository";
+        let expected_value =
+            "\"https://github.com/test/test\"".to_string();
+        let actual_value = get_json_field(Some(file_path), field_name);
+        assert_eq!(expected_value, actual_value);
+    }
 
     #[test]
     fn test_get_json_field_nonexistent() {
-        let file_path = "tests/data/mylibrary.json";
+        let file_path = "./data/mylibrary.json";
         let field_name = "null";
         let expected_value = "null".to_string();
         let actual_value = get_json_field(Some(file_path), field_name);
@@ -141,7 +142,7 @@ mod tests {
 
     #[test]
     fn test_get_yaml_field_existing() {
-        let file_path = "tests/data/mylibrary.yaml";
+        let file_path = "./data/mylibrary.yaml";
         let field_name = "description";
         let expected_value = "A library for doing things".to_string();
         let actual_value = get_yaml_field(Some(file_path), field_name);
@@ -150,7 +151,7 @@ mod tests {
 
     #[test]
     fn test_get_yaml_field_nonexistent() {
-        let file_path = "tests/data/mylibrary.yaml";
+        let file_path = "./data/mylibrary.yaml";
         let field_name = "null";
         let expected_value = "null".to_string();
         let actual_value = get_yaml_field(Some(file_path), field_name);

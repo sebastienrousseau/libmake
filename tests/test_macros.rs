@@ -29,16 +29,16 @@ mod tests {
 
     #[test]
     fn test_generate_files_from_csv() {
-        assert_generate_files_from_csv!("./tests/data/mylibrary.csv");
+        assert_generate_files_from_csv!("./data/mylibrary.csv");
     }
 
     #[test]
     fn test_generate_via_json() {
-        assert_generate_via_json!("./tests/data/mylibrary.json");
+        assert_generate_via_json!("./data/mylibrary.json");
     }
 
     #[test]
     fn test_generate_via_yaml() {
-        assert_generate_via_yaml!("./tests/data/mylibrary.yaml");
+        assert_generate_via_yaml!("./data/mylibrary.yaml");
     }
 }
