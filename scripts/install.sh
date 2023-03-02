@@ -28,7 +28,8 @@ if [ ! -d "$BIN_DIR" ]; then
     exit 1
 fi
 
-LIBMAKE_VERSION=$(curl -s https://api.github.com/repos/sebastienrousseau/libmake/releases/latest | grep tag_name | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+")
+# LIBMAKE_VERSION=$(curl -s https://api.github.com/repos/sebastienrousseau/libmake/releases/latest | grep tag_name | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+")
+LIBMAKE_VERSION=v0.1.1
 DOWNLOAD_PATH="https://github.com/sebastienrousseau/libmake/releases/download/$LIBMAKE_VERSION/libmake-$LIBMAKE_VERSION-$TARGET.tar.gz"
 
 curl -s -L $DOWNLOAD_PATH | tar -xz -C $BIN_DIR -f -
