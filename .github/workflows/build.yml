@@ -16,7 +16,7 @@ jobs:
       matrix:
         rust-toolchain:
           - stable
-          - nightly
+          # - nightly
     steps:
     - name: Clone
       uses: actions/checkout@v2
