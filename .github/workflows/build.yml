@@ -82,7 +82,7 @@ jobs:
     name: Build and Package
     strategy:
       fail-fast: false
-      matrix: &matrix
+      matrix:
         include:
         # Linux targets 🐧
         - os: ubuntu-latest
