@@ -282,9 +282,6 @@ jobs:
           prerelease: false
           body: ${{ env.CHANGELOG }}
           body_path: ${{ env.CHANGELOG_FILE }}
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.repository }}
-          commitish: ${{ github.sha }}
           assets: ${{ steps.upload-artifact.outputs.artifact_paths }}
 
   coverage:
