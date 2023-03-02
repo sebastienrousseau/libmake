@@ -216,45 +216,21 @@ jobs:
           - target: aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
           - target: aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
           - target: arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
           - target: armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
           - target: i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
           - target: i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
           # - target: mips-unknown-linux-gnu # MIPS Linux (kernel 2.6.32+, glibc 2.11+)
           #   os: ubuntu-latest
           #   cross: true
@@ -276,26 +252,14 @@ jobs:
           - target: x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
           - target: x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)
             os: ubuntu-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
 
           # macOS targets 🍎
           - target: x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)
             os: macos-latest
             cross: true
-            cache:
-              name: cache-cargo
-              path: ~/.cargo
-              key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
 
           # Windows targets 🪟
           # - target: i686-pc-windows-msvc # 32-bit Windows
@@ -378,6 +342,14 @@ jobs:
           echo "* [${{ matrix.target }}.tar.gz]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/${{ matrix.target }}.tar.gz)" >> ${{ github.workspace }}/CHANGELOG.md
         # echo "name=artifact_paths::target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
 
+      - name: Cache package directory
+        id: cache-package
+        uses: actions/cache@v2
+        with:
+          path: target/package
+          key: package-${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: package-${{ runner.os }}-${{ matrix.target }}-
+
       - name: Deploy binary 🚀
         id: deploy-binary
         uses: actions/upload-artifact@v3
@@ -386,18 +358,42 @@ jobs:
           path: target/package/${{ matrix.target }}.tar.gz
 
   release:
-    name: Release
+    name: Release 🚀
     needs: build
     runs-on: ubuntu-latest
-    env:
-      CARGO_HOME: ${{ runner.workspace }}/.cargo
     steps:
-      - name: Restore cached targets 🎯
+      - name: Checkout 🛠️
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain 🛠️
+        id: install-toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache dependencies 📦
+        id: cache-dependencies
         uses: actions/cache@v2
         with:
-          path: ${{ env.CARGO_HOME }}
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-${{ matrix.target }}
-          restore-keys: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}-
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Update version number 🧮
+        id: update-version
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+        run: |
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        shell: /bin/bash -e {0}
+
+      - name: Restore package directory
+        uses: actions/cache@v2
+        with:
+          path: target/package
+          key: package-${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
+
       - name: Generate Changelog 📜
         id: generate-changelog
         run: |
@@ -441,7 +437,7 @@ jobs:
         with:
           upload_url: ${{ steps.create-release.outputs.upload_url }}
           asset_path: ${{ github.workspace }}/target/package/*.tar.gz
-          asset_name: ${{ matrix.target }}.tar.gz
+          asset_name: ${{ github.workspace }}/target/package/*.tar.gz
           asset_content_type: application/gzip
 
       # - name: Create Release 🚀
