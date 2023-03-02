@@ -354,6 +354,32 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout 🛠️
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain 🛠️
+        id: install-toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache dependencies 📦
+        id: cache-dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Update version number 🧮
+        id: update-version
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+        run: |
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        shell: /bin/bash -e {0}
+
       - name: Generate Changelog 📜
         id: generate-changelog
         run: |
@@ -403,3 +429,42 @@ jobs:
       #     body_path: ${{ github.workspace }}/CHANGELOG.md
       #     draft: true
       #     prerelease: false
+
+  crate:
+    name: Crate.io
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛠️
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain 🛠️
+        id: install-toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache dependencies 📦
+        id: cache-dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Update version number 🧮
+        id: update-version
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+        run: |
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        shell: /bin/bash -e {0}
+
+      - name: Publish 🚀
+        id: publish
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: publish
+          args: --verbose --token ${{ secrets.CARGO_API_TOKEN }}
