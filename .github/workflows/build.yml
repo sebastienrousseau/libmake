@@ -231,44 +231,46 @@ jobs:
 
       - name: Run Cargo Format 🦀
         id: run-check-format
-        # if: github.ref == !github.event.check_run.conclusion
+        if: github.ref == !github.event.check_run.conclusion
         run: |
           cargo check --all --all-features --workspace --verbose
 
       - name: Run Clippy 🦀
         id: run-check-clippy
-        # if: github.ref == !github.event.check_run.conclusion
+        if: github.ref == !github.event.check_run.conclusion
         run: |
           cargo clippy --all-targets --all-features --workspace -- -D warnings
 
-      - name: Package library 📦
-        run: cargo package --allow-dirty
-        env:
-          CARGO_HOME: ${{ runner.workspace }}/.cargo
-        working-directory: .
+      - name: Package the binary 📦
+        id: package-binary
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p target/package
+          tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+          echo "::set-output name=artifact_paths::target/package/${{ matrix.target }}.tar.gz"
 
-
-      # - name: Generate Changelog 📜
-      #   id: generate-changelog
-      #   # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
-      #   run: |
-      #     # Append version information to CHANGELOG.md
-      #     echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
-      #     # Copy content of template file to CHANGELOG.md
-      #     cat TEMPLATE.md > ${{ github.workspace }}/CHANGELOG.md
-      #     # Append git log to CHANGELOG.md
-      #     echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
-      #     # Append empty line to CHANGELOG.md
-      #     echo "" >> ${{ github.workspace }}/CHANGELOG.md
-      #     # Append empty line to CHANGELOG.md
-      #     echo "" >> ${{ github.workspace }}/CHANGELOG.md
-
-      - name: Upload artifact 📤
-        id: upload-artifact
-        uses: actions/upload-artifact@v2
+      - name: Deploy binary 🚀
+        id: deploy-binary
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.target }}
-          path: target/package/*.crate
+          name: ${{ matrix.target }}.tar.gz
+          path: target/package/${{ matrix.target }}.tar.gz
+
+      - name: Generate Changelog 📜
+        id: generate-changelog
+        if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+        run: |
+          # Append version information to CHANGELOG.md
+          echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
+          # Copy content of template file to CHANGELOG.md
+          cat TEMPLATE.md > ${{ github.workspace }}/CHANGELOG.md
+          # Append git log to CHANGELOG.md
+          echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
+          # Append empty line to CHANGELOG.md
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
+          # Append empty line to CHANGELOG.md
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
       - name: Create Release 🚀
         id: create-release
@@ -282,10 +284,9 @@ jobs:
           prerelease: false
           body: ${{ env.CHANGELOG }}
           body_path: ${{ env.CHANGELOG_FILE }}
-          assets: ${{ steps.upload-artifact.outputs.artifact_paths }}
 
   coverage:
-    name: Coverage
+    name: Coverage 🧪
     strategy:
       fail-fast: false
       matrix:
@@ -296,9 +297,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
+        id: checkout
         uses: actions/checkout@v3
 
       - name: Install stable toolchain
+        id: install-toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
@@ -308,23 +311,27 @@ jobs:
       - uses: Swatinem/rust-cache@v1
 
       - name: Download grcov
+        id: download-grcov
         run: |
           mkdir -p "${HOME}/.local/bin"
           curl -sL https://github.com/mozilla/grcov/releases/download/v0.8.13/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf - -C "${HOME}/.local/bin"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+
       - name: Run xtask coverage
+        id: run-coverage
         uses: actions-rs/cargo@v1
         with:
           command: xtask
           args: coverage
 
       - name: Upload to codecov.io
+        id: upload-coverage
         uses: codecov/codecov-action@v3
         with:
           files: coverage/*.lcov
 
   lints:
-    name: Lints
+    name: Lints 🧰
     strategy:
       fail-fast: false
       matrix:
@@ -335,11 +342,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
+        id: checkout
         uses: actions/checkout@v2
         with:
           submodules: true
 
       - name: Install stable toolchain
+        id: install-toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
@@ -348,6 +357,7 @@ jobs:
           components: clippy
 
       - name: Cache dependencies
+        id: cache-dependencies
         uses: actions/cache@v2
         with:
           path: ~/.cargo
@@ -355,6 +365,7 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - name: Run cargo clippy
+        id: run-clippy
         uses: actions-rs/cargo@v1
         with:
           command: clippy
