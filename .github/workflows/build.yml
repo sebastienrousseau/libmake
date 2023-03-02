@@ -247,7 +247,7 @@ jobs:
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
-          echo "::set-output name=artifact_paths::target/package/${{ matrix.target }}.tar.gz"
+          echo "name=artifact_paths::target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_OUTPUT
 
       - name: Deploy binary 🚀
         id: deploy-binary
@@ -272,6 +272,7 @@ jobs:
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
+
       - name: Create Release 🚀
         id: create-release
         # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
@@ -281,10 +282,9 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
+          body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
-          body: ${{ env.CHANGELOG }}
-          body_path: ${{ env.CHANGELOG_FILE }}
 
   coverage:
     name: Coverage 🧪
