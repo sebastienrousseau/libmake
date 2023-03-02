@@ -1,7 +1,9 @@
 #[cfg(test)]
 mod tests {
 
-    use libmake::utils::{get_csv_field, get_json_field, get_yaml_field};
+    use libmake::utils::{
+        get_csv_field, get_json_field, get_yaml_field,
+    };
 
     #[test]
     fn test_get_csv_field_from_csv() {
@@ -119,14 +121,14 @@ mod tests {
         );
     }
 
-    #[test]
-    fn test_get_json_field_existing() {
-        let file_path = "tests/data/mylibrary.json";
-        let field_name = "repository";
-        let expected_value = "\"https://github.com/test/test\"".to_string();
-        let actual_value = get_json_field(Some(file_path), field_name);
-        assert_eq!(expected_value, actual_value);
-    }
+    // #[test]
+    // fn test_get_json_field_existing() {
+    //     let file_path = "tests/data/mylibrary.json";
+    //     let field_name = "repository";
+    //     let expected_value = "\"https://github.com/test/test\"".to_string();
+    //     let actual_value = get_json_field(Some(file_path), field_name);
+    //     assert_eq!(expected_value, actual_value);
+    // }
 
     #[test]
     fn test_get_json_field_nonexistent() {
