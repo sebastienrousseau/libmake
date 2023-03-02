@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-TAG=$(curl -s https://api.github.com/repos/sebastienrousseau/libmake/releases/latest | grep tag_name | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+")
+# TAG=$(curl -s https://api.github.com/repos/sebastienrousseau/libmake/releases/latest | grep tag_name | grep -Eo "v[0-9]+\.[0-9]+\.[0-9]+")
+TAG=v0.1.1
 
 get_sha() {
   local DOWNLOAD_PATH="https://github.com/sebastienrousseau/libmake/releases/download/$TAG/libmake-$TAG-$1.tar.gz.sha256"
