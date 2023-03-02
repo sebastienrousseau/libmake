@@ -43,7 +43,7 @@ jobs:
           command: check
 
   test:
-    name: Test Suite
+    name: Test Suite 🦀
     strategy:
       fail-fast: false
       matrix:
@@ -53,30 +53,31 @@ jobs:
             os: ubuntu-latest
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources
+      - name: Checkout sources 🛎️
         uses: actions/checkout@v2
 
-      - name: Install stable toolchain
+      - name: Install stable toolchain 🦀
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: ${{ matrix.rust }}
           override: true
 
-      - name: Cache dependencies
+      - name: Cache dependencies 📦
         uses: actions/cache@v2
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Install cargo-hack
+      - name: Install cargo-hack 🦀
         uses: taiki-e/install-action@cargo-hack
 
       - name: Run Cargo Test 🦀
         id: run-check-test
+        if: github.ref == 'refs/heads/main'
         run: |
-          cargo test --target ${{ matrix.target }} --workspace --all-features
+          cargo test --all-targets --workspace --all-features
 
   build:
     name: Build and Package
@@ -169,13 +170,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Install dependencies
-        if: startsWith(matrix.target, 'arm')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libbz2-dev gcc-arm-linux-gnueabihf
-
-      - name: Checkout sources
+      - name: Checkout sources 📥
         uses: actions/checkout@v2
 
       - name: Install stable toolchain
@@ -184,14 +179,14 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Cache dependencies
+      - name: Cache dependencies 📦
         uses: actions/cache@v2
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Install target
+      - name: Install target 🦀
         run: rustup target add ${{ matrix.target }}
 
       - name: Install Cross 🦀
@@ -205,27 +200,46 @@ jobs:
 
         shell: /bin/bash -e {0}
 
-      - name: Build library
-        run: cargo build --release --target ${{ matrix.target }}
+      - name: Build targets 🏗
+        id: build-targets
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --verbose --workspace --release --target ${{ matrix.target }}
 
-      - name: Package library
+      - name: Run Cargo Format 🦀
+        id: run-check-format
+        if: github.ref == !github.event.check_run.conclusion
+        run: |
+          cargo check --all --all-features --workspace --verbose
+
+      - name: Run Clippy 🦀
+        id: run-check-clippy
+        if: github.ref == !github.event.check_run.conclusion
+        run: |
+          cargo clippy --all-targets --all-features --workspace -- -D warnings
+
+      - name: Package library 📦
         run: cargo package --allow-dirty
         env:
           CARGO_HOME: ${{ runner.workspace }}/.cargo
         working-directory: .
 
-      - name: Upload artifact
+      - name: Upload artifact 📤
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.target }}
           path: target/package/*.crate
 
-      - name: Create release
+      - name: Create release 🚀
         uses: softprops/action-gh-release@v1
         with:
           draft: true
           files: |
             target/package/*.crate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   coverage:
     name: Coverage
