@@ -246,7 +246,7 @@ jobs:
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
-          echo "name=artifact_paths::target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_OUTPUT
+          echo "name=artifact_paths::target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
 
       - name: Deploy binary 🚀
         id: deploy-binary
@@ -257,6 +257,7 @@ jobs:
 
       - name: Generate Changelog 📜
         id: generate-changelog
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           # Append version information to CHANGELOG.md
           echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
@@ -271,18 +272,14 @@ jobs:
 
       - name: Create Release 🚀
         id: create-release
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
-          body: |
-            "$(cat ${{ github.workspace }}/CHANGELOG.md)
-
-            ## Uploaded Artifacts 📦
-            * ${{ steps.deploy-binary.outputs.artifact_paths }}"
-
+          body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
 
@@ -290,14 +287,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-upload-url
-          path: ${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz
+          path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
 
       - name: Download release upload URL artifact 📦
         uses: actions/download-artifact@v2
         with:
           name: release-upload-url
-          path: artifacts/release-upload-url
-
+          path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
 
 
   coverage:
