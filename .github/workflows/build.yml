@@ -246,7 +246,8 @@ jobs:
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
-          echo "name=artifact_paths::target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+          echo "* [${{ matrix.target }}.tar.gz]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/${{ matrix.target }}.tar.gz)" >> ${{ github.workspace }}/CHANGELOG.md
+        # echo "name=artifact_paths::target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
 
       - name: Deploy binary 🚀
         id: deploy-binary
@@ -269,7 +270,7 @@ jobs:
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           # Append artifact links to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
-          echo "###### Uploaded Artifacts" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "## Uploaded Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
           for filename in target/package/*.tar.gz; do
             link="$(basename $filename)"
             echo "* [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
