@@ -113,16 +113,22 @@ jobs:
           # Linux targets 🐧
           - target: aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture
             os: ubuntu-latest
+            cross: true
           - target: aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture
             os: ubuntu-latest
+            cross: true
           - target: arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)
             os: ubuntu-latest
+            cross: true
           - target: armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)
             os: ubuntu-latest
+            cross: true
           - target: i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)
             os: ubuntu-latest
+            cross: true
           - target: i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)
             os: ubuntu-latest
+            cross: true
           # - target: mips-unknown-linux-gnu # MIPS Linux (kernel 2.6.32+, glibc 2.11+)
           #   os: ubuntu-latest
           #   cross: true
@@ -143,12 +149,15 @@ jobs:
           #   cross: true
           - target: x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)
             os: ubuntu-latest
+            cross: true
           - target: x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)
             os: ubuntu-latest
+            cross: true
 
           # macOS targets 🍎
           - target: x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)
             os: macos-latest
+            cross: true
 
           # Windows targets 🪟
           # - target: i686-pc-windows-msvc # 32-bit Windows
@@ -182,24 +191,14 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Install target
-        run: rustup target add ${{ matrix.target }}
-
-      - name: Install libbz2-dev
-        run: sudo apt-get install libbz2-dev
-        if: matrix.target == 'x86_64-unknown-linux-gnu' # Only for the x86_64 target
-
-      - name: Install aarch64 toolchain
-        run: rustup target add aarch64-unknown-linux-gnu
-        if: matrix.target == 'aarch64-unknown-linux-gnu' # Only for the aarch64 target
-
-      - name: Install GCC for ARM64
-        run: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
-        if: matrix.target == 'aarch64-unknown-linux-gnu' # Only for the aarch64 target
-
-      - name: Install libbz2-dev
-        run: sudo apt-get install libbz2-dev
-        if: matrix.target == 'armv7-unknown-linux-gnueabihf' # Only for the armv7 target
+      - name: Install Cross 🦀
+        id: install-cross
+        run: |
+          # Install cross
+          cargo install cross
+          # Clean the build artifacts
+          cargo clean --verbose
+        shell: /bin/bash -e {0}
 
       - name: Build library
         run: cargo build --release --target ${{ matrix.target }}
