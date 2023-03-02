@@ -350,7 +350,7 @@ jobs:
           path: target/package/${{ matrix.target }}.tar.gz
 
   release:
-    name: Release
+    name: Release 🚀
     needs: build
     runs-on: ubuntu-latest
     steps:
