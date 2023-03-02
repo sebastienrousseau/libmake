@@ -292,7 +292,7 @@ jobs:
       - name: Download release upload URL artifact 📦
         uses: actions/download-artifact@v2
         with:
-          name: release-upload-url
+          name: ${{ matrix.target }}.tar.gz
           path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
 
 
