@@ -9,7 +9,7 @@ mod tests {
 
     #[test]
     fn test_generate_files_from_csv() {
-        let csv_file = "./data/mylibrary.csv";
+        let csv_file = "./tests/data/mylibrary.csv";
         let result = generate_files_from_csv(csv_file);
         assert!(
             result.is_ok(),
@@ -19,7 +19,7 @@ mod tests {
 
     #[test]
     fn test_process_arguments() {
-        let file_path = "./data/mylibrary.csv";
+        let file_path = "./tests/data/mylibrary.csv";
         let matches = Command::new("myapp")
             .arg(Arg::new("author").short('a').long("author"))
             .arg(Arg::new("build").short('b').long("build"))
@@ -70,7 +70,7 @@ mod tests {
 
     #[test]
     fn test_process_arguments_with_csv() {
-        let file_path = "./data/mylibrary.csv";
+        let file_path = "./tests/data/mylibrary.csv";
         let matches = Command::new("myapp")
             .arg(Arg::new("author").short('a').long("author"))
             .arg(Arg::new("build").short('b').long("build"))
