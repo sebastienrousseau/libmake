@@ -258,8 +258,6 @@ jobs:
           release_name: LibMake 🦀 v${{ env.VERSION }}
           # body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
-          files: |
-            target/package/*.crate
           prerelease: false
 
   coverage:
