@@ -414,8 +414,17 @@ jobs:
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
-          # Upload all the artifacts in target/package
-          asset_paths: target/package/*.tar.gz
+
+      - name: Upload Release Artifacts 📦
+        id: upload-release-artifacts
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/target/package/*.tar.gz
+          asset_name: ${{ github.workspace }}/target/package/*.tar.gz
+          asset_content_type: application/gzip
 
       # - name: Create Release 🚀
       #   id: create-release
@@ -430,38 +439,38 @@ jobs:
       #     draft: true
       #     prerelease: false
 
-  crate:
-    name: Crate.io
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🛠️
-        uses: actions/checkout@v2
+  # crate:
+  #   name: Crate.io
+  #   needs: release
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout 🛠️
+  #       uses: actions/checkout@v2
 
-      - name: Install stable toolchain 🛠️
-        id: install-toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+  #     - name: Install stable toolchain 🛠️
+  #       id: install-toolchain
+  #       uses: actions-rs/toolchain@v1
+  #       with:
+  #         toolchain: stable
+  #         override: true
 
-      - name: Cache dependencies 📦
-        id: cache-dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
+  #     - name: Cache dependencies 📦
+  #       id: cache-dependencies
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: ~/.cargo
+  #         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+  #         restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Update version number 🧮
-        id: update-version
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-        shell: /bin/bash -e {0}
+  #     - name: Update version number 🧮
+  #       id: update-version
+  #       # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+  #       run: |
+  #         NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+  #         echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+  #       shell: /bin/bash -e {0}
 
-      - name: Publish 🚀
+  #     - name: Publish 🚀
         id: publish
         uses: actions-rs/cargo@v1
         with:

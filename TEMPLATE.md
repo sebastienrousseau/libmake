@@ -1,5 +1,4 @@
-# LibMake
-
+<!-- markdownlint-disable MD041 -->
 ## A code generator to reduce repetitive tasks and build high-quality Rust libraries
 
 [![Made With Rust][made-with-rust-badge]][5] [![Crates.io][crates-badge]][7] [![Lib.rs][libs-badge]][9] [![Docs.rs][docs-badge]][8] [![License][license-badge]][2] [![Codecov][codecov-badge]][14]
@@ -38,17 +37,11 @@ The library is designed to be used as a command-line tool. It is available on [C
 - Automatically generate basic functions, methods, and macros to get you started with your Rust library.
 - Enforce best practices and standards with starter documentation, test suites, and benchmark suites that are designed to help you get up and running quickly.
 
-## Changelog 📝
+## Changelog 📚
 
-## License 📝
-
-The project is licensed under the terms of both the MIT license and the Apache License (Version 2.0).
-
-- [Apache License, Version 2.0][1]
-- [MIT license][2]
+-
 
 [0]: https://libmake.com
-[1]: https://opensource.org/license/apache-2-0/
 [2]: http://opensource.org/licenses/MIT
 [3]: https://github.com/sebastienrousseau/libmake/issues
 [4]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md
