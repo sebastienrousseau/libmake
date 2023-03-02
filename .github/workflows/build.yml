@@ -278,10 +278,11 @@ jobs:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
           body: |
-            $(cat ${{ github.workspace }}/CHANGELOG.md)
+            "$(cat ${{ github.workspace }}/CHANGELOG.md)
 
-            ###### Uploaded Artifacts
-            * ${{ steps.deploy-binary.outputs.upload_url }}
+            ## Uploaded Artifacts 📦
+            * ${{ steps.deploy-binary.outputs.artifact_paths }}"
+
           draft: true
           prerelease: false
 
@@ -289,7 +290,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-upload-url
-          path: ${{ steps.create-release.outputs.upload_url }}
+          path: ${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz
 
       - name: Download release upload URL artifact 📦
         uses: actions/download-artifact@v2
