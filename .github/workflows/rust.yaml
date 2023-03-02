@@ -164,14 +164,14 @@ jobs:
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
-      - name: Install Cross 🦀
-        id: run-install-cross
-        run: |
-          # Install cross
-          cargo install --git https://github.com/rust-embedded/cross.git
-          # Clean the build artifacts
-          cargo clean --verbose
-        shell: /bin/bash -e {0}
+      # - name: Install Cross 🦀
+      #   id: run-install-cross
+      #   run: |
+      #     # Install cross
+      #     cargo install cross
+      #     # Clean the build artifacts
+      #     cargo clean --verbose
+      #   shell: /bin/bash -e {0}
 
       - name: Build targets 🏗
         id: build-targets
