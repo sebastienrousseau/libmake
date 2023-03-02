@@ -11,6 +11,14 @@ on:
 jobs:
   check:
     name: Check
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rust: stable
+            target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+        rust: [stable]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -40,6 +48,43 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        include:
+          - rust: stable
+            target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+        rust: [stable]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: ${{ matrix.rust }}
+          override: true
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Install cargo-hack
+        uses: taiki-e/install-action@cargo-hack
+
+      - name: Run Cargo Test 🦀
+        id: run-check-test
+        run: |
+          cargo test --target ${{ matrix.target }} --workspace --all-features
+
+  build:
+    name: Build and Package
+    strategy:
+      fail-fast: false
+      matrix: &matrix
         include:
         # Linux targets 🐧
         - os: ubuntu-latest
@@ -71,9 +116,6 @@ jobs:
         # NixOS targets 🐧
         - os: nixos-latest
           target: x86_64-unknown-linux-gnu
-
-        rust: [stable]
-
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -83,8 +125,7 @@ jobs:
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
+          toolchain: stable
           override: true
 
       - name: Cache dependencies
@@ -94,29 +135,26 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Install cargo-hack
-        uses: taiki-e/install-action@cargo-hack
+      - name: Build library
+        run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Run Cargo Test 🦀
-        id: run-check-test
-        run: |
-          cargo test --all-targets --workspace --all-features
+      - name: Package library
+        run: zip -j ${{ matrix.target }}.zip target/${{ matrix.target }}/release/lib*.a
+        working-directory: .
+        env:
+          TARGET: ${{ matrix.target }}
 
   coverage:
     name: Coverage
     strategy:
       fail-fast: false
       matrix:
-        target:
-          # Linux targets 🐧
-          - x86_64-unknown-linux-gnu
-
-        os:
-          - ubuntu-latest
-
+        include:
+          - rust: stable
+            target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
         rust: [stable]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -148,6 +186,10 @@ jobs:
 
   lints:
     name: Lints
+    strategy:
+      fail-fast: false
+      matrix: &matrix
+        rust: [stable]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -170,14 +212,9 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      # - name: Run cargo fmt
-      #   uses: actions-rs/cargo@v1
-      #   with:
-      #     command: fmt
-      #     args: --all -- --check
-
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
         with:
           command: clippy
           args: --all-targets --all-features --release -- -D warnings
+
