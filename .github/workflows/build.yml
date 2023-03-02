@@ -270,6 +270,9 @@ jobs:
           name: ${{ matrix.target }}
           path: target/package/*.crate
 
+      - name: Set artifact paths 📥
+        run: echo "::set-env name=ARTIFACTS_PATHS::${{ steps.upload-artifact.outputs.artifact_paths }}"
+
       - name: Create Release 🚀
         id: create-release
         uses: actions/create-release@v1
@@ -278,10 +281,14 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
-          # body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
-          asset_paths: ${{ steps.upload-artifact.outputs.artifact_paths }}
+          body: ${{ env.CHANGELOG }}
+          body_path: ${{ env.CHANGELOG_FILE }}
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.repository }}
+          commitish: ${{ github.sha }}
+          assets: ${{ env.ARTIFACTS_PATHS }}
 
   coverage:
     name: Coverage
