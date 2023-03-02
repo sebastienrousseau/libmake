@@ -183,7 +183,7 @@ jobs:
         id: checkout
         uses: actions/checkout@v2
 
-      - name: Install stable toolchain
+      - name: Install stable toolchain 🛠️
         id: install-toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -243,7 +243,7 @@ jobs:
 
       - name: Package the binary 📦
         id: package-binary
-        if: github.ref == 'refs/heads/main'
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
@@ -251,7 +251,7 @@ jobs:
 
       - name: Deploy binary 🚀
         id: deploy-binary
-        if: github.ref == 'refs/heads/main'
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}.tar.gz
@@ -259,7 +259,7 @@ jobs:
 
       - name: Generate Changelog 📜
         id: generate-changelog
-        if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           # Append version information to CHANGELOG.md
           echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
@@ -274,6 +274,7 @@ jobs:
 
       - name: Create Release 🚀
         id: create-release
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -308,7 +309,13 @@ jobs:
           override: true
           components: llvm-tools-preview
 
-      - uses: Swatinem/rust-cache@v1
+      - name: Cache dependencies 📦
+        id: cache-dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
 
       - name: Download grcov
         id: download-grcov
@@ -366,6 +373,7 @@ jobs:
 
       - name: Run cargo clippy
         id: run-clippy
+        if: github.ref == !github.event.check_run.conclusion
         uses: actions-rs/cargo@v1
         with:
           command: clippy
