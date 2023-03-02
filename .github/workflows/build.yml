@@ -19,9 +19,9 @@ jobs:
           # - nightly
     steps:
     - name: Clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Cache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/registry
