@@ -267,6 +267,15 @@ jobs:
           echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
+          # Append artifact links to CHANGELOG.md
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "###### Uploaded Artifacts" >> ${{ github.workspace }}/CHANGELOG.md
+          for filename in target/package/*.tar.gz; do
+            link="$(basename $filename)"
+            echo "* [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+          done
+          # Append empty line to CHANGELOG.md
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
@@ -279,11 +288,7 @@ jobs:
         with:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
-          body_path: |
-            $(cat ${{ github.workspace }}/CHANGELOG.md)
-
-            ## Uploaded Artifacts 🎁
-            $(for filename in target/package/*.tar.gz; do echo "* [$filename]($filename)"; done)
+          body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
 
