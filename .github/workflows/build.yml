@@ -283,11 +283,11 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Upload artifact 📦
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-upload-url
-          path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
+      # - name: Upload artifact 📦
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: release-upload-url
+      #     path: "${{ github.workspace }}/target/package/${{ matrix.target }}.tar.gz"
 
       - name: Download release upload URL artifact 📦
         uses: actions/download-artifact@v2
