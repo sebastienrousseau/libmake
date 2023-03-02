@@ -124,7 +124,6 @@ jobs:
           mkdir -p "${HOME}/.local/bin"
           curl -sL https://github.com/mozilla/grcov/releases/download/v0.8.13/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf - -C "${HOME}/.local/bin"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-
       - name: Run xtask coverage
         id: run-coverage
         uses: actions-rs/cargo@v1
@@ -308,10 +307,8 @@ jobs:
         run: |
           # Install cross
           cargo install cross
-
           # Clean the build artifacts
           cargo clean --verbose
-
         shell: /bin/bash -e {0}
 
       - name: Build targets 🏗
@@ -327,13 +324,11 @@ jobs:
         if: github.ref == !github.event.check_run.conclusion
         run: |
           cargo check --all --all-features --workspace --verbose
-
       - name: Run Clippy 🦀
         id: run-check-clippy
         if: github.ref == !github.event.check_run.conclusion
         run: |
           cargo clippy --all-targets --all-features --workspace -- -D warnings
-
       - name: Package the binary 📦
         id: package-binary
         run: |
@@ -341,14 +336,6 @@ jobs:
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
           echo "* [${{ matrix.target }}.tar.gz]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/${{ matrix.target }}.tar.gz)" >> ${{ github.workspace }}/CHANGELOG.md
         # echo "name=artifact_paths::target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
-
-      - name: Cache package directory
-        id: cache-package
-        uses: actions/cache@v2
-        with:
-          path: target/package
-          key: package-${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: package-${{ runner.os }}-${{ matrix.target }}-
 
       - name: Deploy binary 🚀
         id: deploy-binary
@@ -358,44 +345,16 @@ jobs:
           path: target/package/${{ matrix.target }}.tar.gz
 
   release:
-    name: Release 🚀
+    name: Release
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 🛠️
+      - name: Checkout sources 📥
         uses: actions/checkout@v2
-
-      - name: Install stable toolchain 🛠️
-        id: install-toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-
-      - name: Cache dependencies 📦
-        id: cache-dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-
-      - name: Update version number 🧮
-        id: update-version
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-        shell: /bin/bash -e {0}
-
-      - name: Restore package directory
-        uses: actions/cache@v2
-        with:
-          path: target/package
-          key: package-${{ runner.os }}-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Generate Changelog 📜
         id: generate-changelog
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           # Append version information to CHANGELOG.md
           echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
@@ -416,9 +375,9 @@ jobs:
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
-
       - name: Create Release 🚀
         id: create-release
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -428,66 +387,3 @@ jobs:
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
-
-      - name: Upload Release Artifacts 📦
-        id: upload-release-artifacts
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/target/package/*.tar.gz
-          asset_name: ${{ github.workspace }}/target/package/*.tar.gz
-          asset_content_type: application/gzip
-
-      # - name: Create Release 🚀
-      #   id: create-release
-      #   # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: v${{ env.VERSION }}
-      #     release_name: LibMake 🦀 v${{ env.VERSION }}
-      #     body_path: ${{ github.workspace }}/CHANGELOG.md
-      #     draft: true
-      #     prerelease: false
-
-  # crate:
-  #   name: Crate.io
-  #   needs: release
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout 🛠️
-  #       uses: actions/checkout@v2
-
-  #     - name: Install stable toolchain 🛠️
-  #       id: install-toolchain
-  #       uses: actions-rs/toolchain@v1
-  #       with:
-  #         toolchain: stable
-  #         override: true
-
-  #     - name: Cache dependencies 📦
-  #       id: cache-dependencies
-  #       uses: actions/cache@v2
-  #       with:
-  #         path: ~/.cargo
-  #         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-  #         restore-keys: ${{ runner.os }}-cargo-
-
-  #     - name: Update version number 🧮
-  #       id: update-version
-  #       # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
-  #       run: |
-  #         NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-  #         echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-  #       shell: /bin/bash -e {0}
-
-  #     - name: Publish 🚀
-        # id: publish
-        # uses: actions-rs/cargo@v1
-        # with:
-        #   use-cross: true
-        #   command: publish
-        #   args: --verbose --token ${{ secrets.CARGO_API_TOKEN }}
