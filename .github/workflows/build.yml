@@ -270,9 +270,6 @@ jobs:
           name: ${{ matrix.target }}
           path: target/package/*.crate
 
-      - name: Set artifact paths 📥
-        run: echo "::set-env name=ARTIFACTS_PATHS::${{ steps.upload-artifact.outputs.artifact_paths }}"
-
       - name: Create Release 🚀
         id: create-release
         uses: actions/create-release@v1
@@ -288,7 +285,7 @@ jobs:
           owner: ${{ github.repository_owner }}
           repo: ${{ github.repository }}
           commitish: ${{ github.sha }}
-          assets: ${{ env.ARTIFACTS_PATHS }}
+          assets: ${{ steps.upload-artifact.outputs.artifact_paths }}
 
   coverage:
     name: Coverage
