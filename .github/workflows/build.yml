@@ -243,7 +243,6 @@ jobs:
 
       - name: Package the binary 📦
         id: package-binary
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
@@ -251,7 +250,6 @@ jobs:
 
       - name: Deploy binary 🚀
         id: deploy-binary
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}.tar.gz
@@ -259,7 +257,6 @@ jobs:
 
       - name: Generate Changelog 📜
         id: generate-changelog
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           # Append version information to CHANGELOG.md
           echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
@@ -272,19 +269,35 @@ jobs:
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
-
       - name: Create Release 🚀
         id: create-release
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
           release_name: LibMake 🦀 v${{ env.VERSION }}
-          body_path: ${{ github.workspace }}/CHANGELOG.md
+          body: |
+            $(cat ${{ github.workspace }}/CHANGELOG.md)
+
+            ###### Uploaded Artifacts
+            * ${{ steps.deploy-binary.outputs.upload_url }}
           draft: true
           prerelease: false
+
+      - name: Upload artifact 📦
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-upload-url
+          path: ${{ steps.create-release.outputs.upload_url }}
+
+      - name: Download release upload URL artifact 📦
+        uses: actions/download-artifact@v2
+        with:
+          name: release-upload-url
+          path: artifacts/release-upload-url
+
+
 
   coverage:
     name: Coverage 🧪
