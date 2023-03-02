@@ -42,6 +42,7 @@ jobs:
         id: run-install-cross
         run: |
           # Install cross
+          export PATH=$PATH:~/.cargo/bin
           cargo install cross
           # Clean the build artifacts
           cargo clean --verbose
