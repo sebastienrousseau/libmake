@@ -191,13 +191,18 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
+      - name: Install target
+        run: rustup target add ${{ matrix.target }}
+
       - name: Install Cross 🦀
         id: install-cross
         run: |
           # Install cross
           cargo install cross
+
           # Clean the build artifacts
           cargo clean --verbose
+
         shell: /bin/bash -e {0}
 
       - name: Build library
