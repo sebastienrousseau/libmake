@@ -356,7 +356,7 @@ jobs:
       - name: Download Artifact 📥
         uses: actions/download-artifact@v2
         with:
-          name: ${{ matrix.target }}.tar.gz
+          name: *.tar.gz
           path: target/package/
 
       - name: Generate Changelog 📜
