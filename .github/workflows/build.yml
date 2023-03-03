@@ -356,7 +356,7 @@ jobs:
         id: download-artifact
         with:
           name: ${{ matrix.target }}.tar.gz
-          path: ${{ github_home }}/artifacts
+          path: $HOME/artifacts
 
 
   release:
@@ -371,9 +371,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ${{ matrix.target }}.tar.gz
-          path: target/package/
+          path: ${{ env.GITHUB_HOME }}/artifacts
         env:
-          GITHUB_HOME: ${{ github.home }}
+          GITHUB_HOME: $HOME
 
       - name: Generate Changelog 📜
         id: generate-changelog
