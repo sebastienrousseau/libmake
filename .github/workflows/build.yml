@@ -345,18 +345,15 @@ jobs:
           name: ${{ matrix.target }}.tar.gz
           path: target/package/${{ matrix.target }}.tar.gz
 
+      - name: Archive artifact 📦
+        run: tar -czvf ${{ matrix.target }}.tar.gz target/
+        working-directory: ${{ matrix.target }}-release
+
       - name: Upload artifact 🚀
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.target }}.tar.gz
-          path: target/package/${{ matrix.target }}.tar.gz
-
-      - name: Download artifact 📥
-        uses: actions/download-artifact@v2
-        id: download-artifact
-        with:
-          name: ${{ matrix.target }}.tar.gz
-          path: $HOME/artifacts
+          path: ${{ matrix.target }}-release/${{ matrix.target }}.tar.gz
 
 
   release:
@@ -364,16 +361,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources 📥
-        uses: actions/checkout@v2
-
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
           name: '*.tar.gz'
-          path: ${{ github.home }}/artifacts
+          path: target/package/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
 
       - name: Generate Changelog 📜
         id: generate-changelog
