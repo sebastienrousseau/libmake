@@ -367,13 +367,13 @@ jobs:
       - name: Checkout sources 📥
         uses: actions/checkout@v2
 
-      - name: Download artifact 📥
+      - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
-          name: ${{ matrix.target }}.tar.gz
-          path: ${{ env.GITHUB_HOME }}/artifacts
+          name: '*.tar.gz'
+          path: ${{ github.home }}/artifacts
         env:
-          GITHUB_HOME: $HOME
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Changelog 📜
         id: generate-changelog
