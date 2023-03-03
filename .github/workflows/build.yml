@@ -353,6 +353,12 @@ jobs:
       - name: Checkout sources 📥
         uses: actions/checkout@v2
 
+      - name: Download Artifact 📥
+        uses: actions/download-artifact@v2
+        with:
+          name: ${{ matrix.target }}.tar.gz
+          path: target/package/
+
       - name: Generate Changelog 📜
         id: generate-changelog
         # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
@@ -376,6 +382,16 @@ jobs:
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
+
+      - name: Append Artifact Links 📝
+        run: |
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "## Uploaded Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
+          for filename in target/package/*.tar.gz; do
+            link="$(basename $filename)"
+            echo "* [$link](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+          done
+
       - name: Create Release 🚀
         id: create-release
         # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
