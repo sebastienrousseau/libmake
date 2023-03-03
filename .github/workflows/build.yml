@@ -345,15 +345,11 @@ jobs:
           name: ${{ matrix.target }}.tar.gz
           path: target/package/${{ matrix.target }}.tar.gz
 
-      - name: Archive artifact 📦
-        run: tar -czvf ${{ matrix.target }}.tar.gz target/
-        working-directory: ${{ matrix.target }}-release
-
       - name: Upload artifact 🚀
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.target }}.tar.gz
-          path: ${{ matrix.target }}-release/${{ matrix.target }}.tar.gz
+          path: target/package/${{ matrix.target }}.tar.gz
 
 
   release:
