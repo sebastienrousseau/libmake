@@ -1,4 +1,5 @@
-name: Build
+name: ❯ LibMake Release
+
 on:
   pull_request:
   push:
