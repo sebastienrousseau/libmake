@@ -387,30 +387,28 @@ jobs:
 
       - name: Generate Changelog 📜
         id: generate-changelog
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           # Append version information to CHANGELOG.md
           echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
           # Copy content of template file to CHANGELOG.md
-          cat TEMPLATE.md > ${{ github.workspace }}/CHANGELOG.md
+          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
           # Append git log to CHANGELOG.md
           echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           # Append artifact links to CHANGELOG.md
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
           echo "## Uploaded Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
-          echo "## Uploaded Artifacts 🎁" >> /home/runner/work/libmake/libmake/CHANGELOG.md
           for filename in target/package/*.tar.gz; do
-            if [[ "$filename" == *"aarch64-unknown-linux-gnu.tar.gz" ]]; then
+            if [[ "$filename" =~ ^(aarch64-unknown-linux-gnu|aarch64-unknown-linux-musl|arm-unknown-linux-gnueabi|armv7-unknown-linux-gnueabihf|i686-unknown-linux-gnu|i686-unknown-linux-musl|x86_64-unknown-linux-gnu|x86_64-unknown-linux-musl|x86_64-apple-darwin).tar.gz$ ]]; then
               link="$(basename $filename)"
-              echo "* $link" >> /home/runner/work/libmake/libmake/CHANGELOG.md
+              echo "* [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
             fi
           done
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
+
 
       - name: Append Artifact Links 📝
         run: |
