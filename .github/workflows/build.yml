@@ -357,6 +357,25 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout sources 📥
+        id: checkout
+        uses: actions/checkout@v2
+
+      - name: Install stable toolchain 🛠️
+        id: install-toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache dependencies 📦
+        id: cache-dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
