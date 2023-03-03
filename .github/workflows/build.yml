@@ -360,7 +360,7 @@ jobs:
       - name: Download artifacts 📥
         uses: actions/download-artifact@v2
         with:
-          name: '*.tar.gz'
+          name: 'aarch64-unknown-linux-gnu.tar.gz'
           path: target/package/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
