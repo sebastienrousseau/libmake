@@ -377,13 +377,19 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
 
       - name: Download artifacts 📥
-        uses: actions/download-artifact@v2
-        with:
-          name: 'aarch64-unknown-linux-gnu.tar.gz'
-          path: target/package/
+        id: download-artifacts
+        run: |
+          for target in aarch64-unknown-linux-gnu aarch64-unknown-linux-musl arm-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf i686-unknown-linux-gnu i686-unknown-linux-musl x86_64-unknown-linux-gnu x86_64-unknown-linux-musl x86_64-apple-darwin; do
+            echo "Downloading $target artifact"
+            name="${target}.tar.gz"
+            echo "Artifact name: $name"
+            mkdir -p target/package
+            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts/${name}" -o "target/package/${name}"
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_ID: ${{ github.event.workflow_run.id }}
+
 
       - name: Generate Changelog 📜
         id: generate-changelog
@@ -399,16 +405,52 @@ jobs:
           # Append artifact links to CHANGELOG.md
           echo "## Uploaded Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
           for filename in target/package/*.tar.gz; do
-            if [[ "$filename" =~ ^(aarch64-unknown-linux-gnu|aarch64-unknown-linux-musl|arm-unknown-linux-gnueabi|armv7-unknown-linux-gnueabihf|i686-unknown-linux-gnu|i686-unknown-linux-musl|x86_64-unknown-linux-gnu|x86_64-unknown-linux-musl|x86_64-apple-darwin).tar.gz$ ]]; then
-              link="$(basename $filename)"
-              echo "* [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
-            fi
-          done
-          # Append empty line to CHANGELOG.md
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
-          # Append empty line to CHANGELOG.md
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
-
+            case "$filename" in
+              *aarch64-unknown-linux-gnu.tar.gz*)
+                link="$(basename $filename)"
+                echo "* aarch64-unknown-linux-gnu: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *aarch64-unknown-linux-musl.tar.gz*)
+                link="$(basename $filename)"
+                echo "* aarch64-unknown-linux-musl: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *arm-unknown-linux-gnueabi.tar.gz*)
+                link="$(basename $filename)"
+                echo "* arm-unknown-linux-gnueabi: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *armv7-unknown-linux-gnueabihf.tar.gz*)
+                link="$(basename $filename)"
+                echo "* armv7-unknown-linux-gnueabihf: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *i686-unknown-linux-gnu.tar.gz*)
+                link="$(basename $filename)"
+                echo "* i686-unknown-linux-gnu: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *i686-unknown-linux-musl.tar.gz*)
+                link="$(basename $filename)"
+                echo "* i686-unknown-linux-musl: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *x86_64-unknown-linux-gnu.tar.gz*)
+                link="$(basename $filename)"
+                echo "* x86_64-unknown-linux-gnu: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *x86_64-unknown-linux-musl.tar.gz*)
+                link="$(basename $filename)"
+                echo "* x86_64-unknown-linux-musl: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                ;;
+              *x86_64-apple-darwin.tar.gz*)
+                      link="$(basename $filename)"
+                      echo "* x86_64-apple-darwin: [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+                      ;;
+                    *)
+                      echo "Unknown target: $filename"
+                      ;;
+                  esac
+                done
+                # Append empty line to CHANGELOG.md
+                echo "" >> ${{ github.workspace }}/CHANGELOG.md
+                # Append empty line to CHANGELOG.md
+                echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
       - name: Append Artifact Links 📝
         run: |
