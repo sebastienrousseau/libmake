@@ -1,31 +1,7 @@
 name: ❯ LibMake Release
 
 on:
-  push:
-    branches:
-      - feat/libmake
-
-permissions:
-  contents: read # to fetch code (actions/checkout)
-
-env:
-  CARGO_TERM_COLOR: always
-
-jobs:
-  build-project:
-    name: Build project 🛠️
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cache Rust dependencies
-        uses: actions/cache@v3
-        with:
-          path: "~/.cargo"
-          key: ${{ runner.os }}-rust-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-rust-
-
-      - name: Checkout repository 🛎️
-        id: run-checkout-repository
-        uses: actions/checkout@v3
+  push:❯ LibMake Release
         with: { submodules: true }
 
       - name: Installing Rust 🦀
