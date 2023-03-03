@@ -345,6 +345,20 @@ jobs:
           name: ${{ matrix.target }}.tar.gz
           path: target/package/${{ matrix.target }}.tar.gz
 
+      - name: Upload artifact 🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.target }}.tar.gz
+          path: target/package/${{ matrix.target }}.tar.gz
+
+      - name: Download artifact 📥
+        uses: actions/download-artifact@v2
+        id: download-artifact
+        with:
+          name: ${{ matrix.target }}.tar.gz
+          path: ${{ github_home }}/artifacts
+
+
   release:
     name: Release
     needs: build
@@ -353,11 +367,13 @@ jobs:
       - name: Checkout sources 📥
         uses: actions/checkout@v2
 
-      - name: Download Artifact 📥
+      - name: Download artifact 📥
         uses: actions/download-artifact@v2
         with:
           name: ${{ matrix.target }}.tar.gz
           path: target/package/
+        env:
+          GITHUB_HOME: ${{ github.home }}
 
       - name: Generate Changelog 📜
         id: generate-changelog
