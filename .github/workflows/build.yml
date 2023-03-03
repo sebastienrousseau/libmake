@@ -381,9 +381,12 @@ jobs:
           # Append artifact links to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           echo "## Uploaded Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "## Uploaded Artifacts 🎁" >> /home/runner/work/libmake/libmake/CHANGELOG.md
           for filename in target/package/*.tar.gz; do
-            link="$(basename $filename)"
-            echo "* [$link]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+            if [[ "$filename" == *"aarch64-unknown-linux-gnu.tar.gz" ]]; then
+              link="$(basename $filename)"
+              echo "* $link" >> /home/runner/work/libmake/libmake/CHANGELOG.md
+            fi
           done
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
