@@ -11,11 +11,7 @@
 <!-- markdownlint-disable MD033 -->
 <center>
 
-**[Website][0]
-• [Documentation][8]
-• [Report Bug][3]
-• [Request Feature][3]
-• [Contributing Guidelines][4]**
+**[Website][0] • [Documentation][8] • [Report Bug][3] • [Request Feature][3] • [Contributing Guidelines][4]**
 
 </center>
 
@@ -84,24 +80,31 @@ or later (stable).
 
 `LibMake` is supported and tested on the following platforms:
 
+#### FreeBSD targets 🐬
+
+| Target | Description | Status |
+|--------|-------------|--------|
+| x86_64-unknown-freebsd | 64-bit FreeBSD on x86-64 | ✅ Tested |
+
 #### Linux targets 🐧
 
 | Target | Description | Status |
-| --- | --- | --- |
-| aarch64-unknown-linux-gnu | 64-bit Linux systems on ARM architecture | ✅ |
-| aarch64-unknown-linux-musl | 64-bit Linux systems on ARM architecture | ✅ |
-| arm-unknown-linux-gnueabi | ARMv6 Linux (kernel 3.2, glibc 2.17) | ✅ |
-| armv7-unknown-linux-gnueabihf | ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17) | ✅ |
-| i686-unknown-linux-gnu | 32-bit Linux (kernel 3.2+, glibc 2.17+) | ✅ |
-| i686-unknown-linux-musl | 32-bit Linux (kernel 3.2+, musl libc) | ✅ |
-| x86_64-unknown-linux-gnu | 64-bit Linux (kernel 2.6.32+, glibc 2.11+) | ✅ |
-| x86_64-unknown-linux-musl | 64-bit Linux (kernel 2.6.32+, musl libc) | ✅ |
+|--------|-------------|--------|
+| aarch64-unknown-linux-gnu | 64-bit Linux systems on ARM architecture | ✅ Tested |
+| aarch64-unknown-linux-musl | 64-bit Linux systems on ARM architecture | ✅ Tested |
+| arm-unknown-linux-gnueabi | ARMv6 Linux (kernel 3.2, glibc 2.17) | ✅ Tested |
+| armv7-unknown-linux-gnueabihf | ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17) | ✅ Tested |
+| i686-unknown-linux-gnu | 32-bit Linux (kernel 3.2+, glibc 2.17+) | ✅ Tested |
+| i686-unknown-linux-musl | 32-bit Linux (kernel 3.2+, musl libc) | ✅ Tested |
+| x86_64-unknown-linux-gnu | 64-bit Linux (kernel 2.6.32+, glibc 2.11+) | ✅ Tested |
+| x86_64-unknown-linux-musl | 64-bit Linux (kernel 2.6.32+, musl libc) | ✅ Tested |
 
 #### macOS targets 🍎
 
 | Target | Description | Status |
-| --- | --- | --- |
-| x86_64-apple-darwin | 64-bit macOS (10.7 Lion or later) | ✅ |
+|--------|-------------|--------|
+| aarch64-apple-darwin | 64-bit macOS on Apple Silicon | ✅ Tested |
+| x86_64-apple-darwin | 64-bit macOS (10.7 Lion or later) | ✅ Tested |
 
 The [GitHub Actions][10] shows the platforms in which the `LibMake`
 library tests are run.
@@ -114,22 +117,69 @@ You can find our documentation on [docs.rs][8], [lib.rs][9] and
 
 ## Usage 📖
 
-To use `LibMake` library in your project, add the following to your
-`Cargo.toml` file:
+### Command-line interface
 
-```toml
-[dependencies]
-libmake = "0.1.1"
+`LibMake` provides a command-line interface to generate a new library
+project.
+
+#### Generate a new library using a CSV file
+
+The following command generates a library template from a CSV file.
+
+Have a look at the `tests/data/mylibrary.csv` file for an example and
+feel free to use it for your own library as a template.
+
+```shell
+libmake -f tests/data/mylibrary.csv
 ```
 
-Add the following to your `main.rs` file:
+#### Generate a new library using a JSON file
 
-```rust
-extern crate libmake;
-use libmake::*;
+The following command generates a library template from a JSON file.
+
+Have a look at the `tests/data/mylibrary.json` file for an example and
+feel free to use it for your own library as a template.
+
+```shell
+libmake -f tests/data/mylibrary.json
 ```
 
-then you can use the functions in your application code.
+#### Generate a new library using a YAML file
+
+The following command generates a library template from a YAML file.
+
+Have a look at the `tests/data/mylibrary.yaml` file for an example and
+feel free to use it for your own library as a template.
+
+```shell
+libmake -f tests/data/mylibrary.yaml
+```
+
+#### Generate a new library using the command-line interface
+
+The following command generates a library template using the command-line
+interface.
+
+```shell
+libmake \
+    --author "John Smith" \
+    --build "build.rs" \
+    --categories "['category 1', 'category 2', 'category 3']" \
+    --description "A Rust library for doing cool things" \
+    --documentation "https://docs.rs/my_library" \
+    --edition "2021" \
+    --email "john.smith@example.com" \
+    --homepage "https://my_library.rs" \
+    --keywords "['rust', 'library', 'cool']" \
+    --license "MIT" \
+    --name "my_library" \
+    --output "my_library" \
+    --readme "README.md" \
+    --repository "https://github.com/example/my_library" \
+    --rustversion "1.67.1" \
+    --version "0.1.0" \
+    --website "https://example.com/john-smith"
+```
 
 ### Examples
 
@@ -141,7 +191,7 @@ in your terminal from the project root directory.
 
 #### Generate a new library using a CSV file
 
-The following code uses the `generate_via_csv` function from the
+The following code uses the `generate_from_csv` function from the
 `libmake` crate to generate a library template from a CSV file.
 
 Have a look at the `tests/data/mylibrary.csv` file for an example and
@@ -173,25 +223,25 @@ Then you need to create a row in your CSV file with the values for each
 You can now run the following command to generate a new library using
 
 ```shell
-cargo run --example generate_via_csv
+cargo run --example generate_from_csv
 ```
 
 #### Generate a new library using a JSON file
 
-The following code uses the `generate_via_json` function from the
+The following code uses the `generate_from_json` function from the
 `libmake` crate to generate a library template from a JSON file.
 
 ```shell
-cargo run --example generate_via_json
+cargo run --example generate_from_json
 ```
 
 #### Generate a new library using a YAML file
 
-The following code uses the `generate_via_yaml` function from the
+The following code uses the `generate_from_yaml` function from the
 `libmake` crate to generate a library template from a YAML file.
 
 ```shell
-cargo run --example generate_via_yaml
+cargo run --example generate_from_yaml
 ```
 
 ## Semantic Versioning Policy 🚥

@@ -331,6 +331,29 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     Ok(())
 }
 
+/// Generates files for a new Rust project based on a configuration file.
+/// Supported configuration file formats: JSON, YAML, CSV.
+///
+/// # Arguments
+///
+/// - `path` - The path to the configuration file (required).
+/// - `file_type` - The type of the configuration file (required). Supported types: `json`, `yaml`, `yml`, `csv`.
+///
+pub fn generate_from_config(
+    path: &str,
+    file_type: &str,
+) -> io::Result<()> {
+    match file_type {
+        "csv" => generate_from_csv(path),
+        "json" => generate_from_json(path),
+        "yaml" | "yml" => generate_from_yaml(path),
+        _ => Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "Invalid configuration file format. Supported formats: JSON, YAML, CSV",
+        )),
+    }
+}
+
 /// Generates files for a new Rust project based on a CSV file.
 ///
 /// # Arguments
@@ -355,11 +378,11 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 /// - `version` - the initial version of the project (optional).
 /// - `website` - the website of the project (optional).
 ///
-pub fn generate_files_from_csv(csv_path: &str) -> io::Result<()> {
+pub fn generate_from_csv(csv_path: &str) -> io::Result<()> {
     let mut reader = csv::Reader::from_path(csv_path)?;
     for result in reader.records() {
         let record = result?;
-        println!("{:?}", record);
+        // println!("{:?}", record);
         let params = FileGenerationParams {
             author: record.get(0).map(|s| s.to_string()),
             build: record.get(1).map(|s| s.to_string()),
@@ -410,7 +433,7 @@ pub fn generate_files_from_csv(csv_path: &str) -> io::Result<()> {
 /// - `version` - the initial version of the project (optional).
 /// - `website` - the website of the project (optional).
 ///
-pub fn generate_via_json(path: &str) -> std::io::Result<()> {
+pub fn generate_from_json(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_json::from_str(&contents)?;
     generate_files(params)?;
@@ -440,7 +463,7 @@ pub fn generate_via_json(path: &str) -> std::io::Result<()> {
 /// - `version` - the initial version of the project (optional).
 /// - `website` - the website of the project (optional).
 ///
-pub fn generate_via_yaml(path: &str) -> std::io::Result<()> {
+pub fn generate_from_yaml(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_yaml::from_str(&contents)
         .map_err(|e| {

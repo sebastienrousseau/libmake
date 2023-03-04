@@ -2,17 +2,19 @@
 mod tests {
 
     extern crate libmake;
-    use libmake::generator::FileGenerationParams;
     use libmake::generator::{
-        create_directory, generate_files, generate_files_from_csv,
-        generate_via_json, generate_via_yaml,
+        create_directory, generate_files, generate_from_csv,
+        generate_from_json, generate_from_yaml,
+    };
+    use libmake::generator::{
+        generate_from_config, FileGenerationParams,
     };
     use std::path::Path;
 
     use libmake::{
         assert_create_directory, assert_generate_files,
-        assert_generate_files_from_csv, assert_generate_via_json,
-        assert_generate_via_yaml,
+        assert_generate_from_config, assert_generate_from_csv,
+        assert_generate_from_json, assert_generate_from_yaml,
     };
 
     #[test]
@@ -28,17 +30,25 @@ mod tests {
     }
 
     #[test]
-    fn test_generate_files_from_csv() {
-        assert_generate_files_from_csv!("./tests/data/mylibrary.csv");
+    fn test_generate_from_csv() {
+        assert_generate_from_csv!("./tests/data/mylibrary.csv");
     }
 
     #[test]
-    fn test_generate_via_json() {
-        assert_generate_via_json!("./tests/data/mylibrary.json");
+    fn test_generate_from_json() {
+        assert_generate_from_json!("./tests/data/mylibrary.json");
     }
 
     #[test]
-    fn test_generate_via_yaml() {
-        assert_generate_via_yaml!("./tests/data/mylibrary.yaml");
+    fn test_generate_from_yaml() {
+        assert_generate_from_yaml!("./tests/data/mylibrary.yaml");
+    }
+
+    #[test]
+    fn test_generate_from_config() {
+        assert_generate_from_config!(
+            "./tests/data/mylibrary.yaml",
+            "yaml"
+        );
     }
 }

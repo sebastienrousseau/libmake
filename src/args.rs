@@ -1,6 +1,8 @@
 use clap::ArgMatches;
 
-use super::generator::{generate_files, generate_files_from_csv, FileGenerationParams};
+use super::generator::{
+    generate_files, generate_from_csv, FileGenerationParams,
+};
 
 /// Processes the command line arguments provided to the program.
 ///
@@ -48,10 +50,15 @@ pub fn process_arguments(matches: ArgMatches) {
                 version: version.cloned(),
                 website: website.cloned(),
             };
-            generate_files(params).expect("Failed to generate the template files");
-        } else if let Some(csv_file) = matches.get_one::<String>("csv") {
-            if let Err(e) = generate_files_from_csv(csv_file) {
-                eprintln!("Failed to generate the template files: {}", e);
+            generate_files(params)
+                .expect("Failed to generate the template files");
+        } else if let Some(csv_file) = matches.get_one::<String>("csv")
+        {
+            if let Err(e) = generate_from_csv(csv_file) {
+                eprintln!(
+                    "Failed to generate the template files: {}",
+                    e
+                );
             }
         }
     }

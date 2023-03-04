@@ -4,16 +4,16 @@ mod tests {
 
     use clap::{Arg, Command};
     use libmake::{
-        args::process_arguments, generator::generate_files_from_csv,
+        args::process_arguments, generator::generate_from_csv,
     };
 
     #[test]
-    fn test_generate_files_from_csv() {
+    fn test_generate_from_csv() {
         let csv_file = "./tests/data/mylibrary.csv";
-        let result = generate_files_from_csv(csv_file);
+        let result = generate_from_csv(csv_file);
         assert!(
             result.is_ok(),
-            "generate_files_from_csv was expected to return an Ok result, but it returned an error"
+            "generate_from_csv was expected to return an Ok result, but it returned an error"
         );
     }
 

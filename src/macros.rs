@@ -15,22 +15,29 @@ macro_rules! assert_generate_files {
 }
 #[macro_export]
 /// Asserts generate files from CSV.
-macro_rules! assert_generate_files_from_csv {
+macro_rules! assert_generate_from_csv {
     ($csv_path:expr) => {
-        assert!(generate_files_from_csv($csv_path).is_ok());
+        assert!(generate_from_csv($csv_path).is_ok());
     };
 }
 #[macro_export]
-/// Asserts generate via JSON.
-macro_rules! assert_generate_via_json {
+/// Asserts generate from JSON.
+macro_rules! assert_generate_from_json {
     ($path:expr) => {
-        assert!(generate_via_json($path).is_ok());
+        assert!(generate_from_json($path).is_ok());
     };
 }
 #[macro_export]
-/// Asserts generate via YAML.
-macro_rules! assert_generate_via_yaml {
+/// Asserts generate from YAML.
+macro_rules! assert_generate_from_yaml {
     ($path:expr) => {
-        assert!(generate_via_yaml($path).is_ok());
+        assert!(generate_from_yaml($path).is_ok());
+    };
+}
+#[macro_export]
+/// Asserts generate from config.
+macro_rules! assert_generate_from_config {
+    ($path:expr, $file_type:expr) => {
+        assert!(generate_from_config($path, $file_type).is_ok());
     };
 }
