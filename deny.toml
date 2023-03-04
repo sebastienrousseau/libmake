@@ -5,12 +5,22 @@ unlicensed = "deny"
 # List of explicitly allowed licenses
 # See https://spdx.org/licenses/ for list of possible licenses
 # [possible values: any SPDX 3.7 short identifier (+ optional exception)].
-allow = ["MPL-2.0"]
+allow = [
+    "Apache-2.0",
+    "MIT",
+    "CC0-1.0",
+    "ISC",
+    "0BSD",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "Unlicense",
+    "Unicode-DFS-2016",
+]
 
-# List of explicitly disallowed licenses
-# See https://spdx.org/licenses/ for list of possible licenses
-# [possible values: any SPDX 3.7 short identifier (+ optional exception)].
-deny = []
+# List of banned licenses
+[bans]
+multiple-versions = "deny"
+
 
 # The lint level for licenses considered copyleft
 copyleft = "deny"
@@ -29,10 +39,6 @@ allow-osi-fsf-free = "either"
 # [possible values: any between 0.0 and 1.0].
 confidence-threshold = 0.8
 
-[bans]
-# Lint level for when multiple versions of the same crate are detected
-multiple-versions = "warn"
-
 # The graph highlighting used when creating dotgraphs for crates
 # with multiple versions
 # * lowest-version - The path to the lowest versioned duplicate is highlighted
@@ -41,8 +47,7 @@ multiple-versions = "warn"
 highlight = "all"
 
 # List of crates that are allowed. Use with care!
-allow = [
-]
+allow = []
 
 # List of crates to deny
 deny = [
@@ -51,16 +56,16 @@ deny = [
 ]
 
 # Certain crates/versions that will be skipped when doing duplicate detection.
-skip = [
-]
+skip = []
 
 # Similarly to `skip` allows you to skip certain crates during duplicate detection,
 # unlike skip, it also includes the entire tree of transitive dependencies starting at
 # the specified crate, up to a certain depth, which is by default infinite
-skip-tree = [
-]
+skip-tree = []
 
 
 [advisories]
-ignore = [
-]
+notice = "deny"
+unmaintained = "deny"
+unsound = "deny"
+vulnerability = "deny"
