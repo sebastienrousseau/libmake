@@ -221,10 +221,11 @@ jobs:
 
       - name: Build targets 🏗
         id: build-targets
-        run: cargo build --verbose --workspace --release --target ${{ matrix.target }} --features=default,${{ matrix.target }}-target
-        env:
-          CARGO_CFG_TARGET_FEATURE: "fxsr,sse,sse2,sse3,ssse3"
-          CC_x86_64-apple-darwin: x86_64-apple-darwin17-clang # Use Clang for MacOS builds
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --verbose --workspace --release --target ${{ matrix.target }}
 
       - name: Run Cargo Format 🦀
         id: run-check-format
