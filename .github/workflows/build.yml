@@ -149,30 +149,36 @@ jobs:
     strategy:
       matrix:
         include:
-          - rust: stable
-            target: aarch64-unknown-linux-gnu
+          # Linux targets 🐧
+          - target: aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture
+            os: ubuntu-latest
             cross: true
-          - rust: stable
-            target: i686-pc-windows-gnu
+          - target: aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture
+            os: ubuntu-latest
             cross: true
-          - rust: stable
-            target: i686-pc-windows-msvc
+          - target: arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)
+            os: ubuntu-latest
             cross: true
-          - rust: stable
-            target: i686-unknown-linux-gnu
+          - target: armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)
+            os: ubuntu-latest
             cross: true
-          - rust: stable
-            target: x86_64-apple-darwin
+          - target: i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)
+            os: ubuntu-latest
             cross: true
-          - rust: stable
-            target: x86_64-pc-windows-gnu
+          - target: i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)
+            os: ubuntu-latest
             cross: true
-          - rust: stable
-            target: x86_64-pc-windows-msvc
+          - target: x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)
+            os: ubuntu-latest
             cross: true
-          - rust: stable
-            target: x86_64-unknown-linux-gnu
+          - target: x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)
+            os: ubuntu-latest
             cross: true
+          # macOS targets 🍎
+          - target: x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)
+            os: macos-latest
+            cross: true
+
     steps:
       - name: Checkout sources 📥
         id: checkout
