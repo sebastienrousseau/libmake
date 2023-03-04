@@ -293,12 +293,13 @@ jobs:
         if: github.ref == !github.event.check_run.conclusion
         run: |
           cargo clippy --all-targets --all-features --workspace -- -D warnings
+
       - name: Package the binary 📦
         id: package-binary
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
-          echo "* [${{ matrix.target }}.tar.gz](target/package/${{ matrix.target }}.tar.gz)" >> $GITHUB_ENV
+          echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
 
   release:
     name: Release
