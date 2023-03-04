@@ -263,9 +263,10 @@ jobs:
         # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          # NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          # echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "NEW_VERSION=${{ NEW_VERSION }}" >> $GITHUB_ENV
+
+        # NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+        # echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
       - name: Install Cross 🦀
