@@ -60,6 +60,7 @@
 #![deny(dead_code)]
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
+#![deny(rustc::existing_doc_keyword)]
 #![forbid(unsafe_code)]
 #![warn(unreachable_pub)]
 #![doc(
@@ -68,7 +69,10 @@
     html_root_url = "https://docs.rs/libmake"
 )]
 #![crate_name = "libmake"]
+#![crate_type = "dylib"]
 #![crate_type = "lib"]
+#![crate_type = "rlib"]
+#![crate_type = "staticlib"]
 use log::LevelFilter;
 use simplelog::{CombinedLogger, Config, TermLogger, TerminalMode};
 use std::error::Error;
