@@ -169,7 +169,18 @@ jobs:
           - aarch64-apple-darwin # 64-bit macOS on Apple Silicon                                  ✅ Tested
           - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                               ✅ Tested
 
+          # Redox targets 🦀
+          - x86_64-unknown-redox # 64-bit Redox on x86-64                                          ✅ Tested
+
         include:
+          # FreeBSD targets 🐬
+          - target: aarch64-unknown-freebsd
+            os: ubuntu-latest
+            cross: true
+          - target: x86_64-unknown-freebsd
+            os: ubuntu-latest
+            cross: true
+
           # Linux targets 🐧
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
@@ -202,6 +213,11 @@ jobs:
             cross: true
           - target: x86_64-apple-darwin
             os: macos-latest
+            cross: true
+
+          # Redox targets 🦀
+          - target: x86_64-unknown-redox
+            os: ubuntu-latest
             cross: true
 
     runs-on: ${{ matrix.os }}
