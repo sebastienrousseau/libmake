@@ -158,76 +158,60 @@ jobs:
           - armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)       ✅ Tested
           - i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)                      ✅ Tested
           - i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)                       ✅ Tested
-          # - mips-unknown-linux-gnu # MIPS Linux (kernel 2.6.32+, glibc 2.11+)                   ❌ Tested
-          # - mips-unknown-linux-musl # MIPS Linux (kernel 2.6.32+, musl libc)                    ❌ Tested
-          # - mips64-unknown-linux-gnuabi64 # MIPS64 Linux (kernel 2.6.32+, glibc 2.11+)          ❌ Tested
-          # - mips64el-unknown-linux-gnuabi64 # MIPS64el Linux (kernel 2.6.32+, glibc 2.11+)      ❌ Tested
-          # - mipsel-unknown-linux-gnu # MIPSel Linux (kernel 2.6.32+, glibc 2.11+)               ❌ Tested
-          # - powerpc64le-unknown-linux-gnu # 64-bit PowerPC Linux (kernel 2.6.32+, glibc 2.11+)  ❌ Tested
           - x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)                 ✅ Tested
           - x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)                  ✅ Tested
 
           # macOS targets 🍎
           - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                               ✅ Tested
+          - aarch64-apple-darwin # 64-bit macOS on Apple Silicon                                  ✅ Tested
 
           # Windows targets 🪟
-          - i686-pc-windows-msvc # 32-bit Windows                                               ❌ Tested
+          - i686-pc-windows-gnu # 32-bit Windows                                                  ❌ Tested
+          # - i686-pc-windows-msvc # 32-bit Windows                                               ❌ Tested
           # - x86_64-pc-windows-msvc # 64-bit Windows                                             ❌ Tested
 
         include:
           # Linux targets 🐧
-          - target: aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture
+          - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
             cross: true
-          - target: aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture
+          - target: aarch64-unknown-linux-musl
             os: ubuntu-latest
             cross: true
-          - target: arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)
+          - target: arm-unknown-linux-gnueabi
             os: ubuntu-latest
             cross: true
-          - target: armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)
+          - target: armv7-unknown-linux-gnueabihf
             os: ubuntu-latest
             cross: true
-          - target: i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)
+          - target: i686-unknown-linux-gnu
             os: ubuntu-latest
             cross: true
-          - target: i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)
+          - target: i686-unknown-linux-musl
             os: ubuntu-latest
             cross: true
-          # - target: mips-unknown-linux-gnu # MIPS Linux (kernel 2.6.32+, glibc 2.11+)
-          #   os: ubuntu-latest
-          #   cross: true
-          # - target: mips-unknown-linux-musl # MIPS Linux (kernel 2.6.32+, musl libc)
-          #   os: ubuntu-latest
-          #   cross: true
-          # - target: mips64-unknown-linux-gnuabi64 # MIPS64 Linux (kernel 2.6.32+, glibc 2.11+)
-          #   os: ubuntu-latest
-          #   cross: true
-          # - target: mips64el-unknown-linux-gnuabi64 # MIPS64el Linux (kernel 2.6.32+, glibc 2.11+)
-          #   os: ubuntu-latest
-          #   cross: true
-          # - target: mipsel-unknown-linux-gnu # MIPSel Linux (kernel 2.6.32+, glibc 2.11+)
-          #   os: ubuntu-latest
-          #   cross: true
-          # - target: powerpc64le-unknown-linux-gnu # 64-bit PowerPC Linux (kernel 2.6.32+, glibc 2.11+)
-          #   os: ubuntu-latest
-          #   cross: true
-          - target: x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)
+          - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             cross: true
-          - target: x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)
+          - target: x86_64-unknown-linux-musl
             os: ubuntu-latest
             cross: true
 
           # macOS targets 🍎
-          - target: x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            cross: true
+          - target: aarch64-apple-darwin
             os: macos-latest
             cross: true
 
           # Windows targets 🪟
-          - target: i686-pc-windows-msvc # 32-bit Windows
+          - target: i686-pc-windows-gnu # 32-bit Windows
             os: windows-latest
             cross: true
+          # - target: i686-pc-windows-msvc # 32-bit Windows
+          #   os: windows-latest
+          #   cross: true
           # - target: x86_64-pc-windows-msvc # 64-bit Windows
           #   os: windows-latest
           #   cross: true
@@ -263,7 +247,7 @@ jobs:
         # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
       - name: Install Cross 🦀
