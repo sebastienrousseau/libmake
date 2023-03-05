@@ -169,9 +169,8 @@ jobs:
           - aarch64-apple-darwin # 64-bit macOS on Apple Silicon                                  ✅ Tested
           - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                               ✅ Tested
 
-          # NetBSD targets 🐇
-          - aarch64-unknown-netbsd # 64-bit NetBSD on ARMv8 architecture                      ✅ Tested
-          - x86_64-unknown-netbsd # 64-bit NetBSD on x86-64
+          # Illumos targets 🌞
+          - x86_64-unknown-illumos # 64-bit Illumos on x86-64                                     ✅ Tested
 
         include:
           # FreeBSD targets 🐬
@@ -205,6 +204,11 @@ jobs:
             os: ubuntu-latest
             cross: true
 
+          # Illumos targets 🌞
+          - target: x86_64-unknown-illumos
+            os: ubuntu-latest
+            cross: true
+
           # macOS targets 🍎
           - target: aarch64-apple-darwin
             os: macos-latest
@@ -213,13 +217,6 @@ jobs:
             os: macos-latest
             cross: true
 
-          # NetBSD targets 🐇
-          - target: aarch64-unknown-netbsd
-            os: ubuntu-latest
-            cross: true
-          - target: x86_64-unknown-netbsd
-            os: ubuntu-latest
-            cross: true
 
     runs-on: ${{ matrix.os }}
 
