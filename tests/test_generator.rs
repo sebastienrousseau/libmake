@@ -1,8 +1,13 @@
 #[cfg(test)]
 mod tests {
 
+    use libmake::generator::generate_files;
     use libmake::{
-        generator::{generate_from_config, generate_from_yaml},
+        assert_generate_files,
+        generator::{
+            generate_from_config, generate_from_yaml,
+            FileGenerationParams,
+        },
         utils::{get_csv_field, get_json_field, get_yaml_field},
     };
     use std::path::Path;
@@ -63,5 +68,17 @@ mod tests {
         let file_path = "./tests/data/mylibrary.yaml";
         generate_from_yaml(file_path).unwrap();
         assert_eq!(true, true); // If we get here without panicking, the test has passed
+    }
+
+    #[test]
+    fn test_assert_generate_files() {
+        let temp_dir = std::env::temp_dir().join("my_library");
+        let mut params = FileGenerationParams::default();
+        params.output =
+            Some(temp_dir.as_path().to_str().unwrap().to_owned());
+
+        assert_generate_files!(params);
+        assert!(temp_dir.exists());
+        std::fs::remove_dir_all(temp_dir).unwrap();
     }
 }

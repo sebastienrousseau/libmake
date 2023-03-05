@@ -51,4 +51,25 @@ mod tests {
             "yaml"
         );
     }
+
+    #[test]
+    fn test_assert_create_directory() {
+        assert_create_directory!("./target/tmp");
+        let _ = std::fs::remove_dir_all("./target/tmp");
+    }
+    #[test]
+    fn test_assert_generate_from_csv() {
+        assert_generate_from_csv!("./tests/data/mylibrary.csv");
+        assert!(Path::new("my_library").exists());
+    }
+    #[test]
+    fn test_assert_generate_from_json() {
+        assert_generate_from_json!("./tests/data/mylibrary.json");
+        assert!(Path::new("my_library").exists());
+    }
+    #[test]
+    fn test_assert_generate_from_yaml() {
+        assert_generate_from_yaml!("./tests/data/mylibrary.yaml");
+        assert!(Path::new("my_library").exists());
+    }
 }

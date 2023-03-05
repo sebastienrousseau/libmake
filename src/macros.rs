@@ -3,7 +3,6 @@
 macro_rules! assert_create_directory {
     ($path:expr) => {
         assert!(create_directory(Path::new($path)).is_ok());
-        assert!(create_directory(Path::new($path)).is_ok());
     };
 }
 #[macro_export]

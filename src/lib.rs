@@ -75,7 +75,6 @@
 #![crate_type = "staticlib"]
 use log::LevelFilter;
 use simplelog::{CombinedLogger, Config, TermLogger, TerminalMode};
-use std::error::Error;
 
 /// The `args` module contains functions for processing command-line
 /// arguments.
@@ -105,7 +104,7 @@ pub mod utils;
 /// use libmake::run;
 /// run();
 /// ```
-pub fn run() -> Result<(), Box<dyn Error>> {
+pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize logging
     let log_config = Config::default();
     let file_logger = simplelog::WriteLogger::new(
