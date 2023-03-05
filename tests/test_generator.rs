@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
 
-    use libmake::generator::generate_files;
+    use libmake::generator::{create_directory, generate_files};
     use libmake::{
         assert_generate_files,
         generator::{
@@ -11,6 +11,7 @@ mod tests {
         utils::{get_csv_field, get_json_field, get_yaml_field},
     };
     use std::path::Path;
+    use std::{env, io};
 
     #[test]
     fn test_get_csv_field() {
@@ -80,5 +81,23 @@ mod tests {
         assert_generate_files!(params);
         assert!(temp_dir.exists());
         std::fs::remove_dir_all(temp_dir).unwrap();
+    }
+    #[test]
+    fn test_create_directory_error() -> io::Result<()> {
+        // Create a temporary directory for testing
+        let temp_dir = env::current_dir()?.join("valid_path");
+        std::fs::create_dir(&temp_dir)?;
+
+        // Attempt to create the directory again using create_directory with an invalid path
+        let result =
+            create_directory(&temp_dir.join("invalid_path/test"));
+
+        // Verify that the function returns an error
+        assert!(result.is_err());
+
+        // Clean up the temporary directory
+        std::fs::remove_dir(&temp_dir)?;
+
+        Ok(())
     }
 }

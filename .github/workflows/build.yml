@@ -399,14 +399,3 @@ jobs:
           use-cross: true
           command: publish
           args: --dry-run --verbose --token "${CARGO_API_TOKEN}"
-
-
-      # - name: Publish 🚀
-      #   id: publish
-      #   needs: release
-
-        # uses: actions-rs/cargo@v1
-        # with:
-        #   use-cross: true
-        #   command: publish
-        #   args: -- --dry-run --verbose --token ${{ secrets.CARGO_API_TOKEN }} --debug

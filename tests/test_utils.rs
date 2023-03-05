@@ -2,7 +2,7 @@
 mod tests {
 
     use libmake::utils::{
-        get_csv_field, get_json_field, get_yaml_field,
+        get_config_field, get_csv_field, get_json_field, get_yaml_field,
     };
 
     #[test]
@@ -158,16 +158,28 @@ mod tests {
         assert_eq!(expected_value, actual_value);
     }
 
-    // #[test]
-    // fn test_cleanup_data_directory() {
-    //     let directory_path = "my_library";
-    //     let path = std::path::Path::new(directory_path);
+    #[test]
+    fn test_get_config_field_existing() {
+        let file_path = "./tests/data/mylibrary.yaml";
+        let field_name = "description";
+        let expected_value = "A library for doing things".to_string();
+        let actual_value =
+            get_config_field(Some(file_path), Some("yaml"), field_name);
+        assert_eq!(expected_value, actual_value);
+    }
 
-    //     if path.exists() && path.is_dir() {
-    //         std::fs::remove_dir_all(path).unwrap();
-    //         assert!(!path.exists(), "Directory still exists after cleanup");
-    //     } else {
-    //         assert!(path.exists(), "Directory does not exist after cleanup");
-    //     }
-    // }
+    #[test]
+    fn test_cleanup_data_directory() {
+        let directory_path = "my_library";
+        let path_dir = std::path::Path::new(directory_path);
+
+        // Remove the directory
+        println!("Removing directory: {:?}", path_dir);
+        std::fs::remove_dir_all(path_dir).unwrap();
+
+        assert!(
+            !std::path::Path::new(path_dir).exists(),
+            "Directory still exists after cleanup"
+        );
+    }
 }

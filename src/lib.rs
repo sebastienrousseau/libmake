@@ -110,7 +110,7 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let file_logger = simplelog::WriteLogger::new(
         LevelFilter::Debug,
         log_config.clone(),
-        std::fs::File::create("libmake.log")?,
+        std::fs::File::create("./target/libmake.log")?,
     );
     let term_logger = TermLogger::new(
         LevelFilter::Info,
