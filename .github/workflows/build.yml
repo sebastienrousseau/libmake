@@ -396,4 +396,4 @@ jobs:
         with:
           use-cross: true
           command: publish
-          args: --dry-run --verbose --token ${{ secrets.CARGO_API_TOKEN }}
+          args: -- -vv --debug --dry-run --verbose --token ${{ secrets.CARGO_API_TOKEN }}
