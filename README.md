@@ -99,6 +99,12 @@ or later (stable).
 | x86_64-unknown-linux-gnu | 64-bit Linux (kernel 2.6.32+, glibc 2.11+) | ✅ Tested |
 | x86_64-unknown-linux-musl | 64-bit Linux (kernel 2.6.32+, musl libc) | ✅ Tested |
 
+#### Illumos targets 🌞
+
+| Target | Description | Status |
+|--------|-------------|--------|
+| x86_64-unknown-illumos | 64-bit Illumos on x86-64 | ✅ Tested |
+
 #### macOS targets 🍎
 
 | Target | Description | Status |

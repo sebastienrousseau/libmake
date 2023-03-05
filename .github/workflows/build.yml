@@ -316,7 +316,7 @@ jobs:
 
       - name: Download artifacts
         run: |
-          for target in aarch64-unknown-linux-gnu aarch64-unknown-linux-musl arm-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf i686-unknown-linux-gnu i686-unknown-linux-musl x86_64-unknown-linux-gnu x86_64-unknown-linux-musl x86_64-apple-darwin; do
+          for target in x86_64-unknown-freebsd aarch64-unknown-linux-gnu aarch64-unknown-linux-musl arm-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf i686-unknown-linux-gnu i686-unknown-linux-musl x86_64-unknown-linux-gnu x86_64-unknown-linux-musl aarch64-apple-darwin x86_64-apple-darwin x86_64-unknown-illumos; do
             echo "Downloading $target artifact"
             name="${target}.tar.gz"
             echo "Artifact name: $name"
