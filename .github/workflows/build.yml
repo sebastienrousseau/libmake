@@ -392,7 +392,7 @@ jobs:
 
       - name: Cargo login
         run: |
-            echo "${CARGO_API_TOKEN}" | cargo login
+            echo "${{ secrets.CARGO_API_TOKEN }}" | cargo login
 
       - name: Publish 🚀
         id: publish
