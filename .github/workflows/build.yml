@@ -390,10 +390,24 @@ jobs:
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
+      - name: Cargo login
+        run: |
+            echo "${CARGO_API_TOKEN}" | cargo login
+
       - name: Publish 🚀
         id: publish
         uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: publish
-          args: -- -vv --debug --dry-run --verbose --token ${{ secrets.CARGO_API_TOKEN }}
+          args: -- --dry-run --verbose --token ${{ secrets.CARGO_API_TOKEN }} --debug
+
+      # - name: Publish 🚀
+      #   id: publish
+      #   needs: release
+
+        # uses: actions-rs/cargo@v1
+        # with:
+        #   use-cross: true
+        #   command: publish
+        #   args: -- --dry-run --verbose --token ${{ secrets.CARGO_API_TOKEN }} --debug
