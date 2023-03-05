@@ -11,7 +11,7 @@ on:
 
 jobs:
   check:
-    name: Check
+    name: ❯ Check 💵
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -22,13 +22,13 @@ jobs:
             os: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -36,10 +36,10 @@ jobs:
 
       - uses: actions-rs/cargo@v1
         with:
-          command: check
+          command: check --all-targets --workspace --all-features
 
   test:
-    name: Test Suite 🦀
+    name: ❯ Test 🧪
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -49,13 +49,13 @@ jobs:
             target: x86_64-unknown-linux-gnu
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -68,7 +68,7 @@ jobs:
         run: cargo test --all-targets --workspace --all-features
 
   coverage:
-    name: Coverage 🧪
+    name: ❯ Coverage 📊
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -77,7 +77,7 @@ jobs:
             target: x86_64-unknown-linux-gnu
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -86,7 +86,7 @@ jobs:
           override: true
           components: llvm-tools-preview
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -108,7 +108,7 @@ jobs:
           files: coverage/*.lcov
 
   lints:
-    name: Lints
+    name: ❯ Lints 🧹
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -117,7 +117,7 @@ jobs:
             target: x86_64-unknown-linux-gnu
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
 
@@ -130,7 +130,7 @@ jobs:
           components: clippy
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -144,7 +144,7 @@ jobs:
           args: --all-targets --all-features -- -D warnings
 
   build:
-    name: Build
+    name: ❯ Build 🛠
     strategy:
       fail-fast: false
       matrix:
@@ -167,6 +167,13 @@ jobs:
           # macOS targets 🍎
           - aarch64-apple-darwin # 64-bit macOS on Apple Silicon                                  ✅ Tested
           - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                               ✅ Tested
+
+          # OpenBSD targets 🐡
+          - x86_64-unknown-openbsd # 64-bit OpenBSD on x86-64                               ✅ Tested
+
+          # NetBSD targets 🐇
+          - aarch64-unknown-netbsd # 64-bit NetBSD on ARMv8 architecture                      ✅ Tested
+          - x86_64-unknown-netbsd # 64-bit NetBSD on x86-64
 
         include:
           # FreeBSD targets 🐬
@@ -208,12 +215,25 @@ jobs:
             os: macos-latest
             cross: true
 
+          # OpenBSD targets 🐡
+          - target: x86_64-unknown-openbsd
+            os: ubuntu-latest
+            cross: true
+
+          # NetBSD targets 🐇
+          - target: aarch64-unknown-netbsd
+            os: ubuntu-latest
+            cross: true
+          - target: x86_64-unknown-netbsd
+            os: ubuntu-latest
+            cross: true
+
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout sources 📥
         id: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install stable toolchain 🛠️
         id: install-toolchain
@@ -224,7 +244,7 @@ jobs:
 
       - name: Cache dependencies 📦
         id: cache-dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -278,33 +298,33 @@ jobs:
           echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
 
   release:
-    name: Release
+    name: ❯ Release 🚀
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout sources 📥
-        uses: actions/checkout@v2
+      - name: Checkout sources
+        uses: actions/checkout@v3
 
-      - name: Install stable toolchain 🛠️
+      - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
-      - name: Update version number 🧮
+      - name: Update version number
         run: |
           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
-      - name: Cache dependencies 📦
-        uses: actions/cache@v2
+      - name: Cache dependencies
+        uses: actions/cache@v3
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
 
-      - name: Download artifacts 📥
+      - name: Download artifacts
         run: |
           for target in aarch64-unknown-linux-gnu aarch64-unknown-linux-musl arm-unknown-linux-gnueabi armv7-unknown-linux-gnueabihf i686-unknown-linux-gnu i686-unknown-linux-musl x86_64-unknown-linux-gnu x86_64-unknown-linux-musl x86_64-apple-darwin; do
             echo "Downloading $target artifact"
@@ -317,7 +337,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_ID: ${{ github.event.workflow_run.id }}
 
-      - name: Generate Changelog 📜
+      - name: Generate Changelog
         run: |
           # Append version information to CHANGELOG.md
           echo "## Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
@@ -328,7 +348,7 @@ jobs:
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
-      - name: Append Artifact Links 📝
+      - name: Append Artifact Links
         run: |
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
@@ -337,7 +357,7 @@ jobs:
             echo "* [$link](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
           done
 
-      - name: Create Release 🚀
+      - name: Create Release
         id: create-release
         uses: actions/create-release@v1
         env:
