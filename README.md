@@ -39,7 +39,7 @@ available on [Crates.io][7] and [Lib.rs][8].
 `LibMake` offers the following features and benefits:
 
 - Create your Rust library with ease using the command line interface or
-  by providing a configuration file in CSV, JSON, or YAML format.
+  by providing a configuration file in CSV, JSON, TOML, or YAML format.
 - Rapidly generate new library projects with a pre-defined structure and
   boilerplate code that you can customize with your own template.
 - Automatically generate basic functions, methods, and macros to get you

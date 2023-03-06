@@ -32,7 +32,7 @@ The library is designed to be used as a command-line tool. It is available on [C
 
 `LibMake` offers the following features and benefits:
 
-- Create your Rust library with ease using the command line interface or by providing a configuration file in CSV, JSON, or YAML format.
+- Create your Rust library with ease using the command line interface or by providing a configuration file in CSV, JSON, TOML, or YAML format.
 - Rapidly generate new library projects with a pre-defined structure and boilerplate code that you can customize with your own template.
 - Automatically generate basic functions, methods, and macros to get you started with your Rust library.
 - Enforce best practices and standards with starter documentation, test suites, and benchmark suites that are designed to help you get up and running quickly.

@@ -24,7 +24,7 @@ mod tests {
 
     #[test]
     fn test_generate_files() {
-        let mut params = FileGenerationParams::default();
+        let mut params = FileGenerationParams::new();
         params.output = Some("my_library".into());
         assert_generate_files!(params);
     }

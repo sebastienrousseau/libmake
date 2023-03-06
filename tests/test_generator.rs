@@ -72,9 +72,16 @@ mod tests {
     }
 
     #[test]
+    fn generate_from_toml() {
+        let file_path = "./tests/data/mylibrary.toml";
+        generate_from_config(file_path, "toml").unwrap();
+        assert_eq!(true, true); // If we get here without panicking, the test has passed
+    }
+
+    #[test]
     fn test_assert_generate_files() {
         let temp_dir = std::env::temp_dir().join("my_library");
-        let mut params = FileGenerationParams::default();
+        let mut params = FileGenerationParams::new();
         params.output =
             Some(temp_dir.as_path().to_str().unwrap().to_owned());
 

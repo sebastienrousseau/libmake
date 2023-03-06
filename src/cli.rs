@@ -21,7 +21,6 @@ use clap::{Arg, ArgMatches, Command, Error};
 /// ```
 pub fn build_cli() -> Result<ArgMatches, Error> {
     let matches = Command::new("My Library")
-        .author("Your Name")
         .about(
             "A Rust library generator that helps create high-quality Rust libraries quickly and easily.",
         )
@@ -48,13 +47,6 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
                 .long("categories")
                 .short('c')
                 .value_name("CATEGORIES"),
-        )
-        .arg(
-            Arg::new("csv")
-                .help("Sets the CSV file to use for generating the library")
-                .long("csv")
-                .short('f')
-                .value_name("CSV"),
         )
         .arg(
             Arg::new("description")
@@ -168,10 +160,40 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
                 .short('w')
                 .value_name("WEBSITE"),
         )
+        .arg(
+            Arg::new("csv")
+                .help("Sets the CSV file to use for generating the library")
+                .long("csv")
+                .short('x')
+                .value_name("CSV"),
+        )
+        .arg(
+            Arg::new("yml")
+                .help("Sets the YML file to use for generating the library")
+                .long("yml")
+                .short('y')
+                .value_name("YAML"),
+        )
+        .arg(
+            Arg::new("json")
+                .help("Sets the JSON file to use for generating the library")
+                .long("json")
+                .short('j')
+                .value_name("JSON"),
+        )
+        .arg(
+            Arg::new("toml")
+                .help("Sets the TOML file to use for generating the library")
+                .long("toml")
+                .short('t')
+                .value_name("TOML"),
+        )
         .after_help(
-            "Longer explanation to appear after the options when \
-        displaying the help information from --help or -h",
+            "By default, if no arguments are passed in, the CLI will \
+            execute the `default` action. To see a list of available \
+            actions, run `--help`.",
         )
         .get_matches();
+
     Ok(matches)
 }

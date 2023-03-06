@@ -1,5 +1,9 @@
 use clap::ArgMatches;
 
+use crate::generator::{
+    generate_from_json, generate_from_toml, generate_from_yaml,
+};
+
 use super::generator::{
     generate_files, generate_from_csv, FileGenerationParams,
 };
@@ -30,36 +34,47 @@ pub fn process_arguments(matches: ArgMatches) {
     let website = matches.get_one::<String>("website");
 
     if matches.contains_id("csv") {
-        if matches.get_one::<String>("csv") == Some(&"".to_string()) {
-            let params = FileGenerationParams {
-                author: author.cloned(),
-                build: build.cloned(),
-                categories: categories.cloned(),
-                description: description.cloned(),
-                documentation: documentation.cloned(),
-                edition: edition.cloned(),
-                email: email.cloned(),
-                homepage: homepage.cloned(),
-                keywords: keywords.cloned(),
-                license: license.cloned(),
-                name: name.cloned(),
-                output: output.cloned(),
-                readme: readme.cloned(),
-                repository: repository.cloned(),
-                rustversion: rustversion.cloned(),
-                version: version.cloned(),
-                website: website.cloned(),
-            };
-            generate_files(params)
-                .expect("Failed to generate the template files");
-        } else if let Some(csv_file) = matches.get_one::<String>("csv")
-        {
-            if let Err(e) = generate_from_csv(csv_file) {
-                eprintln!(
-                    "Failed to generate the template files: {}",
-                    e
-                );
-            }
-        }
+        let csv_file_path = matches.get_one::<String>("csv").unwrap();
+        generate_from_csv(csv_file_path)
+            .expect("Failed to generate the template files");
+    } else if let Some(yaml_file_path) =
+        matches.get_one::<String>("yml")
+    {
+        generate_from_yaml(yaml_file_path)
+            .expect("Failed to generate the template files");
+    } else if let Some(json_file_path) =
+        matches.get_one::<String>("json")
+    {
+        generate_from_json(json_file_path)
+            .expect("Failed to generate the template files");
+    } else if let Some(toml_file_path) =
+        matches.get_one::<String>("toml")
+    {
+        generate_from_toml(toml_file_path)
+            .expect("Failed to generate the template files");
+    } else if matches.contains_id("csv") {
+        let params = FileGenerationParams {
+            author: author.cloned(),
+            build: build.cloned(),
+            categories: categories.cloned(),
+            description: description.cloned(),
+            documentation: documentation.cloned(),
+            edition: edition.cloned(),
+            email: email.cloned(),
+            homepage: homepage.cloned(),
+            keywords: keywords.cloned(),
+            license: license.cloned(),
+            name: name.cloned(),
+            output: output.cloned(),
+            readme: readme.cloned(),
+            repository: repository.cloned(),
+            rustversion: rustversion.cloned(),
+            version: version.cloned(),
+            website: website.cloned(),
+        };
+        generate_files(params)
+            .expect("Failed to generate the template files");
     }
+    println!("Template files generated successfully!");
 }
+// }
