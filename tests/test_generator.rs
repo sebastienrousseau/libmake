@@ -1,7 +1,9 @@
 #[cfg(test)]
 mod tests {
 
-    use libmake::generator::{create_directory, generate_files};
+    use libmake::generator::{
+        create_directory, generate_files, generate_from_args,
+    };
     use libmake::{
         assert_generate_files,
         generator::{
@@ -76,6 +78,47 @@ mod tests {
         let file_path = "./tests/data/mylibrary.toml";
         generate_from_config(file_path, "toml").unwrap();
         assert_eq!(true, true); // If we get here without panicking, the test has passed
+    }
+
+    #[test]
+    fn test_generate_from_args() {
+        let args = "--author=Me --output=my_library"
+            .split(' ')
+            .map(|s| s.to_string())
+            .collect::<Vec<String>>();
+
+        let args_str = args[1..].join(" ");
+        let result = generate_from_args(&args_str);
+
+        assert_eq!(result.is_ok(), true);
+    }
+
+    #[test]
+    fn test_from_args() {
+        let args = "--author=Me \
+                                 --build=build.rs \
+                                 --categories=[cat1,cat2] \
+                                 --description='test' \
+                                 --documentation= \
+                                 --edition=2018 \
+                                 --email='test@test.com' \
+                                 --homepage= \
+                                 --keywords= \
+                                 --license=MIT \
+                                 --output=my_library \
+                                 --readme= \
+                                 --repository= \
+                                 --rustversion= \
+                                 --version= \
+                                 --website="
+            .split(' ')
+            .map(|s| s.to_string())
+            .collect::<Vec<String>>();
+
+        let args_str = args[1..].join(" ");
+        let result = generate_from_args(&args_str);
+        
+        assert_eq!(result.is_ok(), true);
     }
 
     #[test]

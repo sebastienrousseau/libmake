@@ -13,6 +13,7 @@ fn main() -> std::io::Result<()> {
 
     let args_str = args[1..].join(" ");
     let result = generate_from_args(&args_str);
+    println!("{:?}", result);
 
     match result {
         Ok(()) => println!("Successfully generated files!"),
