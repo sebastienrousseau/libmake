@@ -96,7 +96,7 @@ jobs:
   # This job runs the tests for the project.
   coverage:
     name: ❯ Coverage 📊
-    # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     strategy:
       matrix:
