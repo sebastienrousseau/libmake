@@ -102,73 +102,76 @@ impl FileGenerationParams {
             website: Some("https://example.com/john-smith".to_string()),
         }
     }
+    /// Parses the command line arguments and returns a new instance of
+    /// the structure.
+
     /// Creates a new instance with default values.
     pub fn new() -> Self {
         Self::default_params()
     }
-    // Creates a new instance from the command line arguments.
-    // pub fn from_args(args_str: &str) -> Result<Self, String> {
-    //     let mut params = Self::new();
-    //     let args: Vec<&str> = args_str.split_whitespace().collect();
-    //     for arg in args {
-    //         let mut arg_parts = arg.splitn(2, ' ');
-    //         let arg_name = arg_parts
-    //             .next()
-    //             .ok_or_else(|| "Missing argument name".to_string())?;
-    //         let arg_value = arg_parts
-    //             .next()
-    //             .ok_or_else(|| "Missing argument value".to_string())?;
-    //         match arg_name {
-    //             "--author" => {
-    //                 params.author = Some(arg_value.to_string())
-    //             }
-    //             "--build" => params.build = Some(arg_value.to_string()),
-    //             "--categories" => {
-    //                 params.categories = Some(arg_value.to_string())
-    //             }
-    //             "--description" => {
-    //                 params.description = Some(arg_value.to_string())
-    //             }
-    //             "--documentation" => {
-    //                 params.documentation = Some(arg_value.to_string())
-    //             }
-    //             "--edition" => {
-    //                 params.edition = Some(arg_value.to_string())
-    //             }
-    //             "--email" => params.email = Some(arg_value.to_string()),
-    //             "--homepage" => {
-    //                 params.homepage = Some(arg_value.to_string())
-    //             }
-    //             "--keywords" => {
-    //                 params.keywords = Some(arg_value.to_string())
-    //             }
-    //             "--license" => {
-    //                 params.license = Some(arg_value.to_string())
-    //             }
-    //             "--name" => params.name = Some(arg_value.to_string()),
-    //             "--output" => {
-    //                 params.output = Some(arg_value.to_string())
-    //             }
-    //             "--readme" => {
-    //                 params.readme = Some(arg_value.to_string())
-    //             }
-    //             "--repository" => {
-    //                 params.repository = Some(arg_value.to_string())
-    //             }
-    //             "--rustversion" => {
-    //                 params.rustversion = Some(arg_value.to_string())
-    //             }
-    //             "--version" => {
-    //                 params.version = Some(arg_value.to_string())
-    //             }
-    //             "--website" => {
-    //                 params.website = Some(arg_value.to_string())
-    //             }
-    //             _ => (),
-    //         }
-    //     }
-    //     Ok(params)
-    // }
+    /// Creates a new instance from the command line arguments.
+    pub fn from_args(args_str: &str) -> Result<Self, String> {
+        let mut params = Self::new();
+        let args: Vec<&str> = args_str.split_whitespace().collect();
+        for arg in args {
+            let mut arg_parts = arg.splitn(2, ' ');
+            let arg_name = arg_parts
+                .next()
+                .ok_or_else(|| "Missing argument name".to_string())?;
+            let arg_value = arg_parts
+                .next()
+                .ok_or_else(|| "Missing argument value".to_string())?;
+            match arg_name {
+                "--author" => {
+                    params.author = Some(arg_value.to_string())
+                }
+                "--build" => params.build = Some(arg_value.to_string()),
+                "--categories" => {
+                    params.categories = Some(arg_value.to_string())
+                }
+                "--description" => {
+                    params.description = Some(arg_value.to_string())
+                }
+                "--documentation" => {
+                    params.documentation = Some(arg_value.to_string())
+                }
+                "--edition" => {
+                    params.edition = Some(arg_value.to_string())
+                }
+                "--email" => params.email = Some(arg_value.to_string()),
+                "--homepage" => {
+                    params.homepage = Some(arg_value.to_string())
+                }
+                "--keywords" => {
+                    params.keywords = Some(arg_value.to_string())
+                }
+                "--license" => {
+                    params.license = Some(arg_value.to_string())
+                }
+                "--name" => params.name = Some(arg_value.to_string()),
+                "--output" => {
+                    params.output = Some(arg_value.to_string())
+                }
+                "--readme" => {
+                    params.readme = Some(arg_value.to_string())
+                }
+                "--repository" => {
+                    params.repository = Some(arg_value.to_string())
+                }
+                "--rustversion" => {
+                    params.rustversion = Some(arg_value.to_string())
+                }
+                "--version" => {
+                    params.version = Some(arg_value.to_string())
+                }
+                "--website" => {
+                    params.website = Some(arg_value.to_string())
+                }
+                _ => (),
+            }
+        }
+        Ok(params)
+    }
 }
 
 /// Creates a directory if it does not exist. If the directory already
