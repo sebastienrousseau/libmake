@@ -191,6 +191,21 @@ jobs:
           command: clippy
           args: --all-targets --all-features -- -D warnings
 
+      # Run Cargo Format for the code style
+      - name: Run Cargo Format
+        id: run-check-format
+        if: github.ref == !github.event.check_run.conclusion
+        run: |
+          cargo check --all --all-features --workspace --verbose
+
+      # Run cargo clippy to check for linting errors
+      - name: Run Clippy
+        id: run-check-clippy
+        if: github.ref == !github.event.check_run.conclusion
+        run: |
+          cargo clippy --all-targets --all-features --workspace -- -D warnings
+
+
   build:
     # This job builds the project for all the targets and generates a
     # release artifact that contains the binaries for all the targets.
@@ -300,7 +315,6 @@ jobs:
       # Update the version number based on the Cargo.toml file
       - name: Update version number
         id: update-version
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
@@ -325,20 +339,6 @@ jobs:
           command: build
           args: --verbose --workspace --release --target ${{ matrix.target }}
 
-      # Run Cargo Format for the code style
-      - name: Run Cargo Format
-        id: run-check-format
-        if: github.ref == !github.event.check_run.conclusion
-        run: |
-          cargo check --all --all-features --workspace --verbose
-
-      # Run cargo clippy to check for linting errors
-      - name: Run Clippy
-        id: run-check-clippy
-        if: github.ref == !github.event.check_run.conclusion
-        run: |
-          cargo clippy --all-targets --all-features --workspace -- -D warnings
-
       # Package the binary for each target
       - name: Package the binary
         id: package-binary
@@ -346,6 +346,14 @@ jobs:
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
           echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+
+      # Upload the binary for each target
+      - name: Upload the binary
+        id: upload-binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.target }}.tar.gz
+          path: ${{ env[format('{0}.tar.gz', matrix.target)] }}
 
   # Release the binary to GitHub Releases
   release:

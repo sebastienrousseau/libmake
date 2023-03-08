@@ -21,6 +21,7 @@ use clap::{Arg, ArgMatches, Command, Error};
 /// ```
 pub fn build_cli() -> Result<ArgMatches, Error> {
     let matches = Command::new("My Library")
+        .author("Sebastien Rousseau")
         .about(
             "A Rust library generator that helps create high-quality Rust libraries quickly and easily.",
         )
@@ -146,7 +147,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("version")
-                .default_value("0.1.1")
+                .default_value("0.1.2")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')

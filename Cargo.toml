@@ -14,7 +14,7 @@ license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.67.1"
-version = "0.1.1"
+version = "0.1.2"
 include = [
     "/build.rs",
     "/Cargo.toml",
@@ -36,22 +36,22 @@ members = ["xtask"]
 # harness = false
 # path = "benches/criterion.rs"
 
-[profile.bench]
-debug = true
+# [profile.bench]
+# debug = true
 
 [dependencies]
-assert_cmd = "2.0.8"
-clap = "4.1.6"
-csv = "1.2.0"
-figlet-rs = "0.1.5"
-log = "0.4.17"
-serde = { version = "1.0.152", features = ["derive"] }
-serde_json = "1.0.93"
-serde_yaml = "0.9.17"
-simplelog = "0.12.0"
-toml = "0.7.2"
+# log = "0.4.17"
+# simplelog = "0.12.0"
 # tempfile = "3.4.0"
 # zip = "0.6.4"
+assert_cmd = "2.0.8"
+clap = "4.1.6"
+csv = "1.2.1"
+figlet-rs = "0.1.5"
+serde = { version = "1.0.153", features = ["derive"] }
+serde_json = "1.0.94"
+serde_yaml = "0.9.19"
+toml = "0.7.2"
 
 [dev-dependencies]
 # criterion = "0.4.0"
