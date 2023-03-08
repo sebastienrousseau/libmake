@@ -147,7 +147,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("version")
-                .default_value("0.1.2")
+                .default_value("0.1.3")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')
@@ -191,8 +191,8 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .after_help(
             "By default, if no arguments are passed in, the CLI will \
-            execute the `default` action. To see a list of available \
-            actions, run `--help`.",
+            throw an error. To see a list of available actions, run \
+            `--help`.",
         )
         .get_matches();
 

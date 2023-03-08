@@ -190,19 +190,23 @@ pub fn create_directory(path: &Path) -> io::Result<()> {
 /// Creates the template directory and downloads the template files.
 pub fn create_template_folder() -> io::Result<()> {
     let current_dir = std::env::current_dir()?;
+    // println!("Current directory: {:?}", current_dir);
     let template_dir_path = current_dir.join("template");
+    // println!("Creating template directory: {:?}", template_dir_path);
     create_directory(&template_dir_path)?;
     let url = "https://raw.githubusercontent.com/sebastienrousseau/libmake/main/template/";
     let files = [
-        "CONTRIBUTING.tpl",
-        "Cargo.tpl",
-        "README.tpl",
-        "criterion.ion.tpl",
         "build.tpl",
+        "Cargo.tpl",
+        "ci.tpl",
+        "CONTRIBUTING.tpl",
+        "criterion.tpl",
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
         "main.tpl",
+        "README.tpl",
+        "TEMPLATE.tpl",
         "test.tpl",
     ];
     for file in &files {
