@@ -347,6 +347,6 @@ this project.
 [codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 'Codecov'
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.2-orange.svg?style=for-the-badge 'Lib.rs Badge'
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.3-orange.svg?style=for-the-badge 'Lib.rs Badge'
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'

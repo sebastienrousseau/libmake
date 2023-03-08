@@ -52,7 +52,7 @@ pub fn process_arguments(matches: ArgMatches) {
     {
         generate_from_toml(toml_file_path)
             .expect("Failed to generate the template files");
-    } else if matches.args_present() {
+    } else if !matches.args_present() {
         let params = FileGenerationParams {
             author: author.cloned(),
             build: build.cloned(),
@@ -74,8 +74,8 @@ pub fn process_arguments(matches: ArgMatches) {
         };
         generate_files(params)
             .expect("Failed to generate the template files");
+        println!("\n\nTemplate files generated successfully!");
     } else {
-        println!("No arguments provided. Please provide the required arguments to generate the template files.");
+        println!("❌ No arguments provided. Please provide the required arguments to generate the template files.");
     }
-    println!("Template files generated successfully!");
 }
