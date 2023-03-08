@@ -17,6 +17,32 @@
 
 <!-- markdownlint-enable MD033 -->
 
+## Table of Contents 📖
+
+- [Overview 📖](#overview-)
+- [Features ✨](#features-)
+- [Getting Started 🚀](#getting-started-)
+  - [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Platform support](#platform-support)
+    - [FreeBSD targets 🐬](#freebsd-targets-)
+    - [Linux targets 🐧](#linux-targets-)
+    - [Illumos targets 🌞](#illumos-targets-)
+    - [macOS targets 🍎](#macos-targets-)
+  - [Documentation](#documentation)
+- [Usage 📖](#usage-)
+  - [Command-line interface](#command-line-interface)
+    - [Generate a new library using a CSV file](#generate-a-new-library-using-a-csv-file)
+    - [Generate a new library using a JSON file](#generate-a-new-library-using-a-json-file)
+    - [Generate a new library using a TOML file](#generate-a-new-library-using-a-toml-file)
+    - [Generate a new library using a YAML file](#generate-a-new-library-using-a-yaml-file)
+    - [Generate a new library using the command-line interface (CLI) directly](#generate-a-new-library-using-the-command-line-interface-cli-directly)
+  - [Examples](#examples)
+- [Semantic Versioning Policy 🚥](#semantic-versioning-policy-)
+- [License 📝](#license-)
+- [Contribution 🤝](#contribution-)
+- [Acknowledgements 💙](#acknowledgements-)
+
 ## Overview 📖
 
 `LibMake` is a tool designed to quickly help creating high-quality Rust
@@ -42,6 +68,8 @@ available on [Crates.io][7] and [Lib.rs][8].
   by providing a configuration file in CSV, JSON, TOML, or YAML format.
 - Rapidly generate new library projects with a pre-defined structure and
   boilerplate code that you can customize with your own template.
+- Generate a library pre-defined GitHub Actions workflow to help you
+  automate your library development and testing.
 - Automatically generate basic functions, methods, and macros to get you
   started with your Rust library.
 - Enforce best practices and standards with starter documentation, test
@@ -50,7 +78,7 @@ available on [Crates.io][7] and [Lib.rs][8].
 
 ## Getting Started 🚀
 
-It takes just a few minutes to get up and running with `LibMake`.
+It takes just a few seconds to get up and running with `LibMake`.
 
 ### Installation
 
@@ -78,7 +106,7 @@ or later (stable).
 
 ### Platform support
 
-`LibMake` is supported and tested on the following platforms:
+`LibMake` is supported and has been tested on the following platforms:
 
 #### FreeBSD targets 🐬
 
@@ -115,10 +143,15 @@ or later (stable).
 The [GitHub Actions][10] shows the platforms in which the `LibMake`
 library tests are run.
 
+Should you encounter any issues with the library on any of the above
+platforms, please [report a bug][3]. We will do our best to resolve the
+issue as soon as possible. If you would like to contribute to help us to
+support additional platforms, please submit a pull request.
+
 ### Documentation
 
-> ℹ️ **Info:** Please check out our [website][0] for more information.
-You can find our documentation on [docs.rs][8], [lib.rs][9] and
+> ℹ️ **Info:** Do check out our [website][0] for more information. You
+can find our documentation on [docs.rs][8], [lib.rs][9] and
 [crates.io][7].
 
 ## Usage 📖
@@ -126,7 +159,7 @@ You can find our documentation on [docs.rs][8], [lib.rs][9] and
 ### Command-line interface
 
 `LibMake` provides a command-line interface to generate a new library
-project.
+project. There are a few options available to help you get started.
 
 #### Generate a new library using a CSV file
 
@@ -136,7 +169,13 @@ Have a look at the `tests/data/mylibrary.csv` file for an example and
 feel free to use it for your own library as a template.
 
 ```shell
-libmake -f tests/data/mylibrary.csv
+libmake --csv tests/data/mylibrary.csv
+```
+
+or locally if you have cloned the repository:
+
+```shell
+cargo run -- --csv tests/data/mylibrary.csv
 ```
 
 #### Generate a new library using a JSON file
@@ -147,7 +186,30 @@ Have a look at the `tests/data/mylibrary.json` file for an example and
 feel free to use it for your own library as a template.
 
 ```shell
-libmake -f tests/data/mylibrary.json
+libmake --json tests/data/mylibrary.json
+```
+
+or locally if you have cloned the repository:
+
+```shell
+cargo run -- --json tests/data/mylibrary.json
+```
+
+#### Generate a new library using a TOML file
+
+The following command generates a library template from a TOML file.
+
+Have a look at the `tests/data/mylibrary.toml` file for an example and
+feel free to use it for your own library as a template.
+
+```shell
+libmake --toml tests/data/mylibrary.toml
+```
+
+or locally if you have cloned the repository:
+
+```shell
+cargo run -- --toml tests/data/mylibrary.toml
 ```
 
 #### Generate a new library using a YAML file
@@ -158,10 +220,16 @@ Have a look at the `tests/data/mylibrary.yaml` file for an example and
 feel free to use it for your own library as a template.
 
 ```shell
-libmake -f tests/data/mylibrary.yaml
+libmake --yml tests/data/mylibrary.yaml
 ```
 
-#### Generate a new library using the command-line interface
+or locally if you have cloned the repository:
+
+```shell
+cargo run -- --yml tests/data/mylibrary.yaml
+```
+
+#### Generate a new library using the command-line interface (CLI) directly
 
 The following command generates a library template using the command-line
 interface.
@@ -169,6 +237,28 @@ interface.
 ```shell
 libmake \
     --author "John Smith" \
+    --build "build.rs" \
+    --categories "['category 1', 'category 2', 'category 3']" \
+    --description "A Rust library for doing cool things" \
+    --documentation "https://docs.rs/my_library" \
+    --edition "2021" \
+    --email "john.smith@example.com" \
+    --homepage "https://my_library.rs" \
+    --keywords "['rust', 'library', 'cool']" \
+    --license "MIT" \
+    --name "my_library" \
+    --output "my_library" \
+    --readme "README.md" \
+    --repository "https://github.com/example/my_library" \
+    --rustversion "1.67.1" \
+    --version "0.1.0" \
+    --website "https://example.com/john-smith"
+```
+
+or locally if you have cloned the repository:
+
+```shell
+cargo run -- --author "John Smith" \
     --build "build.rs" \
     --categories "['category 1', 'category 2', 'category 3']" \
     --description "A Rust library for doing cool things" \
@@ -195,60 +285,14 @@ To get started with `LibMake`, you can use the examples provided in the
 To run the examples, clone the repository and run the following command
 in your terminal from the project root directory.
 
-#### Generate a new library using a CSV file
-
-The following code uses the `generate_from_csv` function from the
-`libmake` crate to generate a library template from a CSV file.
-
-Have a look at the `tests/data/mylibrary.csv` file for an example and
-feel free to use it for your own library as a template.
-
-The CSV file contains the following header columns:
-
-- `author` - The author of the library (e.g. `John Doe`)
-- `build` - The build configuration file name (e.g. `build.rs`)
-- `categories` - The categories of the library from Crates.io (e.g. `cli,development`)
-- `csv` - The CSV file path to use for the library template generation (e.g. `/tests/data/mylibrary.csv`)
-- `description` - The description of the library (e.g. `My library is a great library`)
-- `documentation` - The documentation of the library (e.g. `https://docs.rs/mylibrary`)
-- `edition` - The edition of the library (e.g. `2021`)
-- `email` - The email of the author of the library (e.g. `john.doe@gmail.com`)
-- `homepage` - The homepage of the library (e.g. `https://mylibrary.com`)
-- `keywords` - The keywords of the library from Crates.io (e.g. `cli,development`)
-- `license` - The license of the library (e.g. `MIT OR Apache-2.0`)
-- `name` - The name of the library (e.g. `mylibrary`)
-- `output` - The output directory path to use for the library template generation (e.g. `/tmp/mylibrary`)
-- `readme` - The README file name (e.g. `README.md`)
-- `repository` - The repository of the library (e.g. `https://github.com/mylibrary/mylibrary`)
-- `rustversion` - The Rust version of the library (e.g. `1.56.0`)
-- `version` - The version of the library (e.g. `0.1.1`)
-- `website` - The website of the author of the library (e.g. `https://johndoe.com`)
-
-Then you need to create a row in your CSV file with the values for each
-
-You can now run the following command to generate a new library using
-
-```shell
-cargo run --example generate_from_csv
-```
-
-#### Generate a new library using a JSON file
-
-The following code uses the `generate_from_json` function from the
-`libmake` crate to generate a library template from a JSON file.
-
-```shell
-cargo run --example generate_from_json
-```
-
-#### Generate a new library using a YAML file
-
-The following code uses the `generate_from_yaml` function from the
-`libmake` crate to generate a library template from a YAML file.
-
-```shell
-cargo run --example generate_from_yaml
-```
+| Example | Description | Command |
+|---------|-------------|---------|
+| `generate_from_args` | Generates a library template using the command-line interface. | `cargo run --example generate_from_args` |
+| `generate_from_config` | Generates a library template from a configuration file. | `cargo run --example generate_from_config` |
+| `generate_from_csv` | Generates a library template from a CSV file. | `cargo run --example generate_from_csv` |
+| `generate_from_json` | Generates a library template from a JSON file. | `cargo run --example generate_from_json` |
+| `generate_from_toml` | Generates a library template from a TOML file. | `cargo run --example generate_from_toml` |
+| `generate_from_yaml` | Generates a library template from a YAML file. | `cargo run --example generate_from_yaml` |
 
 ## Semantic Versioning Policy 🚥
 

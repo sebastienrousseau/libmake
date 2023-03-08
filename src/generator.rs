@@ -323,6 +323,14 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     let tests_directory = project_directory.join("tests");
     create_directory(&tests_directory)?;
 
+    // Creating the .github directory
+    let github_directory = project_directory.join(".github");
+    create_directory(&github_directory)?;
+
+    // Creating the .github/workflows directory
+    let workflows_directory = github_directory.join("workflows");
+    create_directory(&workflows_directory)?;
+
     // Copying the template files to the new library directory
     copy_and_replace_template(
         "criterion.tpl",
@@ -379,8 +387,22 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         &params,
     )?;
     copy_and_replace_template(
+        "TEMPLATE.tpl",
+        "TEMPLATE.md",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
         "test.tpl",
         "tests/test.rs",
+        &project_directory,
+        &params,
+    )?;
+
+    // Copying the template files to the new library directory
+    copy_and_replace_template(
+        "ci.tpl",
+        ".github/workflows/ci.yml",
         &project_directory,
         &params,
     )?;
