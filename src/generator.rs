@@ -19,8 +19,18 @@ use std::{
 /// * The template files are copied to the output directory and the placeholders are replaced with the values of the parameters.
 ///
 ///
-#[non_exhaustive]
-#[derive(Clone, Debug, Default, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize, Deserialize)]
+#[derive(
+    Clone,
+    Debug,
+    Default,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    Serialize,
+    Deserialize,
+)]
 pub struct FileGenerationParams {
     /// The author of the project (optional).
     pub author: Option<String>,
@@ -58,6 +68,112 @@ pub struct FileGenerationParams {
     pub website: Option<String>,
 }
 
+impl FileGenerationParams {
+    /// Creates a default instance with default values.
+    pub fn default_params() -> Self {
+        Self {
+            author: Some("John Smith".to_string()),
+            build: Some("build.rs".to_string()),
+            categories: Some(
+                "[\"category1\",\"category2\",\"category3\"]"
+                    .to_string(),
+            ),
+            description: Some(
+                "A Rust library for doing cool things".to_string(),
+            ),
+            documentation: Some(
+                "https://docs.rs/my_library".to_string(),
+            ),
+            edition: Some("2021".to_string()),
+            email: Some("john.smith@example.com".to_string()),
+            homepage: Some("https://my_library.rs".to_string()),
+            keywords: Some(
+                "[\"rust\",\"library\",\"cool\"]".to_string(),
+            ),
+            license: Some("MIT".to_string()),
+            name: Some("my_library".to_string()),
+            output: Some("my_library".to_string()),
+            readme: Some("README.md".to_string()),
+            repository: Some(
+                "https://github.com/example/my_library".to_string(),
+            ),
+            rustversion: Some("1.67.1".to_string()),
+            version: Some("0.1.0".to_string()),
+            website: Some("https://example.com/john-smith".to_string()),
+        }
+    }
+    /// Parses the command line arguments and returns a new instance of
+    /// the structure.
+
+    /// Creates a new instance with default values.
+    pub fn new() -> Self {
+        Self::default_params()
+    }
+    /// Creates a new instance from the command line arguments.
+    pub fn from_args(args_str: &str) -> Result<Self, String> {
+        let mut params = Self::new();
+        let args: Vec<&str> = args_str.split_whitespace().collect();
+        for arg in args {
+            let mut arg_parts = arg.splitn(2, ' ');
+            let arg_name = arg_parts
+                .next()
+                .ok_or_else(|| "Missing argument name".to_string())?;
+            let arg_value = arg_parts
+                .next()
+                .ok_or_else(|| "Missing argument value".to_string())?;
+            match arg_name {
+                "--author" => {
+                    params.author = Some(arg_value.to_string())
+                }
+                "--build" => params.build = Some(arg_value.to_string()),
+                "--categories" => {
+                    params.categories = Some(arg_value.to_string())
+                }
+                "--description" => {
+                    params.description = Some(arg_value.to_string())
+                }
+                "--documentation" => {
+                    params.documentation = Some(arg_value.to_string())
+                }
+                "--edition" => {
+                    params.edition = Some(arg_value.to_string())
+                }
+                "--email" => params.email = Some(arg_value.to_string()),
+                "--homepage" => {
+                    params.homepage = Some(arg_value.to_string())
+                }
+                "--keywords" => {
+                    params.keywords = Some(arg_value.to_string())
+                }
+                "--license" => {
+                    params.license = Some(arg_value.to_string())
+                }
+                "--name" => params.name = Some(arg_value.to_string()),
+                "--output" => {
+                    params.output = Some(arg_value.to_string())
+                }
+                "--readme" => {
+                    params.readme = Some(arg_value.to_string())
+                }
+                "--repository" => {
+                    params.repository = Some(arg_value.to_string())
+                }
+                "--rustversion" => {
+                    params.rustversion = Some(arg_value.to_string())
+                }
+                "--version" => {
+                    params.version = Some(arg_value.to_string())
+                }
+                "--website" => {
+                    params.website = Some(arg_value.to_string())
+                }
+                _ => (),
+            }
+        }
+        Ok(params)
+    }
+}
+
 /// Creates a directory if it does not exist. If the directory already
 /// exists, the function will return `Ok(())`.
 ///
@@ -65,14 +181,14 @@ pub struct FileGenerationParams {
 ///
 /// - `path` - The path to the directory.
 ///
-fn create_directory(path: &Path) -> io::Result<()> {
+pub fn create_directory(path: &Path) -> io::Result<()> {
     fs::create_dir(path).or_else(|e| match e.kind() {
         io::ErrorKind::AlreadyExists => Ok(()),
         _ => Err(e),
     })
 }
-
-fn create_template_folder() -> io::Result<()> {
+/// Creates the template directory and downloads the template files.
+pub fn create_template_folder() -> io::Result<()> {
     let current_dir = std::env::current_dir()?;
     let template_dir_path = current_dir.join("template");
     create_directory(&template_dir_path)?;
@@ -81,7 +197,7 @@ fn create_template_folder() -> io::Result<()> {
         "CONTRIBUTING.tpl",
         "Cargo.tpl",
         "README.tpl",
-        "bench.tpl",
+        "criterion.ion.tpl",
         "build.tpl",
         "example.tpl",
         "gitignore.tpl",
@@ -127,7 +243,7 @@ fn create_template_folder() -> io::Result<()> {
 /// was successful, the result will be `Ok(())`. If the operation failed,
 /// the result will be `Err(io::Error)`.
 ///
-fn copy_and_replace_template(
+pub fn copy_and_replace_template(
     template_file: &str,
     dest_file: &str,
     project_directory: &PathBuf,
@@ -207,10 +323,33 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     let tests_directory = project_directory.join("tests");
     create_directory(&tests_directory)?;
 
+    // Creating the .github directory
+    let github_directory = project_directory.join(".github");
+    create_directory(&github_directory)?;
+
+    // Creating the .github/workflows directory
+    let workflows_directory = github_directory.join("workflows");
+    create_directory(&workflows_directory)?;
+
     // Copying the template files to the new library directory
-    copy_and_replace_template("bench.tpl", "benches/bench.rs", &project_directory, &params)?;
-    copy_and_replace_template("build.tpl", "build.rs", &project_directory, &params)?;
-    copy_and_replace_template("Cargo.tpl", "Cargo.toml", &project_directory, &params)?;
+    copy_and_replace_template(
+        "criterion.tpl",
+        "benches/criterion.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "build.tpl",
+        "build.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "Cargo.tpl",
+        "Cargo.toml",
+        &project_directory,
+        &params,
+    )?;
     copy_and_replace_template(
         "CONTRIBUTING.tpl",
         "CONTRIBUTING.md",
@@ -223,11 +362,50 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         &project_directory,
         &params,
     )?;
-    copy_and_replace_template("gitignore.tpl", ".gitignore", &project_directory, &params)?;
-    copy_and_replace_template("lib.tpl", "src/lib.rs", &project_directory, &params)?;
-    copy_and_replace_template("main.tpl", "src/main.rs", &project_directory, &params)?;
-    copy_and_replace_template("README.tpl", "README.md", &project_directory, &params)?;
-    copy_and_replace_template("test.tpl", "tests/test.rs", &project_directory, &params)?;
+    copy_and_replace_template(
+        "gitignore.tpl",
+        ".gitignore",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "lib.tpl",
+        "src/lib.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "main.tpl",
+        "src/main.rs",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "README.tpl",
+        "README.md",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "TEMPLATE.tpl",
+        "TEMPLATE.md",
+        &project_directory,
+        &params,
+    )?;
+    copy_and_replace_template(
+        "test.tpl",
+        "tests/test.rs",
+        &project_directory,
+        &params,
+    )?;
+
+    // Copying the template files to the new library directory
+    copy_and_replace_template(
+        "ci.tpl",
+        ".github/workflows/ci.yml",
+        &project_directory,
+        &params,
+    )?;
 
     // Displaying the argument and value pairs
     println!("{:<15}Value", "Argument");
@@ -250,8 +428,16 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     );
     println!("{:<15}{}", "edition", params.edition.unwrap_or_default());
     println!("{:<15}{}", "email", params.email.unwrap_or_default());
-    println!("{:<15}{}", "homepage", params.homepage.unwrap_or_default());
-    println!("{:<15}{}", "keywords", params.keywords.unwrap_or_default());
+    println!(
+        "{:<15}{}",
+        "homepage",
+        params.homepage.unwrap_or_default()
+    );
+    println!(
+        "{:<15}{}",
+        "keywords",
+        params.keywords.unwrap_or_default()
+    );
     println!("{:<15}{}", "license", params.license.unwrap_or_default());
     println!("{:<15}{}", "name", params.name.unwrap_or_default());
     println!("{:<15}{}", "output", output.clone());
@@ -270,6 +456,30 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     println!("{:<15}{}", "website", params.website.unwrap_or_default());
 
     Ok(())
+}
+
+/// Generates files for a new Rust project based on a configuration file.
+/// Supported configuration file formats: JSON, YAML, CSV.
+///
+/// # Arguments
+///
+/// - `path` - The path to the configuration file (required).
+/// - `file_type` - The type of the configuration file (required). Supported types: `json`, `yaml`, `yml`, `csv`.
+///
+pub fn generate_from_config(
+    path: &str,
+    file_type: &str,
+) -> io::Result<()> {
+    match file_type {
+        "csv" => generate_from_csv(path),
+        "json" => generate_from_json(path),
+        "yaml" | "yml" => generate_from_yaml(path),
+        "toml" => generate_from_toml(path),
+        _ => Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "Invalid configuration file format. Supported formats: CSV, JSON, TOML, YAML.",
+        )),
+    }
 }
 
 /// Generates files for a new Rust project based on a CSV file.
@@ -296,10 +506,11 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 /// - `version` - the initial version of the project (optional).
 /// - `website` - the website of the project (optional).
 ///
-pub fn generate_files_from_csv(csv_path: &str) -> io::Result<()> {
+pub fn generate_from_csv(csv_path: &str) -> io::Result<()> {
     let mut reader = csv::Reader::from_path(csv_path)?;
     for result in reader.records() {
         let record = result?;
+        // println!("{:?}", record);
         let params = FileGenerationParams {
             author: record.get(0).map(|s| s.to_string()),
             build: record.get(1).map(|s| s.to_string()),
@@ -350,7 +561,7 @@ pub fn generate_files_from_csv(csv_path: &str) -> io::Result<()> {
 /// - `version` - the initial version of the project (optional).
 /// - `website` - the website of the project (optional).
 ///
-pub fn generate_via_json(path: &str) -> std::io::Result<()> {
+pub fn generate_from_json(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_json::from_str(&contents)?;
     generate_files(params)?;
@@ -380,10 +591,114 @@ pub fn generate_via_json(path: &str) -> std::io::Result<()> {
 /// - `version` - the initial version of the project (optional).
 /// - `website` - the website of the project (optional).
 ///
-pub fn generate_via_yaml(path: &str) -> std::io::Result<()> {
+pub fn generate_from_yaml(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_yaml::from_str(&contents)
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+        .map_err(|e| {
+            std::io::Error::new(std::io::ErrorKind::Other, e)
+        })?;
+    generate_files(params)?;
+    Ok(())
+}
+
+/// Generates files for a new Rust project based on a TOML file.
+///
+/// The TOML file must contain a single object with the following
+/// properties:
+///
+/// - `author` - the author of the project (optional).
+/// - `build` - the build command to be used for building the project (optional).
+/// - `categories` - the categories that the project belongs to (optional).
+/// - `description` - a short description of the project (optional).
+/// - `documentation` - the documentation URL of the project (optional).
+/// - `edition` - the edition of the project (optional).
+/// - `email` - the email address of the author (optional).
+/// - `homepage` - the homepage of the project (optional).
+/// - `keywords` - keywords that describe the project (optional).
+/// - `license` - the license under which the project is released (optional).
+/// - `name` - the name of the project (optional).
+/// - `output` - the output directory where the project files will be created (required).
+/// - `readme` - the name of the readme file (optional).
+/// - `repository` - the url of the project's repository (optional).
+/// - `rustversion` - the minimum Rust version required by the project (optional).
+/// - `version` - the initial version of the project (optional).
+/// - `website` - the website of the project (optional).
+///
+pub fn generate_from_toml(path: &str) -> std::io::Result<()> {
+    let contents = fs::read_to_string(path)?;
+    let params: FileGenerationParams = toml::from_str(&contents)
+        .map_err(|e| {
+            std::io::Error::new(std::io::ErrorKind::Other, e)
+        })?;
+    generate_files(params)?;
+    Ok(())
+}
+
+/// Generates files for a new Rust project based on command line arguments.
+/// The arguments must be in the form `--name=value`.
+/// The following arguments are supported:
+/// - `author` - the author of the project (optional).
+/// - `build` - the build command to be used for building the project (optional).
+/// - `categories` - the categories that the project belongs to (optional).
+/// - `description` - a short description of the project (optional).
+/// - `documentation` - the documentation URL of the project (optional).
+/// - `edition` - the edition of the project (optional).
+/// - `email` - the email address of the author (optional).
+/// - `homepage` - the homepage of the project (optional).
+/// - `keywords` - keywords that describe the project (optional).
+/// - `license` - the license under which the project is released (optional).
+/// - `name` - the name of the project (optional).
+/// - `output` - the output directory where the project files will be created (required).
+/// - `readme` - the name of the readme file (optional).
+/// - `repository` - the url of the project's repository (optional).
+/// - `rustversion` - the minimum Rust version required by the project (optional).
+/// - `version` - the initial version of the project (optional).
+/// - `website` - the website of the project (optional).
+///
+pub fn generate_from_args(args_str: &str) -> std::io::Result<()> {
+    let args = args_str.split_whitespace();
+    let mut params = FileGenerationParams::default();
+    for arg in args {
+        let mut parts = arg.splitn(2, '=');
+        let name = parts.next().unwrap_or_default();
+        let value = parts.next().unwrap_or_default();
+        match name {
+            "--author" => params.author = Some(value.to_string()),
+            "--build" => params.build = Some(value.to_string()),
+            "--categories" => {
+                params.categories = Some(value.to_string())
+            }
+            "--description" => {
+                params.description = Some(value.to_string())
+            }
+            "--documentation" => {
+                params.documentation = Some(value.to_string())
+            }
+            "--edition" => params.edition = Some(value.to_string()),
+            "--email" => params.email = Some(value.to_string()),
+            "--homepage" => params.homepage = Some(value.to_string()),
+            "--keywords" => params.keywords = Some(value.to_string()),
+            "--license" => params.license = Some(value.to_string()),
+            "--name" => params.name = Some(value.to_string()),
+            "--output" => params.output = Some(value.to_string()),
+            "--readme" => params.readme = Some(value.to_string()),
+            "--repository" => {
+                params.repository = Some(value.to_string())
+            }
+            "--rustversion" => {
+                params.rustversion = Some(value.to_string())
+            }
+            "--version" => params.version = Some(value.to_string()),
+            "--website" => params.website = Some(value.to_string()),
+            _ => {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::Other,
+                    format!("Invalid argument: {}", name),
+                ))
+            }
+        }
+    }
+    println!("{:?}", params);
     generate_files(params)?;
     Ok(())
 }

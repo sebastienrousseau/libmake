@@ -14,7 +14,7 @@ license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.67.1"
-version = "0.1.0"
+version = "0.1.1"
 include = [
     "/build.rs",
     "/Cargo.toml",
@@ -28,10 +28,13 @@ include = [
     "/templates/**",
 ]
 
+[workspace]
+members = ["xtask"]
+
 # [[bench]]
 # name = "benchmark"
 # harness = false
-# path = "benches/bench.rs"
+# path = "benches/criterion.rs"
 
 [profile.bench]
 debug = true
@@ -46,11 +49,13 @@ serde = { version = "1.0.152", features = ["derive"] }
 serde_json = "1.0.93"
 serde_yaml = "0.9.17"
 simplelog = "0.12.0"
-tempfile = "3.4.0"
-zip = "0.6.4"
+toml = "0.7.2"
+# tempfile = "3.4.0"
+# zip = "0.6.4"
 
 [dev-dependencies]
-criterion = "0.4.0"
+# criterion = "0.4.0"
+predicates = "2.1.5"
 
 [lib]
 crate-type = ["lib"]

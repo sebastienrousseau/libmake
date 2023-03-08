@@ -10,7 +10,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.0-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.1-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -60,6 +60,7 @@
 #![deny(dead_code)]
 #![deny(missing_debug_implementations)]
 #![deny(missing_docs)]
+#![deny(rustc::existing_doc_keyword)]
 #![forbid(unsafe_code)]
 #![warn(unreachable_pub)]
 #![doc(
@@ -68,10 +69,12 @@
     html_root_url = "https://docs.rs/libmake"
 )]
 #![crate_name = "libmake"]
+#![crate_type = "dylib"]
 #![crate_type = "lib"]
+#![crate_type = "rlib"]
+#![crate_type = "staticlib"]
 use log::LevelFilter;
 use simplelog::{CombinedLogger, Config, TermLogger, TerminalMode};
-use std::error::Error;
 
 /// The `args` module contains functions for processing command-line
 /// arguments.
@@ -87,6 +90,8 @@ pub mod generator;
 /// The `interface` module contains functions for displaying the
 /// interface.
 pub mod interface;
+/// The `macros` module contains functions for generating macros.
+pub mod macros;
 /// The `utils` module contains a function for reading a CSV file at the
 /// given file path and returns the value of the given field.
 pub mod utils;
@@ -99,13 +104,13 @@ pub mod utils;
 /// use libmake::run;
 /// run();
 /// ```
-pub fn run() -> Result<(), Box<dyn Error>> {
+pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize logging
     let log_config = Config::default();
     let file_logger = simplelog::WriteLogger::new(
         LevelFilter::Debug,
         log_config.clone(),
-        std::fs::File::create("libmake.log")?,
+        std::fs::File::create("./target/libmake.log")?,
     );
     let term_logger = TermLogger::new(
         LevelFilter::Info,
@@ -124,11 +129,13 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     let matches = cli::build_cli()?;
     args::process_arguments(matches);
-    eprintln!(
-        "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
-    );
 
-    Err("Unable to get the command-line arguments"
-        .to_string()
-        .into())
+    // Print the welcome message if no arguments were passed
+    if std::env::args().len() == 1 {
+        eprintln!(
+            "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
+        );
+    }
+
+    Ok(())
 }
