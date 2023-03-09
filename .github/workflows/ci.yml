@@ -460,7 +460,7 @@ jobs:
       # Cache dependencies to speed up subsequent builds
       - name: Cache dependencies
         id: cache-dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: /home/runner/.cargo/registry/index/
           key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
