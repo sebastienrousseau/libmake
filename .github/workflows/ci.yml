@@ -350,7 +350,7 @@ jobs:
       # Upload the binary for each target
       - name: Upload the binary
         id: upload-binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.target }}.tar.gz
           path: ${{ env[format('{0}.tar.gz', matrix.target)] }}
