@@ -10,7 +10,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.3-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.4-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -58,23 +58,18 @@
 //!
 #![cfg_attr(feature = "bench", feature(test))]
 #![deny(dead_code)]
-#![deny(missing_debug_implementations)]
-#![deny(missing_docs)]
 #![deny(rustc::existing_doc_keyword)]
+#![forbid(missing_debug_implementations)]
+#![forbid(missing_docs)]
+#![forbid(unreachable_pub)]
 #![forbid(unsafe_code)]
-#![warn(unreachable_pub)]
 #![doc(
     html_favicon_url = "https://raw.githubusercontent.com/sebastienrousseau/vault/main/assets/libmake/icons/ico-libmake.svg",
     html_logo_url = "https://raw.githubusercontent.com/sebastienrousseau/vault/main/assets/libmake/icons/ico-libmake.svg",
     html_root_url = "https://docs.rs/libmake"
 )]
 #![crate_name = "libmake"]
-// #![crate_type = "dylib"]
 #![crate_type = "lib"]
-// #![crate_type = "rlib"]
-// #![crate_type = "staticlib"]
-// use log::LevelFilter;
-// use simplelog::{CombinedLogger, Config, TermLogger, TerminalMode};
 
 /// The `args` module contains functions for processing command-line
 /// arguments.
@@ -136,6 +131,5 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
             "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
         );
     }
-
     Ok(())
 }
