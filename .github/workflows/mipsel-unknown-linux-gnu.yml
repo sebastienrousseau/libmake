@@ -56,11 +56,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: libmake-${{ matrix.target }}-v${{ env.VERSION }}
-          path: target/release/ssg
+          path: target/release/libmake
 
       # Tar the binary for the target
       - name: Tar files
-        run: tar -czvf libmake-${{ matrix.target }}-v${{ env.VERSION }}.tar.gz target/release/ssg
+        run: tar -czvf libmake-${{ matrix.target }}-v${{ env.VERSION }}.tar.gz target/release/libmake
 
       # Upload the tarball for the target
       - name: Upload Artifact
