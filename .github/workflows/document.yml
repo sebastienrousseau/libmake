@@ -28,7 +28,7 @@ jobs:
           echo '<html><head><meta http-equiv="refresh" content="0; url=/libmake/"></head><body></body></html>' > ./target/doc/index.html
 
     - name: Deploy
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: documentation
         path: target/doc
