@@ -1,47 +1,29 @@
-# LibMake
+<!-- markdownlint-disable MD033 MD041 -->
 
-## A code generator to reduce repetitive tasks and build high-quality Rust libraries
+<img src="https://kura.pro/libmake/images/logos/libmake.svg"
+alt="LibMake logo" width="261" align="right" />
 
-[![Made With Rust][made-with-rust-badge]][5] [![Crates.io][crates-badge]][7] [![Lib.rs][libs-badge]][9] [![Docs.rs][docs-badge]][8] [![License][license-badge]][2] [![Codecov][codecov-badge]][14]
+<!-- markdownlint-enable MD033 MD041 -->
+# LibMake 🦀
 
-## Welcome to `libmake` 👋
+A code generator to reduce repetitive tasks and build high-quality Rust
+libraries.
+
+<!-- markdownlint-disable MD033 MD041 -->
+<center>
+<!-- markdownlint-enable MD033 MD041 -->
 
 ![libmake Banner][banner]
 
-<!-- markdownlint-disable MD033 -->
-<center>
+[![Made With Rust][made-with-rust-badge]][5] [![Crates.io][crates-badge]][7] [![Lib.rs][libs-badge]][9] [![Docs.rs][docs-badge]][8] [![License][license-badge]][2] [![Codecov][codecov-badge]][14]
 
-**[Website][0] • [Documentation][8] • [Report Bug][3] • [Request Feature][3] • [Contributing Guidelines][4]**
+[Website][0] • [Documentation][8] • [Report Bug][3] • [Request Feature][3] • [Contributing Guidelines][4]
 
+<!-- markdownlint-disable MD033 MD041 -->
 </center>
+<!-- markdownlint-enable MD033 MD041 -->
 
 <!-- markdownlint-enable MD033 -->
-
-## Table of Contents 📖
-
-- [Overview 📖](#overview-)
-- [Features ✨](#features-)
-- [Getting Started 🚀](#getting-started-)
-  - [Installation](#installation)
-  - [Requirements](#requirements)
-  - [Platform support](#platform-support)
-    - [FreeBSD targets 🐬](#freebsd-targets-)
-    - [Linux targets 🐧](#linux-targets-)
-    - [Illumos targets 🌞](#illumos-targets-)
-    - [macOS targets 🍎](#macos-targets-)
-  - [Documentation](#documentation)
-- [Usage 📖](#usage-)
-  - [Command-line interface](#command-line-interface)
-    - [Generate a new library using a CSV file](#generate-a-new-library-using-a-csv-file)
-    - [Generate a new library using a JSON file](#generate-a-new-library-using-a-json-file)
-    - [Generate a new library using a TOML file](#generate-a-new-library-using-a-toml-file)
-    - [Generate a new library using a YAML file](#generate-a-new-library-using-a-yaml-file)
-    - [Generate a new library using the command-line interface (CLI) directly](#generate-a-new-library-using-the-command-line-interface-cli-directly)
-  - [Examples](#examples)
-- [Semantic Versioning Policy 🚥](#semantic-versioning-policy-)
-- [License 📝](#license-)
-- [Contribution 🤝](#contribution-)
-- [Acknowledgements 💙](#acknowledgements-)
 
 ## Overview 📖
 
@@ -101,7 +83,7 @@ libmake --help
 
 ### Requirements
 
-The minimum supported Rust toolchain version is currently Rust `1.68.2`
+The minimum supported Rust toolchain version is currently Rust `1.69.0`
 or later (stable).
 
 ### Platform support
@@ -246,7 +228,7 @@ libmake \
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.68.2" \
+    --rustversion "1.69.0" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
@@ -268,7 +250,7 @@ cargo run -- --author "John Smith" \
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.68.2" \
+    --rustversion "1.69.0" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
@@ -339,10 +321,10 @@ this project.
 [13]: https://www.rust-lang.org/learn/get-started
 [14]: https://codecov.io/github/sebastienrousseau/libmake?branch=main
 
-[banner]: https://raw.githubusercontent.com/sebastienrousseau/vault/main/assets/libmake/logo/logo-libmake.svg "libmake Banner"
+[banner]: https://kura.pro/libmake/images/titles/title-libmake.svg "libmake Banner"
 [codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 'Codecov'
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.4-orange.svg?style=for-the-badge 'Lib.rs Badge'
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.5-orange.svg?style=for-the-badge 'Lib.rs Badge'
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'

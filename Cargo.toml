@@ -1,5 +1,5 @@
 [package]
-authors = ["Sebastian Rousseau <sebastian.rousseau@gmail.com>}"]
+authors = ["Sebastien Rousseau <sebastian.rousseau@gmail.com>}"]
 categories = ['development-tools', 'command-line-utilities', 'template-engine']
 description = "A code generator to reduce repetitive tasks and build high-quality Rust libraries."
 edition = "2021"
@@ -13,8 +13,8 @@ keywords = [
 license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
-rust-version = "1.68.2"
-version = "0.1.4"
+rust-version = "1.69.0"
+version = "0.1.5"
 include = [
     "/build.rs",
     "/Cargo.toml",
@@ -44,18 +44,18 @@ members = ["xtask"]
 # simplelog = "0.12.0"
 # tempfile = "3.4.0"
 # zip = "0.6.4"
-assert_cmd = "2.0.10"
-clap = "4.2.1"
+assert_cmd = "2.0.11"
+clap = "4.2.5"
 csv = "1.2.1"
 figlet-rs = "0.1.5"
-serde = { version = "1.0.159", features = ["derive"] }
-serde_json = "1.0.95"
-serde_yaml = "0.9.19"
+serde = { version = "1.0.160", features = ["derive"] }
+serde_json = "1.0.96"
+serde_yaml = "0.9.21"
 toml = "0.7.3"
 
 [dev-dependencies]
 # criterion = "0.4.0"
-predicates = "3.0.2"
+predicates = "3.0.3"
 
 [lib]
 crate-type = ["lib"]

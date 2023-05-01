@@ -12,7 +12,8 @@ use super::generator::{
 ///
 /// # Arguments
 ///
-/// * `matches` - An instance of `clap::ArgMatches` containing the parsed command line arguments.
+/// * `matches` - An instance of `clap::ArgMatches` containing the
+///               parsed command line arguments.
 ///
 pub fn process_arguments(matches: ArgMatches) {
     let author = matches.get_one::<String>("author");
