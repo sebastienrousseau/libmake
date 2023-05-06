@@ -2,7 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 //!
-//! # A code generator to reduce repetitive tasks and build high-quality Rust libraries
+//! A code generator to reduce repetitive tasks and build high-quality Rust
+//! libraries.
+//!
+//! *Part of the [Mini Functions][0] family of libraries.*
 //!
 //! [![Rust](https://kura.pro/libmake/images/banners/banner-libmake.svg)](https://libmake.com)
 //!
@@ -10,7 +13,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.5-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.6-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -55,6 +58,7 @@
 //! - [`serde`][]: Enable serialization/deserialization via serde
 //!
 //! [`serde`]: https://github.com/serde-rs/serde
+//! [0]: https://minifunctions.com/libmake "Mini Functions"
 //!
 #![cfg_attr(feature = "bench", feature(test))]
 #![deny(dead_code)]
@@ -64,7 +68,7 @@
 #![forbid(unreachable_pub)]
 #![forbid(unsafe_code)]
 #![doc(
-    html_favicon_url = "https://kura.pro/libmake/images/logos/libmake.svg",
+    html_favicon_url = "https://kura.pro/libmake/images/favicon.ico",
     html_logo_url = "https://kura.pro/libmake/images/logos/libmake.svg",
     html_root_url = "https://docs.rs/libmake"
 )]
@@ -100,21 +104,6 @@ pub mod utils;
 /// run();
 /// ```
 pub fn run() -> Result<(), Box<dyn std::error::Error>> {
-    // Initialize logging
-    // let log_config = Config::default();
-    // let file_logger = simplelog::WriteLogger::new(
-    //     LevelFilter::Debug,
-    //     log_config.clone(),
-    //     std::fs::File::create("./target/libmake.log")?,
-    // );
-    // let term_logger = TermLogger::new(
-    //     LevelFilter::Info,
-    //     log_config,
-    //     TerminalMode::Mixed,
-    //     simplelog::ColorChoice::Auto,
-    // );
-    // CombinedLogger::init(vec![term_logger, file_logger])?;
-
     // Process the ascii art
     ascii::generate_ascii_art("LibMake");
 

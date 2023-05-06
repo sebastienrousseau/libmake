@@ -196,16 +196,21 @@ pub fn create_template_folder() -> io::Result<()> {
     create_directory(&template_dir_path)?;
     let url = "https://raw.githubusercontent.com/sebastienrousseau/libmake/main/template/";
     let files = [
+        "AUTHORS.tpl",
         "build.tpl",
         "Cargo.tpl",
         "ci.tpl",
         "CONTRIBUTING.tpl",
         "criterion.tpl",
+        "deepsource.tpl",
+        "deny.tpl",
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
+        "macros.tpl",
         "main.tpl",
         "README.tpl",
+        "rustfmt.tpl",
         "TEMPLATE.tpl",
         "test.tpl",
     ];
@@ -336,77 +341,123 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     create_directory(&workflows_directory)?;
 
     // Copying the template files to the new library directory
+
+    // Copying the `AUTHORS.tpl` file to the new library directory
     copy_and_replace_template(
-        "criterion.tpl",
-        "benches/criterion.rs",
+        "AUTHORS.tpl",
+        "AUTHORS.md",
         &project_directory,
         &params,
     )?;
+    // Copying the `build.tpl` file to the new library directory
     copy_and_replace_template(
         "build.tpl",
         "build.rs",
         &project_directory,
         &params,
     )?;
+    // Copying the `Cargo.tpl` file to the new library directory
     copy_and_replace_template(
         "Cargo.tpl",
         "Cargo.toml",
         &project_directory,
         &params,
     )?;
+    // Copying the `ci.tpl` file to the new library directory
+    copy_and_replace_template(
+        "ci.tpl",
+        ".github/workflows/ci.yml",
+        &project_directory,
+        &params,
+    )?;
+    // Copying the `CONTRIBUTING.tpl` file to the new library directory
     copy_and_replace_template(
         "CONTRIBUTING.tpl",
         "CONTRIBUTING.md",
         &project_directory,
         &params,
     )?;
+    // Copying the `criterion.tpl` file to the new library directory
+    copy_and_replace_template(
+        "criterion.tpl",
+        "criterion.rs",
+        &project_directory,
+        &params,
+    )?;
+    // Copying the `deepsource.tpl` file to the new library directory
+    copy_and_replace_template(
+        "deepsource.tpl",
+        ".deepsource.toml",
+        &project_directory,
+        &params,
+    )?;
+    // Copying the `deny.tpl` file to the new library directory
+    copy_and_replace_template(
+        "deny.tpl",
+        "deny.toml",
+        &project_directory,
+        &params,
+    )?;
+    // Copying the `example.tpl` file to the new library directory
     copy_and_replace_template(
         "example.tpl",
         "examples/example.rs",
         &project_directory,
         &params,
     )?;
+    // Copying the `gitignore.tpl` file to the new library directory
     copy_and_replace_template(
         "gitignore.tpl",
         ".gitignore",
         &project_directory,
         &params,
     )?;
+    // Copying the `lib.tpl` file to the new library directory
     copy_and_replace_template(
         "lib.tpl",
         "src/lib.rs",
         &project_directory,
         &params,
     )?;
+    // Copying the `macros.tpl` file to the new library directory
+    copy_and_replace_template(
+        "macros.tpl",
+        "src/macros.rs",
+        &project_directory,
+        &params,
+    )?;
+    // Copying the `main.tpl` file to the new library directory
     copy_and_replace_template(
         "main.tpl",
         "src/main.rs",
         &project_directory,
         &params,
     )?;
+    // Copying the `README.tpl` file to the new library directory
     copy_and_replace_template(
         "README.tpl",
         "README.md",
         &project_directory,
         &params,
     )?;
+    // Copying the `rustfmt.tpl` file to the new library directory
+    copy_and_replace_template(
+        "rustfmt.tpl",
+        "rustfmt.toml",
+        &project_directory,
+        &params,
+    )?;
+    // Copying the `TEMPLATE.tpl` file to the new library directory
     copy_and_replace_template(
         "TEMPLATE.tpl",
         "TEMPLATE.md",
         &project_directory,
         &params,
     )?;
+    // Copying the `test.tpl` file to the new library directory
     copy_and_replace_template(
         "test.tpl",
         "tests/test.rs",
-        &project_directory,
-        &params,
-    )?;
-
-    // Copying the template files to the new library directory
-    copy_and_replace_template(
-        "ci.tpl",
-        ".github/workflows/ci.yml",
         &project_directory,
         &params,
     )?;

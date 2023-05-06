@@ -1,0 +1,3 @@
+# Authors
+
+* [{author}](mailto:{email})
