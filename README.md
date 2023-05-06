@@ -4,20 +4,26 @@
 alt="LibMake logo" width="261" align="right" />
 
 <!-- markdownlint-enable MD033 MD041 -->
-# LibMake 🦀
+# LibMake
 
 A code generator to reduce repetitive tasks and build high-quality Rust
 libraries.
+
+*Part of the [Mini Functions][0] family of libraries.*
 
 <!-- markdownlint-disable MD033 MD041 -->
 <center>
 <!-- markdownlint-enable MD033 MD041 -->
 
-![libmake Banner][banner]
+![Libmake Banner][banner]
 
-[![Made With Rust][made-with-rust-badge]][5] [![Crates.io][crates-badge]][7] [![Lib.rs][libs-badge]][9] [![Docs.rs][docs-badge]][8] [![License][license-badge]][2] [![Codecov][codecov-badge]][14]
+[![Made With Rust][made-with-rust-badge]][13]
+[![Crates.io][crates-badge]][8] [![Lib.rs][libs-badge]][10]
+[![Docs.rs][docs-badge]][9] [![License][license-badge]][3]
+[![Codecov][codecov-badge]][14]
 
-[Website][0] • [Documentation][8] • [Report Bug][3] • [Request Feature][3] • [Contributing Guidelines][4]
+• [Website][1] • [Documentation][9] • [Report Bug][4]
+• [Request Feature][4] • [Contributing Guidelines][5]
 
 <!-- markdownlint-disable MD033 MD041 -->
 </center>
@@ -66,7 +72,7 @@ It takes just a few seconds to get up and running with `LibMake`.
 
 To install `LibMake`, you need to have the Rust toolchain installed on
 your machine. You can install the Rust toolchain by following the
-instructions on the [Rust website][13].
+instructions on the [Rust website][12].
 
 Once you have the Rust toolchain installed, you can install `LibMake`
 using the following command:
@@ -118,19 +124,19 @@ or later (stable).
 | ✅ | macOS   | aarch64-apple-darwin | 64-bit macOS (10.7 Lion or later) |
 | ✅ | Windows | aarch64-pc-windows-msvc | 64-bit Windows (7 or later) |
 
-The [GitHub Actions][10] shows the platforms in which the `LibMake`
+The [GitHub Actions][11] shows the platforms in which the `LibMake`
 library tests are run.
 
 Should you encounter any issues with the library on any of the above
-platforms, please [report a bug][3]. We will do our best to resolve the
+platforms, please [report a bug][4]. We will do our best to resolve the
 issue as soon as possible. If you would like to contribute to help us to
 support additional platforms, please submit a pull request.
 
 ### Documentation
 
-> ℹ️ **Info:** Do check out our [website][0] for more information. You
-can find our documentation on [docs.rs][8], [lib.rs][9] and
-[crates.io][7].
+> ℹ️ **Info:** Do check out our [website][1] for more information. You
+can find our documentation on [docs.rs][9], [lib.rs][10] and
+[crates.io][8].
 
 ## Usage 📖
 
@@ -275,23 +281,23 @@ in your terminal from the project root directory.
 ## Semantic Versioning Policy 🚥
 
 For transparency into our release cycle and in striving to maintain
-backward compatibility, `libmake` follows [semantic versioning][6].
+backward compatibility, `libmake` follows [semantic versioning][7].
 
 ## License 📝
 
 The project is licensed under the terms of both the MIT license and the
 Apache License (Version 2.0).
 
-- [Apache License, Version 2.0][1]
-- [MIT license][2]
+- [Apache License, Version 2.0][2]
+- [MIT license][3]
 
 ## Contribution 🤝
 
 We welcome all people who want to contribute. Please see the
-[contributing instructions][4] for more information.
+[contributing instructions][5] for more information.
 
 Contributions in any form (issues, pull requests, etc.) to this project
-must adhere to the [Rust's Code of Conduct][11].
+must adhere to the [Rust's Code of Conduct][12].
 
 Unless you explicitly state otherwise, any contribution intentionally
 submitted for inclusion in the work by you, as defined in the
@@ -300,31 +306,32 @@ additional terms or conditions.
 
 ## Acknowledgements 💙
 
-A big thank you to all the awesome contributors of [libmake][5] for their
-help and support. A special thank you goes to the [Rust Reddit][12]
-community for providing a lot of useful suggestions on how to improve
+A big thank you to all the awesome contributors of [libmake][6] for
+their help and support. A special thank you goes to the
+[Rust Reddit][15] community for providing a lot of useful suggestions on how to improve
 this project.
 
-[0]: https://libmake.com
-[1]: https://opensource.org/license/apache-2-0/
-[2]: http://opensource.org/licenses/MIT
-[3]: https://github.com/sebastienrousseau/libmake/issues
-[4]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md
-[5]: https://github.com/sebastienrousseau/libmake/graphs/contributors
-[6]: http://semver.org/
-[7]: https://crates.io/crates/libmake
-[8]: https://docs.rs/libmake
-[9]: https://lib.rs/crates/libmake
-[10]: https://github.com/sebastienrousseau/libmake/actions
-[11]: https://www.rust-lang.org/policies/code-of-conduct
-[12]: https://www.reddit.com/r/rust/
-[13]: https://www.rust-lang.org/learn/get-started
-[14]: https://codecov.io/github/sebastienrousseau/libmake?branch=main
+[0]: https://minifunctions.com/libmake "Mini Functions"
+[1]: https://libmake.com "LibMake"
+[2]: https://opensource.org/license/apache-2-0/ "Apache License, Version 2.0"
+[3]: http://opensource.org/licenses/MIT "MIT license"
+[4]: https://github.com/sebastienrousseau/libmake/issues "Issues"
+[5]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md "Contributing"
+[6]: https://github.com/sebastienrousseau/libmake/graphs/contributors "Contributors"
+[7]: http://semver.org/ "Semantic Versioning"
+[8]: https://crates.io/crates/libmake "LibMake on crates.io"
+[9]: https://docs.rs/libmake "LibMake on docs.rs"
+[10]: https://lib.rs/crates/libmake "LibMake on lib.rs"
+[11]: https://github.com/sebastienrousseau/libmake/actions "GitHub Actions"
+[12]: https://www.rust-lang.org/policies/code-of-conduct "Rust's Code of Conduct"
+[13]: https://www.rust-lang.org "The Rust Programming Language"
+[14]: https://codecov.io/gh/sebastienrousseau/libmake "Codecov"
+[15]: https://www.reddit.com/r/rust/ "Rust Reddit"
 
-[banner]: https://kura.pro/libmake/images/titles/title-libmake.svg "libmake Banner"
+[banner]: https://kura.pro/libmake/images/titles/title-libmake.svg "LibMake Banner"
 [codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 'Codecov'
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.5-orange.svg?style=for-the-badge 'Lib.rs Badge'
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.6-orange.svg?style=for-the-badge 'Lib.rs Badge'
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'
