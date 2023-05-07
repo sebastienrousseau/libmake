@@ -8,4 +8,4 @@ fn main() {
         eprintln!("Error running {name}: {}", err);
         std::process::exit(1);
     }
-}
+}
