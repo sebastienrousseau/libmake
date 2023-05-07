@@ -79,30 +79,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Install ${{ matrix.rust }} toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.target }}
-          override: true
-
-      - name: Install OpenSSL
-        if: matrix.build == 'aarch64-linux'
-        run: sudo apt-get install libssl-dev pkg-config
-
-      - name: Build release library
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: ${{ matrix.cross }}
-          command: build
-          args: --release --target ${{ matrix.target }} --package libmake
-
-      - name: Copy library to dist
-        run: |
-          mkdir -p dist/${{ matrix.target }}
-          cp target/${{ matrix.target }}/release/liblibmake.rlib dist/${{ matrix.target }}
-
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: libs-${{ matrix.build }}
