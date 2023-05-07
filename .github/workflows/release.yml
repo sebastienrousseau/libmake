@@ -159,40 +159,22 @@ jobs:
       - name: Checkout sources
         id: checkout
         uses: actions/checkout@v3
+        with: { submodules: true }
 
-      # Install the stable Rust toolchain
-      - name: Install stable toolchain
-        id: install-toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+      - name: Installing Rust 🦀
+        id: install-rust
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        shell: /bin/bash -e {0}
 
-      # Cache dependencies to speed up subsequent builds
-      - name: Cache dependencies
-        id: cache-dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-
-      # Install the targets for the cross compilation toolchain
-      - name: Install target
-        id: install-target
-        run: rustup target add ${{ matrix.target }}
-
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
+      - name: Update version number 🧮
         id: update-version
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
-      # Install the cross compilation toolchain
-      - name: Install Cross
+      - name: Install Cross 🦀
         id: install-cross
         run: |
           # Install cross
@@ -201,118 +183,57 @@ jobs:
           cargo clean --verbose
         shell: /bin/bash -e {0}
 
-      # Build the targets
-      - name: Build targets
+      - name: Build targets 🏗
         id: build-targets
         uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
-          args: --verbose --workspace --release --target ${{ matrix.target }}
+          args: --verbose --release --target ${{ matrix.target }}
+
+      - name: Package the binary 📦
+        id: package-binary
+        if: github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p target/package
+          tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
 
       # Upload the binary for the target
       - name: Upload binary to GitHub Packages
-        uses: actions/upload-artifact@v2
-        with:
-          # Name the artifact based on the target and version number
-          name: LibMake v${{ env.VERSION }}
-          # Specify the path to the built binary
-          path: target/release/libmake
-
-      # Tar the binary for the target
-      - name: Tar files
-        run: tar -czvf libmake-${{ matrix.target }}-v${{ env.VERSION }}.tar.gz target/release/libmake
-
-      # Upload the tarball for the target
-      - name: Upload Artifact
+        id: deploy-binary
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v3
         with:
-          # Name the artifact based on the version number
-          name: libmake v${{ env.VERSION }}
-          # Specify the path to the tarball
-          path: libmake-${{ matrix.target }}-v${{ env.VERSION }}.tar.gz
-          # Print a success message with the URL of the uploaded artifact
-          run: |
-            echo "Binary uploaded successfully for ${{ matrix.target }}. URL: ${{ steps.upload-artifact.outputs.artifact_url }}"
-          shell: /bin/bash -e {0}
+          name: ${{ matrix.target }}.tar.gz
+          path: target/package/${{ matrix.target }}.tar.gz
 
-  # Release the binary to GitHub Releases
-  release:
-    name: ❯ Release 🚀
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      # Check out the repository code
-      - name: Checkout sources
-        uses: actions/checkout@v3
-
-      # Install the stable Rust toolchain
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
-        shell: /bin/bash -e {0}
-
-      # Cache dependencies to speed up subsequent builds
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-
-      # Download the artifacts from the build job
-      - name: Download artifacts
-        run: |
-          for target in ${{ matrix.target }}; do
-            echo "Downloading $target artifact"
-            if [[ "${{ runner.os }}" == "Windows" ]]; then
-              name="${target}.zip"
-            else
-              name="${target}.tar.gz"
-            fi
-            echo "Artifact name: $name"
-            mkdir -p target/package
-            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${{ github.event.repository.url }}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
-          done
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Generate the changelog based on git log and template file
-      - name: Generate Changelog
+      - name: Generate Changelog 📜
+        id: generate-changelog
+        if: github.ref == 'refs/heads/main'
         run: |
           # Append version information to CHANGELOG.md
-          echo "## Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "## [${{ env.VERSION }}] - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
           # Copy content of template file to CHANGELOG.md
-          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
+          cat README.md > ${{ github.workspace }}/CHANGELOG.md
           # Append git log to CHANGELOG.md
           echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
-
-      # Append the artifact links to the changelog
-      - name: Append Artifact Links
-        run: |
+          # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
-          echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
-          for filename in target/package/*.tar.gz; do
-            link="$(basename $filename)"
-            echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
-          done
 
-      # Create the release on GitHub Releases
-      - name: Create Release
-        id: create-release
+      - name: Create Release 🚀
+        id: create_release
+        if: github.ref == 'refs/heads/main'
         uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: LibMake v${{ env.VERSION }}
+          body_path: ${{ github.workspace }}/CHANGELOG.md
+          draft: true
+          prerelease: false
 
   # Publish the release to Crates.io automatically
   crate:
