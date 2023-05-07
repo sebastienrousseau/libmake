@@ -59,7 +59,9 @@ jobs:
           sudo apt-get install musl-tools libssl-dev
 
       - name: Build
-        run: cargo build --target=${{ matrix.rust_target }} --release
+        run: |
+          cargo clean && |
+          cargo build --target=${{ matrix.rust_target }} --release
 
       - name: Update version number 🧮
         id: update-version
