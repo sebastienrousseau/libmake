@@ -2,11 +2,20 @@
 //!
 //! This crate provides the following macros:
 //!
-//! - [`{name}!`]: The main macro for the `{name}` crate.
+//! - [`{name}`]: The main macro for the `{name}` crate.
+//! - [`{name}_print`]: Prints the arguments to the console.
+//! - [`{name}_vec`]: Creates a new vector of the given elements.
+//! - [`{name}_map`]: Creates a new map of the given key-value pairs.
+//! - [`{name}_assert`]: Checks if the given expression is true.
+//! - [`{name}_min`]: Returns the minimum of the given values.
+//! - [`{name}_max`]: Returns the maximum of the given values.
+//! - [`{name}_split`]: Splits a string into a vector of words.
+//! - [`{name}_join`]: Joins a vector of strings into a single string.
+//! - [`{name}_print_vec`]: Prints a vector of elements to the console.
 //!
-//! This macro takes any number of arguments and parses them into a
-//! Rust value.
 
+/// This macro takes any number of arguments and parses them into a
+/// Rust value.
 #[macro_export]
 macro_rules! {name} {
     ($($tt:tt)*) => {
@@ -15,7 +24,7 @@ macro_rules! {name} {
     };
 }
 
-//! This macro prints the arguments to the console.
+/// This macro prints the arguments to the console.
 #[macro_export]
 macro_rules! {name}_print {
     ($($arg:tt)*) => {
@@ -23,7 +32,7 @@ macro_rules! {name}_print {
     };
 }
 
-//! This macro creates a new vector of the given elements.
+/// This macro creates a new vector of the given elements.
 #[macro_export]
 macro_rules! {name}_vec {
     ($($elem:expr),*) => {{
@@ -33,7 +42,7 @@ macro_rules! {name}_vec {
     }};
 }
 
-//! This macro creates a new map of the given key-value pairs.
+/// This macro creates a new map of the given key-value pairs.
 #[macro_export]
 macro_rules! {name}_map {
     ($($key:expr => $value:expr),*) => {{
@@ -44,7 +53,7 @@ macro_rules! {name}_map {
     }};
 }
 
-//! This macro checks if the given expression is true.
+/// This macro checks if the given expression is true.
 #[macro_export]
 macro_rules! {name}_assert {
     ($($arg:tt)*) => {
@@ -54,7 +63,7 @@ macro_rules! {name}_assert {
     };
 }
 
-//! This macro returns the minimum of the given values.
+/// This macro returns the minimum of the given values.
 #[macro_export]
 macro_rules! {name}_min {
     ($($x:expr),*) => {{
@@ -64,7 +73,7 @@ macro_rules! {name}_min {
     }};
 }
 
-//! This macro returns the maximum of the given values.
+/// This macro returns the maximum of the given values.
 #[macro_export]
 macro_rules! {name}_max {
     ($($x:expr),*) => {{
@@ -74,7 +83,7 @@ macro_rules! {name}_max {
     }};
 }
 
-//! This macro takes a string and splits it into a vector of words.
+/// This macro takes a string and splits it into a vector of words.
 #[macro_export]
 macro_rules! {name}_split {
     ($s:expr) => {{
@@ -86,8 +95,8 @@ macro_rules! {name}_split {
     }};
 }
 
-//! This macro takes a vector of strings and joins them together into a
-//! single string.
+/// This macro takes a vector of strings and joins them together into a
+/// single string.
 #[macro_export]
 macro_rules! {name}_join {
     ($($s:expr),*) => {{
@@ -99,8 +108,8 @@ macro_rules! {name}_join {
     }};
 }
 
-//! This macro takes a vector of elements and prints them to the
-//! console.
+/// This macro takes a vector of elements and prints them to the
+/// console.
 #[macro_export]
 macro_rules! {name}_print_vec {
     ($($v:expr),*) => {{

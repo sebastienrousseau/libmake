@@ -34,7 +34,7 @@ fn {name}_benchmark(c: &mut Criterion) {
     c.bench_function("{name}", |b| {
         b.iter(|| {
             for _ in 0..1000 {
-                run();
+                run().unwrap();
             }
         })
     });

@@ -218,6 +218,7 @@ pub fn create_template_folder() -> io::Result<()> {
         let file_url = format!("{}{}", url, file);
         let file_path = template_dir_path.join(file);
         let output = Command::new("curl")
+            .arg("-s")
             .arg("-L")
             .arg("-o")
             .arg(file_path.as_os_str())
@@ -380,7 +381,7 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     // Copying the `criterion.tpl` file to the new library directory
     copy_and_replace_template(
         "criterion.tpl",
-        "criterion.rs",
+        "benches/criterion.rs",
         &project_directory,
         &params,
     )?;
