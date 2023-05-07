@@ -1,8 +1,7 @@
 name: 🧪 Release
 
 env:
-  BIN_NAME: libmake
-  PROJECT_NAME: LibMake
+  PROJECT_NAME: libmake
 
 on: [push, pull_request]
 
@@ -81,7 +80,7 @@ jobs:
 
       - name: Strip release binary (linux and macos)
         if: matrix.build == 'x86_64-linux' || matrix.build == 'x86_64-macos'
-        run: strip "target/${{ matrix.target }}/release/$BIN_NAME"
+        run: strip "target/${{ matrix.target }}/release/$PROJECT_NAME"
 
       - name: Strip release binary (arm)
         if: matrix.build == 'aarch64-linux'
@@ -90,7 +89,7 @@ jobs:
             "$PWD/target:/target:Z" \
             rustembedded/cross:${{ matrix.target }} \
             aarch64-linux-gnu-strip \
-            /target/${{ matrix.target }}/release/$BIN_NAME
+            /target/${{ matrix.target }}/release/$PROJECT_NAME
 
       - name: Build archive
         shell: bash
@@ -98,9 +97,9 @@ jobs:
           rm -rf dist
           mkdir dist
           if [ "${{ matrix.os }}" = "windows-2019" ]; then
-            cp "target/${{ matrix.target }}/release/$BIN_NAME.exe" "dist/"
+            cp "target/${{ matrix.target }}/release/$PROJECT_NAME.exe" "dist/"
           else
-            cp "target/${{ matrix.target }}/release/$BIN_NAME" "dist/"
+            cp "target/${{ matrix.target }}/release/$PROJECT_NAME" "dist/"
           fi
 
       - uses: actions/upload-artifact@v2.2.4
@@ -118,6 +117,13 @@ jobs:
         with:
           submodules: false
 
+      # Update the version number based on the Cargo.toml file
+      - name: Update version number
+        run: |
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
+        shell: /bin/bash -e {0}
+
       - uses: actions/download-artifact@v2
         # with:
         #   path: dist
@@ -126,7 +132,7 @@ jobs:
 
       - name: Calculate tag name
         run: |
-          name=dev
+          name=v$VERSION
           if [[ $GITHUB_REF == refs/tags/v* ]]; then
             name=${GITHUB_REF:10}
           fi
@@ -152,8 +158,8 @@ jobs:
               pkgname=$PROJECT_NAME-$platform
               mkdir tmp/$pkgname
               # cp LICENSE README.md tmp/$pkgname
-              mv bins-$platform/$BIN_NAME$exe tmp/$pkgname
-              chmod +x tmp/$pkgname/$BIN_NAME$exe
+              mv bins-$platform/$PROJECT_NAME$exe tmp/$pkgname
+              chmod +x tmp/$pkgname/$PROJECT_NAME$exe
 
               if [ "$exe" = "" ]; then
                   tar cJf dist/$pkgname.tar.xz -C tmp $pkgname
@@ -161,6 +167,18 @@ jobs:
                   (cd tmp && 7z a -r ../dist/$pkgname.zip $pkgname)
               fi
           done
+
+      # Generate the changelog based on git log and template file
+      - name: Generate Changelog
+        run: |
+          # Append version information to CHANGELOG.md
+          echo "## Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
+          # Copy content of template file to CHANGELOG.md
+          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
+          # Append git log to CHANGELOG.md
+          echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
+          # Append empty line to CHANGELOG.md
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
@@ -170,3 +188,32 @@ jobs:
           file_glob: true
           tag: ${{ steps.tagname.outputs.val }}
           overwrite: true
+
+      # Create the release on GitHub Releases
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Hash (HSH) 🦀 v${{ env.VERSION }}
+          body_path: ${{ github.workspace }}/CHANGELOG.md
+          draft: true
+          prerelease: false
+
+      # Log in to crates.io
+      - name: Log in to crates.io
+        id: login-crate-io
+        run: cargo login ${{ secrets.CARGO_API_TOKEN }}
+
+      # Publish the Rust library to Crate.io
+      - name: Publish Library to Crate.io
+        id: publish-library
+        uses: actions-rs/cargo@v1
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
+        with:
+          command: publish
+          args: "--no-verify --allow-dirty"
+          use-cross: false
