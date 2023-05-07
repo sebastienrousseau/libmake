@@ -8,4 +8,4 @@ mod tests {
         let {name} = {name}::new();
         assert_eq!({name}, {name}::default());
     }
-}
+}

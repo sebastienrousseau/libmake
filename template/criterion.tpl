@@ -47,4 +47,4 @@ criterion_group!(
     {name}_join_benchmark,
     {name}_benchmark
 );
-criterion_main!({name}_macros_benchmark);
+criterion_main!({name}_macros_benchmark);

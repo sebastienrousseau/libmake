@@ -1,5 +1,6 @@
 use crate::interface::replace_placeholders;
-use assert_cmd::Command;
+use reqwest::blocking::get;
+// use assert_cmd::Command;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_yaml;
@@ -217,22 +218,24 @@ pub fn create_template_folder() -> io::Result<()> {
     for file in &files {
         let file_url = format!("{}{}", url, file);
         let file_path = template_dir_path.join(file);
-        let output = Command::new("curl")
-            .arg("-s")
-            .arg("-L")
-            .arg("-o")
-            .arg(file_path.as_os_str())
-            .arg(file_url)
-            .output()?;
-        if !output.status.success() {
-            return Err(io::Error::new(
+        let response = get(&file_url).map_err(|e| {
+            io::Error::new(
                 io::ErrorKind::Other,
-                format!(
-                    "Failed to download template file: {}",
-                    String::from_utf8_lossy(&output.stderr)
-                ),
-            ));
-        }
+                format!("Failed to download template file: {}", e),
+            )
+        })?;
+        let file_contents = response.text().map_err(|e| {
+            io::Error::new(
+                io::ErrorKind::Other,
+                format!("Failed to read response body: {}", e),
+            )
+        })?;
+        std::fs::write(
+            &file_path,
+            file_contents
+                .trim_start_matches('\n')
+                .trim_end_matches('\n'),
+        )?;
     }
     Ok(())
 }
