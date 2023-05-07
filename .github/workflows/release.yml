@@ -239,7 +239,6 @@ jobs:
   crate:
     name: ❯ Crate.io 🦀
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: release
     runs-on: ubuntu-latest
 
     steps:
