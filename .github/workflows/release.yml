@@ -62,7 +62,8 @@ jobs:
       - name: Copy library to dist
         run: |
           mkdir -p dist/${{ matrix.target }}
-          cp target/${{ matrix.target }}/release/liblibmake.a dist/${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/liblibmake.d dist/${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/liblibmake.rlib dist/${{ matrix.target }}
 
       - uses: actions/upload-artifact@v2.2.4
         with:
