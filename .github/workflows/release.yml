@@ -57,7 +57,7 @@ jobs:
         with:
           use-cross: ${{ matrix.cross }}
           command: build
-          args: --release --target ${{ matrix.target }} --package ${PROJECT_NAME}
+          args: --release --target ${{ matrix.target }} --package
 
       - name: Copy library to dist
         run: |
@@ -96,7 +96,7 @@ jobs:
         with:
           use-cross: ${{ matrix.cross }}
           command: build
-          args: --release --target ${{ matrix.target }} --package ${PROJECT_NAME}
+          args: --release --target ${{ matrix.target }} --package
 
       - name: Copy library to dist
         run: |
