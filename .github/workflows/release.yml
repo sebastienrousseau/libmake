@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false # don't fail other jobs if one fails
       matrix:
-        build: [x86_64-linux, x86_64-macos, aarch64-macos, x86_64-windows]
+        build: [x86_64-linux, x86_64-macos, aarch64-macos, x86_64-windows] #, x86_64-win-gnu, win32-msvc aarch64-linux,
         include:
           - build: x86_64-linux
             os: ubuntu-20.04
@@ -57,12 +57,12 @@ jobs:
         with:
           use-cross: ${{ matrix.cross }}
           command: build
-          args: --release --target ${{ matrix.target }} --package
+          args: --release --target ${{ matrix.target }} --package libmake
 
       - name: Copy library to dist
         run: |
           mkdir -p dist/${{ matrix.target }}
-          cp target/${{ matrix.target }}/release/$PROJECT_NAME.rlib dist/${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/libmake.rlib dist/${{ matrix.target }}
 
       - uses: actions/upload-artifact@v2.2.4
         with:
@@ -96,12 +96,12 @@ jobs:
         with:
           use-cross: ${{ matrix.cross }}
           command: build
-          args: --release --target ${{ matrix.target }} --package
+          args: --release --target ${{ matrix.target }} --package libmake
 
       - name: Copy library to dist
         run: |
           mkdir -p dist/${{ matrix.target }}
-          cp target/${{ matrix.target }}/release/$PROJECT_NAME.rlib dist/${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/libmake.rlib dist/${{ matrix.target }}
 
       - uses: actions/upload-artifact@v2.2.4
         with:
