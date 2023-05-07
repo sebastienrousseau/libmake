@@ -52,6 +52,12 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           rustup default ${{ matrix.rust-toolchain }}
 
+      # Install the cross-compilation toolchain
+      - name: Install cross-compilation toolchain
+        id: install-cross
+        run: |
+          rustup target add ${{ matrix.target }}
+
       # Update the version number based on the Cargo.toml file
       - name: Update version number
         id: update-version
