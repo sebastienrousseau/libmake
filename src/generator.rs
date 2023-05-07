@@ -381,7 +381,7 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     // Copying the `criterion.tpl` file to the new library directory
     copy_and_replace_template(
         "criterion.tpl",
-        "criterion.rs",
+        "benches/criterion.rs",
         &project_directory,
         &params,
     )?;
