@@ -62,12 +62,47 @@ jobs:
       - name: Copy library to dist
         run: |
           mkdir -p dist/${{ matrix.target }}
-          cp target/${{ matrix.target }}/release/liblibmake.rlib dist/${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/liblibmake.a dist/${{ matrix.target }}
 
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: libs-${{ matrix.build }}
           path: dist
+
+      # Generate the changelog based on git log and template file
+      - name: Generate Changelog
+        run: |
+          # Append version information to CHANGELOG.md
+          echo "## Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
+          # Copy content of template file to CHANGELOG.md
+          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
+          # Append git log to CHANGELOG.md
+          echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
+          # Append empty line to CHANGELOG.md
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
+
+      # Append the artifact links to the changelog
+      - name: Append Artifact Links
+        run: |
+          echo "" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
+          for filename in dist/*; do
+            link="$(basename $filename)"
+            echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+          done
+
+      # Create the release on GitHub Releases
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Hash (HSH) 🦀 v${{ env.VERSION }}
+          body_path: ${{ github.workspace }}/CHANGELOG.md
+          draft: true
+          prerelease: false
 
   publish:
     name: Publish library
