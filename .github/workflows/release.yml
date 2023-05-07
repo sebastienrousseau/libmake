@@ -47,48 +47,57 @@ jobs:
       # Check out the repository code
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 2
+        uses: actions/checkout@v3
 
       # Install the stable Rust toolchain
-      - name: Setup Rust
-        id: setup-rust
-        run: |
-          # Download and install Rustup
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      - name: Install stable toolchain
+        id: install-toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
 
-          # Set the default Rust toolchain based on the matrix variable
-          rustup default ${{ matrix.rust-toolchain }}
+      # Cache dependencies to speed up subsequent builds
+      - name: Cache dependencies
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
 
-      # Install the cross-compilation toolchain
-      - name: Install cross-compilation toolchain
-        id: install-cross
-        run: |
-          # Add the target specified in the matrix to the Rust toolchain
-          rustup target add ${{ matrix.target }}
+      # Install the targets for the cross compilation toolchain
+      - name: Install target
+        id: install-target
+        run: rustup target add ${{ matrix.target }}
 
       # Update the version number based on the Cargo.toml file
       - name: Update version number
         id: update-version
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         run: |
-          # Extract the version number from the Cargo.toml file
           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-
-          # Set an environment variable with the new version number
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
-      # Build the targets for Linux
+      # Install the cross compilation toolchain
+      - name: Install Cross
+        id: install-cross
+        run: |
+          # Install cross
+          cargo install cross
+          # Clean the build artifacts
+          cargo clean --verbose
+        shell: /bin/bash -e {0}
+
+      # Build the targets
       - name: Build targets
         id: build-targets
         uses: actions-rs/cargo@v1
         with:
-          # Use the cross-compilation toolchain
           use-cross: true
-          # Build the project with the specified target and other arguments
           command: build
-          args: --release --target ${{ matrix.target }} --verbose --workspace
+          args: --verbose --workspace --release --target ${{ matrix.target }}
 
       # Upload the binary for the target
       - name: Upload binary to GitHub Packages
