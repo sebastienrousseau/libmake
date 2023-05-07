@@ -29,16 +29,72 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust-toolchain:
-          - stable
         target:
-          # 64-bit macOS on Apple Silicon ✅ Tested
-          - aarch64-apple-darwin
+          # List of targets: https://doc.rust-lang.org/nightly/rustc/platform-support.html
+
+          # FreeBSD targets 🐬
+          - x86_64-unknown-freebsd # 64-bit FreeBSD on x86-64                                     ✅ Tested
+
+          # Linux targets 🐧
+          - aarch64-unknown-linux-gnu # 64-bit Linux systems on ARM architecture                  ✅ Tested
+          - aarch64-unknown-linux-musl # 64-bit Linux systems on ARM architecture                 ✅ Tested
+          - arm-unknown-linux-gnueabi # ARMv6 Linux (kernel 3.2, glibc 2.17)                      ✅ Tested
+          - armv7-unknown-linux-gnueabihf # ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17)       ✅ Tested
+          - i686-unknown-linux-gnu # 32-bit Linux (kernel 3.2+, glibc 2.17+)                      ✅ Tested
+          - i686-unknown-linux-musl # 32-bit Linux (kernel 3.2+, musl libc)                       ✅ Tested
+          - x86_64-unknown-linux-gnu # 64-bit Linux (kernel 2.6.32+, glibc 2.11+)                 ✅ Tested
+          - x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)                  ✅ Tested
+
+          # macOS targets 🍎
+          - aarch64-apple-darwin # 64-bit macOS on Apple Silicon                                  ✅ Tested
+          - x86_64-apple-darwin # 64-bit macOS (10.7 Lion or later)                               ✅ Tested
+
+          # Illumos targets 🌞
+          - x86_64-unknown-illumos # 64-bit Illumos on x86-64                                     ✅ Tested
 
         include:
-          # Linux targets 🐧
-          - target: aarch64-apple-darwin
+          # FreeBSD targets 🐬
+          - target: x86_64-unknown-freebsd
             os: ubuntu-latest
+            cross: true
+
+          # Linux targets 🐧
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-latest
+            cross: true
+          - target: arm-unknown-linux-gnueabi
+            os: ubuntu-latest
+            cross: true
+          - target: armv7-unknown-linux-gnueabihf
+            os: ubuntu-latest
+            cross: true
+          - target: i686-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          - target: i686-unknown-linux-musl
+            os: ubuntu-latest
+            cross: true
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            cross: true
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            cross: true
+
+          # Illumos targets 🌞
+          - target: x86_64-unknown-illumos
+            os: ubuntu-latest
+            cross: true
+
+          # macOS targets 🍎
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            cross: true
+          - target: x86_64-apple-darwin
+            os: macos-latest
             cross: true
 
     runs-on: ${{ matrix.os }}
@@ -104,7 +160,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           # Name the artifact based on the target and version number
-          name: libmake-${{ matrix.target }}-v${{ env.VERSION }}
+          name: LibMake v${{ env.VERSION }}
           # Specify the path to the built binary
           path: target/release/libmake
 
