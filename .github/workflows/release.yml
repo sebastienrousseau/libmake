@@ -64,10 +64,7 @@ jobs:
         run: |
           rm -rf dist
           mkdir dist
-          cp "target/${{ matrix.target }}/release/lib${PROJECT_NAME}.a" "dist/"
           cp "target/${{ matrix.target }}/release/lib${PROJECT_NAME}.d" "dist/"
-          cp "target/${{ matrix.target }}/release/lib${PROJECT_NAME}.dll" "dist/"
-          cp "target/${{ matrix.target }}/release/lib${PROJECT_NAME}.dylib" "dist/"
           cp "target/${{ matrix.target }}/release/lib${PROJECT_NAME}.rlib" "dist/"
 
       - uses: actions/upload-artifact@v2.2.4
