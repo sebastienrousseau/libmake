@@ -60,8 +60,7 @@ jobs:
 
       - name: Build
         run: |
-          cargo clean && |
-          cargo build --target=${{ matrix.rust_target }} --release
+          cargo clean && cargo build --target=${{ matrix.rust_target }} --release
 
       - name: Update version number 🧮
         id: update-version
