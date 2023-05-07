@@ -84,14 +84,6 @@ jobs:
           name: libs-${{ matrix.build }}
           path: dist
 
-      - name: Publish library to crates.io
-        uses: actions-rs/cargo@v1
-        with:
-          command: publish
-          token: ${{ secrets.CRATES_IO_TOKEN }}
-          package: $PROJECT_NAME
-          all-features: true
-
       # Log in to crates.io
       - name: Log in to crates.io
         id: login-crate-io
