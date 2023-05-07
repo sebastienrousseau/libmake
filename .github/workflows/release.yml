@@ -1,12 +1,31 @@
 name: 🧪 Release
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+permissions:
+  contents: read
 
 jobs:
-  # This job builds the project on 64-bit macOS on Apple Silicon
+  # This job builds the project for Linux
   build:
     name: ❯ build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.event_name == 'push'
     strategy:
       fail-fast: false
       matrix:
@@ -16,18 +35,13 @@ jobs:
           # 64-bit macOS on Apple Silicon ✅ Tested
           - aarch64-apple-darwin
 
-        include:
-          # Linux targets 🐧
-          - target: aarch64-apple-darwin
-            os: ubuntu-latest
-            cross: true
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     steps:
       # Check out the repository code
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 2
 
@@ -37,6 +51,7 @@ jobs:
         run: |
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
           rustup default ${{ matrix.rust-toolchain }}
+
       # Update the version number based on the Cargo.toml file
       - name: Update version number
         id: update-version
@@ -45,11 +60,7 @@ jobs:
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
         shell: /bin/bash -e {0}
 
-      # Build the target
-      - name: Build
-        run: cargo build --release
-
-      # Build the targets
+      # Build the targets for Linux
       - name: Build targets
         id: build-targets
         uses: actions-rs/cargo@v1
@@ -60,7 +71,7 @@ jobs:
 
       # Upload the binary for the target
       - name: Upload binary to GitHub Packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: libmake-${{ matrix.target }}-v${{ env.VERSION }}
           path: target/release/libmake
@@ -73,7 +84,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: libmake-${{ matrix.target }}-v${{ env.VERSION }}
+          name: libmake v${{ env.VERSION }}
           path: libmake-${{ matrix.target }}-v${{ env.VERSION }}.tar.gz
           run: |
             echo "Binary uploaded successfully for ${{ matrix.target }}. URL: ${{ steps.upload-artifact.outputs.artifact_url }}"
