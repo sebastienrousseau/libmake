@@ -218,6 +218,7 @@ pub fn create_template_folder() -> io::Result<()> {
         let file_url = format!("{}{}", url, file);
         let file_path = template_dir_path.join(file);
         let output = Command::new("curl")
+            .arg("-s")
             .arg("-L")
             .arg("-o")
             .arg(file_path.as_os_str())
