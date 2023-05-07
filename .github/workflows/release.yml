@@ -82,15 +82,14 @@ jobs:
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
-      # Append the artifact links to the changelog
       - name: Append Artifact Links
         run: |
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
-          for filename in dist/*; do (
+          for filename in dist/*; do
             link="$(basename $filename)"
-            echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v/${link})" >> D:\a\libmake\libmake/CHANGELOG.md
-          ); done
+            echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ env.VERSION }}/${link})" >> ${{ github.workspace }}/CHANGELOG.md
+          done
 
       # Create the release on GitHub Releases
       - name: Create Release
