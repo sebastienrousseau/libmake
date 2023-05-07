@@ -19,13 +19,6 @@ jobs:
             rust: stable
             target: x86_64-unknown-linux-gnu
             cross: false
-
-          # - build: aarch64-linux # this fails on openssl
-          #   os: ubuntu-20.04
-          #   rust: stable
-          #   target: aarch64-unknown-linux-gnu
-          #   cross: true
-
           - build: x86_64-macos
             os: macos-latest
             rust: stable
@@ -40,18 +33,6 @@ jobs:
             os: macos-latest
             rust: stable
             target: aarch64-apple-darwin
-        # - build: aarch64-macos
-        #   os: macos-latest
-        #   rust: stable
-        #   target: aarch64-apple-darwin
-        # - build: x86_64-win-gnu
-        #   os: windows-2019
-        #   rust: stable-x86_64-gnu
-        #   target: x86_64-pc-windows-gnu
-        # - build: win32-msvc
-        #   os: windows-2019
-        #   rust: stable
-        #   target: i686-pc-windows-msvc
 
     steps:
       - name: Checkout sources
@@ -71,40 +52,23 @@ jobs:
         if: matrix.build == 'aarch64-linux'
         run: sudo apt-get install libssl-dev pkg-config
 
-      - name: Build release binary
+      - name: Build release library
         uses: actions-rs/cargo@v1
         with:
           use-cross: ${{ matrix.cross }}
           command: build
           args: --release --target ${{ matrix.target }}
 
-      - name: Strip release binary (linux and macos)
-        if: matrix.build == 'x86_64-linux' || matrix.build == 'x86_64-macos'
-        run: strip "target/${{ matrix.target }}/release/$PROJECT_NAME"
-
-      - name: Strip release binary (arm)
-        if: matrix.build == 'aarch64-linux'
-        run: |
-          docker run --rm -v \
-            "$PWD/target:/target:Z" \
-            rustembedded/cross:${{ matrix.target }} \
-            aarch64-linux-gnu-strip \
-            /target/${{ matrix.target }}/release/$PROJECT_NAME
-
       - name: Build archive
         shell: bash
         run: |
           rm -rf dist
           mkdir dist
-          if [ "${{ matrix.os }}" = "windows-2019" ]; then
-            cp "target/${{ matrix.target }}/release/$PROJECT_NAME.exe" "dist/"
-          else
-            cp "target/${{ matrix.target }}/release/$PROJECT_NAME" "dist/"
-          fi
+          cp "target/${{ matrix.target }}/release/lib$PROJECT_NAME.*" "dist/"
 
       - uses: actions/upload-artifact@v2.2.4
         with:
-          name: bins-${{ matrix.build }}
+          name: libs-${{ matrix.build }}
           path: dist
 
   publish:
@@ -128,7 +92,7 @@ jobs:
         # with:
         #   path: dist
       # - run: ls -al ./dist
-      - run: ls -al bins-*
+      - run: ls -al libs-*
 
       - name: Calculate tag name
         run: |
@@ -150,23 +114,32 @@ jobs:
           rm -rf dist
           mkdir dist
 
-          for dir in bins-* ; do
-              platform=${dir#"bins-"}
-              if [[ $platform =~ "windows" ]]; then
-                  exe=".exe"
-              fi
-              pkgname=$PROJECT_NAME-$platform
-              mkdir tmp/$pkgname
-              # cp LICENSE README.md tmp/$pkgname
-              mv bins-$platform/$PROJECT_NAME$exe tmp/$pkgname
-              chmod +x tmp/$pkgname/$PROJECT_NAME$exe
+          pkgname=$PROJECT_NAME
+          if [ "${{ matrix.os }}" = "windows-2019" ]; then
+            lib_ext=".dll"
+          elif [ "${{ matrix.os }}" = "macos-10.15" ]; then
+            lib_ext=".dylib"
+          else
+            lib_ext=".a"
+          fi
 
-              if [ "$exe" = "" ]; then
-                  tar cJf dist/$pkgname.tar.xz -C tmp $pkgname
-              else
-                  (cd tmp && 7z a -r ../dist/$pkgname.zip $pkgname)
-              fi
-          done
+          # Copy the library binary to the tmp directory
+          cp target/${{ matrix.target }}/release/lib${pkgname}${lib_ext} tmp/
+          chmod +x tmp/lib${pkgname}${lib_ext}
+
+          # Copy the .d and .rlib files to the tmp directory
+          cp target/${{ matrix.target }}/release/deps/lib${pkgname}-*.d tmp/
+          cp target/${{ matrix.target }}/release/lib${pkgname}.rlib tmp/
+
+          # Rename the library binary file to have the appropriate extension
+          if [ "${{ matrix.os }}" = "windows-2019" ]; then
+            mv tmp/lib${pkgname}${lib_ext} tmp/${pkgname}.dll
+          else
+            mv tmp/lib${pkgname}${lib_ext} tmp/lib${pkgname}.a
+          fi
+
+          # Create a tar archive of the library and related files
+          tar cJf dist/${pkgname}-${{ matrix.os }}-${{ matrix.target_arch }}.tar.xz -C tmp ${pkgname}.*
 
       # Generate the changelog based on git log and template file
       - name: Generate Changelog
