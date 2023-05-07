@@ -53,6 +53,11 @@ jobs:
           target: ${{ matrix.rust_target }}
           override: true
 
+      - name: Install apt packages
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt-get install musl-tools libssl-dev
+          
       - name: Build
         run: cargo build --target=${{ matrix.rust_target }} --release
 
