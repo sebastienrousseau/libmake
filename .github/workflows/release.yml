@@ -57,137 +57,78 @@ jobs:
         with:
           use-cross: ${{ matrix.cross }}
           command: build
-          args: --release --target ${{ matrix.target }}
+          args: --release --target ${{ matrix.target }} --package $PROJECT_NAME
 
-      - name: Build archive
-        shell: bash
+      - name: Copy library to dist
         run: |
-          rm -rf dist
-          mkdir dist
-          cp "target/${{ matrix.target }}/release/lib${PROJECT_NAME}.d" "dist/"
-          cp "target/${{ matrix.target }}/release/lib${PROJECT_NAME}.rlib" "dist/"
+          mkdir -p dist/${{ matrix.target }}
+          cp target/${{ matrix.target }}/release/$PROJECT_NAME.rlib dist/${{ matrix.target }}
 
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: libs-${{ matrix.build }}
           path: dist
 
-  publish:
-    name: Publish
-    needs: [dist]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          submodules: false
+    publish:
+      name: Publish library
+      runs-on: ubuntu-latest
+      needs:
+        - build
+      steps:
+        - name: Checkout sources
+          uses: actions/checkout@v2
+          with:
+            submodules: true
 
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
-        shell: /bin/bash -e {0}
+        - name: Install ${{ matrix.rust }} toolchain
+          uses: actions-rs/toolchain@v1
+          with:
+            profile: minimal
+            toolchain: ${{ matrix.rust }}
+            target: ${{ matrix.target }}
+            override: true
 
-      - uses: actions/download-artifact@v2
-        # with:
-        #   path: dist
-      # - run: ls -al ./dist
-      - run: ls -al libs-*
+        - name: Install OpenSSL
+          if: matrix.build == 'aarch64-linux'
+          run: sudo apt-get install libssl-dev pkg-config
 
-      - name: Calculate tag name
-        run: |
-          name=v$VERSION
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            name=${GITHUB_REF:10}
-          fi
-          echo ::set-output name=val::$name
-          echo TAG=$name >> $GITHUB_ENV
-        id: tagname
+        - name: Build release library
+          uses: actions-rs/cargo@v1
+          with:
+            use-cross: ${{ matrix.cross }}
+            command: build
+            args: --release --target ${{ matrix.target }} --package $PROJECT_NAME
 
-      - name: Build archive
-        shell: bash
-        run: |
-          set -ex
+        - name: Copy library to dist
+          run: |
+            mkdir -p dist/${{ matrix.target }}
+            cp target/${{ matrix.target }}/release/$PROJECT_NAME.rlib dist/${{ matrix.target }}
 
-          rm -rf tmp
-          mkdir tmp
-          rm -rf dist
-          mkdir dist
+        - uses: actions/upload-artifact@v2.2.4
+          with:
+            name: libs-${{ matrix.build }}
+            path: dist
 
-          pkgname=$PROJECT_NAME
-          if [ "${{ matrix.os }}" = "windows-2019" ]; then
-            lib_ext=".dll"
-          elif [ "${{ matrix.os }}" = "macos-10.15" ]; then
-            lib_ext=".dylib"
-          else
-            lib_ext=".a"
-          fi
+        - name: Publish library to crates.io
+          uses: actions-rs/cargo@v1
+          with:
+            command: publish
+            token: ${{ secrets.CRATES_IO_TOKEN }}
+            package: $PROJECT_NAME
+            all-features: true
 
-          # Copy the library binary to the tmp directory
-          cp target/${{ matrix.target }}/release/lib${pkgname}${lib_ext} tmp/
-          chmod +x tmp/lib${pkgname}${lib_ext}
+        # Log in to crates.io
+        - name: Log in to crates.io
+          id: login-crate-io
+          run: cargo login ${{ secrets.CARGO_API_TOKEN }}
 
-          # Copy the .d and .rlib files to the tmp directory
-          cp target/${{ matrix.target }}/release/deps/lib${pkgname}-*.d tmp/
-          cp target/${{ matrix.target }}/release/lib${pkgname}.rlib tmp/
-
-          # Rename the library binary file to have the appropriate extension
-          if [ "${{ matrix.os }}" = "windows-2019" ]; then
-            mv tmp/lib${pkgname}${lib_ext} tmp/${pkgname}.dll
-          else
-            mv tmp/lib${pkgname}${lib_ext} tmp/lib${pkgname}.a
-          fi
-
-          # Create a tar archive of the library and related files
-          tar cJf dist/${pkgname}-${{ matrix.os }}-${{ matrix.target_arch }}.tar.xz -C tmp ${pkgname}.*
-
-      # Generate the changelog based on git log and template file
-      - name: Generate Changelog
-        run: |
-          # Append version information to CHANGELOG.md
-          echo "## Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
-          # Copy content of template file to CHANGELOG.md
-          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
-          # Append git log to CHANGELOG.md
-          echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
-          # Append empty line to CHANGELOG.md
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
-
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/*
-          file_glob: true
-          tag: ${{ steps.tagname.outputs.val }}
-          overwrite: true
-
-      # Create the release on GitHub Releases
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.VERSION }}
-          release_name: LibMake v${{ env.VERSION }}
-          body_path: ${{ github.workspace }}/CHANGELOG.md
-          draft: true
-          prerelease: false
-
-      # Log in to crates.io
-      - name: Log in to crates.io
-        id: login-crate-io
-        run: cargo login ${{ secrets.CARGO_API_TOKEN }}
-
-      # Publish the Rust library to Crate.io
-      - name: Publish Library to Crate.io
-        id: publish-library
-        uses: actions-rs/cargo@v1
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
-        with:
-          command: publish
-          args: "--no-verify --allow-dirty"
-          use-cross: false
+        # Publish the Rust library to Crate.io
+        - name: Publish Library to Crate.io
+          id: publish-library
+          uses: actions-rs/cargo@v1
+          env:
+            CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
+          with:
+            command: publish
+            args: "--no-verify --allow-dirty"
+            use-cross: false
