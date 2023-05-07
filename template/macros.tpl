@@ -2,16 +2,16 @@
 //!
 //! This crate provides the following macros:
 //!
-//! - [`{name}`]: The main macro for the `{name}` crate.
-//! - [`{name}_print`]: Prints the arguments to the console.
-//! - [`{name}_vec`]: Creates a new vector of the given elements.
-//! - [`{name}_map`]: Creates a new map of the given key-value pairs.
-//! - [`{name}_assert`]: Checks if the given expression is true.
-//! - [`{name}_min`]: Returns the minimum of the given values.
-//! - [`{name}_max`]: Returns the maximum of the given values.
-//! - [`{name}_split`]: Splits a string into a vector of words.
-//! - [`{name}_join`]: Joins a vector of strings into a single string.
-//! - [`{name}_print_vec`]: Prints a vector of elements to the console.
+//! - `{name}`: The main macro for the `{name}` crate.
+//! - `{name}_print`: Prints the arguments to the console.
+//! - `{name}_vec`: Creates a new vector of the given elements.
+//! - `{name}_map`: Creates a new map of the given key-value pairs.
+//! - `{name}_assert`: Checks if the given expression is true.
+//! - `{name}_min`: Returns the minimum of the given values.
+//! - `{name}_max`: Returns the maximum of the given values.
+//! - `{name}_split`: Splits a string into a vector of words.
+//! - `{name}_join`: Joins a vector of strings into a single string.
+//! - `{name}_print_vec`: Prints a vector of elements to the console.
 //!
 
 /// This macro takes any number of arguments and parses them into a

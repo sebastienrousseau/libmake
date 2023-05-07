@@ -1,9 +1,10 @@
 <!-- markdownlint-disable MD033 MD041 -->
 
 <img
-src="https://via.placeholder.com/261x261.png/000000/FFFFFF?text={name}"
-alt="{name} logo"
-width="261"
+src="https://via.placeholder.com/199x199.png/E82440/78C9FF?text={name}"
+alt="{name}'s logo"
+height="199"
+width="199"
 align="right"
 />
 
@@ -194,4 +195,4 @@ providing a lot of useful suggestions on how to improve this project.
 [docs-badge]: https://img.shields.io/docsrs/{name}.svg?style=for-the-badge 'Docs.rs badge'
 [libs-badge]: https://img.shields.io/badge/lib.rs-v{version}-orange.svg?style=for-the-badge 'Lib.rs badge'
 [license-badge]: https://img.shields.io/crates/l/{name}.svg?style=for-the-badge 'License badge'
-[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust badge'
+[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust badge'
