@@ -129,7 +129,7 @@ jobs:
             targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
-              echo "* [${link}](${RELEASE_URL}/download/untagged-${ref}/${link})" >> "${changelog_file}"
+              echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
             done
           fi
         shell: bash
