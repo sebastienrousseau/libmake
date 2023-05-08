@@ -151,3 +151,24 @@ jobs:
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
+
+      # Upload artifacts as release assets
+      - name: Upload Release Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
+          for target in "${targets[@]}"; do
+            asset_path="target/package/${target}.tar.gz"
+            asset_name="${target}.tar.gz"
+            echo "Uploading asset: ${asset_name}"
+            curl \
+              --progress-bar \
+              --location \
+              --request POST \
+              --header "Authorization: Bearer ${GITHUB_TOKEN}" \
+              --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
+              --upload-file "${asset_path}" \
+              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
+          done
+        shell: bash
