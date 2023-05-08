@@ -52,8 +52,8 @@ jobs:
       - name: Update version number
         run: |
           NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
-        shell: /bin/bash -e {0}
+          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        shell: bash
 
       - name: Install OpenSSL
         if: matrix.build == 'aarch64-linux'
