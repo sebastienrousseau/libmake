@@ -74,12 +74,6 @@ jobs:
           echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
         shell: bash
 
-      # Upload the library as an artifact
-      - uses: actions/upload-artifact@v2.2.4
-        with:
-          name: libs-${{ matrix.build }}
-          path: target/package
-
       # Update the version number based on the Cargo.toml file
       - name: Update version number
         id: update-version
@@ -135,7 +129,7 @@ jobs:
             targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
-              echo "* [${link}](${RELEASE_URL}/download/untagged-${ref}/${link})" >> "${changelog_file}"
+              echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
             done
           fi
         shell: bash
@@ -159,6 +153,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Get version from Cargo.toml
+          version=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+
           targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
           for target in "${targets[@]}"; do
             asset_path="target/package/${target}.tar.gz"
@@ -171,6 +168,6 @@ jobs:
               --header "Authorization: Bearer ${GITHUB_TOKEN}" \
               --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
               --upload-file "${asset_path}" \
-              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
+              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/v${version}/assets?name=${asset_name}"
           done
         shell: bash
