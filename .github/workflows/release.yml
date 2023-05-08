@@ -133,6 +133,7 @@ jobs:
             link="$(basename "${filename}")"
             echo "* [${link}](${RELEASE_URL}/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
           done
+
         shell: bash
 
       # Create the release on GitHub releases
@@ -143,7 +144,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.update-version.outputs.VERSION }}
-          release_name: LibMake v${{ steps.update-version.outputs.VERSION }}
+          release_name: LibMake - A Rust Code generator library 🦀
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false

@@ -39,8 +39,6 @@ The library is designed to be used as a command-line tool. It is available on [C
 
 ## Changelog 📚
 
--
-
 [0]: https://libmake.com
 [2]: http://opensource.org/licenses/MIT
 [3]: https://github.com/sebastienrousseau/libmake/issues
