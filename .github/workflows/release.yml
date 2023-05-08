@@ -15,14 +15,21 @@ jobs:
           [
             aarch64-linux,
             aarch64-macos,
-            i686-linux,
-            i686-windows-gnu,
-            i686-windows-msvc,
             x86_64-linux,
             x86_64-macos,
             x86_64-windows,
           ]
         include:
+          - build: aarch64-linux
+            os: ubuntu-20.04
+            rust: stable
+            target: aarch64-unknown-linux-gnu
+            cross: false
+          - build: aarch64-macos
+            os: macos-latest
+            rust: stable
+            target: aarch64-apple-darwin
+            cross: false
           - build: x86_64-linux
             os: ubuntu-20.04
             rust: stable
@@ -37,31 +44,6 @@ jobs:
             os: windows-2019
             rust: stable
             target: x86_64-pc-windows-msvc
-            cross: false
-          - build: aarch64-macos
-            os: macos-latest
-            rust: stable
-            target: aarch64-apple-darwin
-            cross: false
-          - build: aarch64-linux
-            os: ubuntu-20.04
-            rust: stable
-            target: aarch64-unknown-linux-gnu
-            cross: false
-          - build: i686-windows-gnu
-            os: windows-2019
-            rust: stable
-            target: i686-pc-windows-gnu
-            cross: false
-          - build: i686-windows-msvc
-            os: windows-2019
-            rust: stable
-            target: i686-pc-windows-msvc
-            cross: false
-          - build: i686-linux
-            os: ubuntu-20.04
-            rust: stable
-            target: i686-unknown-linux-gnu
             cross: false
 
     steps:
@@ -82,7 +64,7 @@ jobs:
 
       # Install OpenSSL
       - name: Install OpenSSL
-        if: matrix.build == 'aarch64-linux' || matrix.build == 'i686-linux' || matrix.build == 'x86_64-linux'
+        if: matrix.build == 'aarch64-linux'
         run: sudo apt-get install libssl-dev pkg-config
 
       # Build the library
@@ -113,7 +95,7 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          targets=("aarch64-linux, aarch64-macos, i686-linux, i686-windows-gnu, i686-windows-msvc, x86_64-linux, x86_64-macos, x86_64-windows")
+          targets=("aarch64-linux, aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows")
           for target in "${targets[@]}"; do
             echo "Downloading $target artifact"
             name="${target}.tar.gz"
@@ -154,7 +136,7 @@ jobs:
             # Append artifact links to changelog
             echo "## Artifacts 🎁" >> "${changelog_file}"
             ref="$(git rev-parse HEAD)"
-            targets=("aarch64-linux, aarch64-macos, i686-linux, i686-windows-gnu, i686-windows-msvc, x86_64-linux, x86_64-macos, x86_64-windows")
+            targets=("aarch64-linux, aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
               echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
@@ -181,7 +163,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          targets=("aarch64-linux, aarch64-macos, i686-linux, i686-windows-gnu, i686-windows-msvc, x86_64-linux, x86_64-macos, x86_64-windows")
+          targets=("aarch64-linux, aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows")
           for target in "${targets[@]}"; do
             asset_path="target/package/${target}.tar.gz"
             asset_name="${target}.tar.gz"
