@@ -131,10 +131,11 @@ jobs:
 
             # Append artifact links to changelog
             echo "## Artifacts 🎁" >> "${changelog_file}"
+            ref="$(git rev-parse HEAD)"
             targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
-              echo "* [${link}](${RELEASE_URL}/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+              echo "* [${link}](${RELEASE_URL}/download/untagged-${ref}/${link})" >> "${changelog_file}"
             done
           fi
         shell: bash
@@ -142,6 +143,7 @@ jobs:
       # Create the release on GitHub releases
       - name: Create Release
         id: create-release
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
