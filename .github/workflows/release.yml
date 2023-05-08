@@ -91,6 +91,9 @@ jobs:
       # Generate the changelog based on the git log
       - name: Generate Changelog
         run: |
+          env:
+            RELEASE_URL: https://github.com/<owner>/<repo>/releases/download/
+
           # Set path to changelog file
           changelog_file="${{ github.workspace }}/CHANGELOG.md"
 
