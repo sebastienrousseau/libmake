@@ -70,10 +70,22 @@ jobs:
         id: package-binary
         run: |
           mkdir -p target/package
-          tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
-          echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
-          zip -j target/package/${{ matrix.target }}.zip target/${{ matrix.target }}/release/*
-          echo "${{ matrix.target }}.zip=target/package/${{ matrix.target }}.zip" >> $GITHUB_ENV
+          if [[ "$OSTYPE" == "darwin"* ]]; then
+            tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+            echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+            zip -j target/package/${{ matrix.target }}.zip target/${{ matrix.target }}/release/*
+            echo "${{ matrix.target }}.zip=target/package/${{ matrix.target }}.zip" >> $GITHUB_ENV
+          elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+            echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+            zip -j target/package/${{ matrix.target }}.zip target/${{ matrix.target }}/release/*
+            echo "${{ matrix.target }}.zip=target/package/${{ matrix.target }}.zip" >> $GITHUB_ENV
+          elif [[ "$OSTYPE" == "cygwin" || "$OSTYPE" == "msys" ]]; then
+            tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+            echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+            7z a -tzip target/package/${{ matrix.target }}.zip target/${{ matrix.target }}/release/*
+            echo "${{ matrix.target }}.zip=target/package/${{ matrix.target }}.zip" >> $GITHUB_ENV
+          fi
 
       # Upload the library as an artifact
       - uses: actions/upload-artifact@v2.2.4
@@ -112,9 +124,9 @@ jobs:
 
           # Append artifact links to changelog
           echo "## Artifacts 🎁" >> "${changelog_file}"
-          for filename in target/package/*; do
+          for filename in target/package/*.tar.gz target/package/*.zip; do
             link="$(basename "${filename}")"
-            echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+            echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ steps.update-version.outputs.VERSION }}/${{ matrix.build }}/${link})" >> "${changelog_file}"
           done
         shell: bash
 
