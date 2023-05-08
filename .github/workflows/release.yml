@@ -112,7 +112,7 @@ jobs:
           echo "## Artifacts 🎁" >> "${changelog_file}"
           for filename in dist/*; do
             link="$(basename "${filename}")"
-            echo "* [${link}](${github.server_url}/${github.repository}/releases/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+            echo "* [${link}](${{ github.server_url }}/${{ github.repository }} /releases/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
           done
         shell: bash
 
