@@ -92,7 +92,7 @@ jobs:
       - name: Generate Changelog
         id: generate-changelog
         env:
-          RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases/download/
+          RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases
 
         run: |
           # Set path to changelog file
@@ -115,9 +115,9 @@ jobs:
 
           # Append artifact links to changelog
           echo "## Artifacts 🎁" >> "${changelog_file}"
-          for filename in target/package/*; do
-            link="$(basename "${filename}")"
-            echo "* [${link}](${{ env.RELEASE_URL }}/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+          for filename in target/{{ matrix.target }}/release/.tar.gz; do
+            link="(basename"{filename}")"
+            echo "* [link]({{ env.RELEASE_URL }}/download/v${{ steps.update-version.outputs.VERSION }}/link)">>"{changelog_file}"
           done
 
         shell: bash
