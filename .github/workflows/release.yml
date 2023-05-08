@@ -91,7 +91,8 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          for target in ${{ matrix.target }}; do
+          targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
+          for target in "${targets[@]}"; do
             echo "Downloading $target artifact"
             name="${target}.tar.gz"
             echo "Artifact name: $name"
@@ -109,31 +110,33 @@ jobs:
           RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases
 
         run: |
-          # Set path to changelog file
-          changelog_file="${{ github.workspace }}/CHANGELOG.md"
+          if [[ ! -f CHANGELOG.md ]]; then
+            # Set path to changelog file
+            changelog_file="${{ github.workspace }}/CHANGELOG.md"
 
-          # Get version from Cargo.toml
-          version=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+            # Get version from Cargo.toml
+            version=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
 
-          # Append version information to changelog
-          echo "## Release v${version} - $(date +'%Y-%m-%d')" >> "${changelog_file}"
+            # Append version information to changelog
+            echo "## Release v${version} - $(date +'%Y-%m-%d')" >> "${changelog_file}"
 
-          # Copy content of template file to changelog
-          cat TEMPLATE.md >> "${changelog_file}"
+            # Copy content of template file to changelog
+            cat TEMPLATE.md >> "${changelog_file}"
 
-          # Append git log to changelog
-          echo "$(git log --pretty=format:'%s' --reverse HEAD)" >> "${changelog_file}"
+            # Append git log to changelog
+            echo "$(git log --pretty=format:'%s' --reverse HEAD)" >> "${changelog_file}"
 
-          # Append empty line to changelog
-          echo "" >> "${changelog_file}"
+            # Append empty line to changelog
+            echo "" >> "${changelog_file}"
 
-          # Append artifact links to changelog
-          echo "## Artifacts 🎁" >> "${changelog_file}"
-          for filename in target/package/*; do
-            link="$(basename "${filename}")"
-            echo "* [${link}](${RELEASE_URL}/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
-          done
-
+            # Append artifact links to changelog
+            echo "## Artifacts 🎁" >> "${changelog_file}"
+            targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
+            for target in "${targets[@]}"; do
+              link="${target}.tar.gz"
+              echo "* [${link}](${RELEASE_URL}/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+            done
+          fi
         shell: bash
 
       # Create the release on GitHub releases
