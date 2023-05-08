@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Checkout sources
         id: checkout-sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: true
       - name: Build release library
@@ -43,7 +43,7 @@ jobs:
           done
 
       - name: Upload the artifacts
-        uses: actions/upload-artifacts@v2.2.4
+        uses: actions/upload-artifact@v3
         with:
           name: artifacts
           path: artifacts
