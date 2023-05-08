@@ -113,8 +113,9 @@ jobs:
           echo "## Artifacts 🎁" >> "${changelog_file}"
           for filename in target/package/*; do
             link="$(basename "${filename}")"
-            echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+            echo "* [${link}](${{ env.RELEASE_URL }}/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
           done
+
         shell: bash
 
       # Create the release on GitHub releases
