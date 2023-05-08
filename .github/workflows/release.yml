@@ -35,11 +35,13 @@ jobs:
             target: aarch64-apple-darwin
 
     steps:
+      # Checkout the source code
       - name: Checkout sources
         uses: actions/checkout@v2
         with:
           submodules: true
 
+      # Install Rust toolchain
       - name: Install ${{ matrix.rust }} toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -48,17 +50,12 @@ jobs:
           target: ${{ matrix.target }}
           override: true
 
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-        shell: bash
-
+      # Install OpenSSL
       - name: Install OpenSSL
         if: matrix.build == 'aarch64-linux'
         run: sudo apt-get install libssl-dev pkg-config
 
+      # Build the library
       - name: Build release library
         uses: actions-rs/cargo@v1
         with:
@@ -66,33 +63,54 @@ jobs:
           command: build
           args: --release --target ${{ matrix.target }} --package libmake
 
+      # Copy the library to the dist folder
       - name: Copy library to dist
         run: |
           mkdir -p dist/${{ matrix.target }}
           cp target/${{ matrix.target }}/release/liblibmake.rlib dist/${{ matrix.target }}
 
+      # Upload the library as an artifact
       - uses: actions/upload-artifact@v2.2.4
         with:
           name: libs-${{ matrix.build }}
           path: dist
 
-      # Generate the changelog based on git log and template file
+      # Update the version number based on the Cargo.toml file
+      - name: Update version number
+        id: update-version
+        run: |
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "::set-output name=VERSION::$NEW_VERSION"
+        shell: bash
+
+      # Generate the changelog based on the git log
       - name: Generate Changelog
         run: |
-          # Append version information to CHANGELOG.md
-          echo "## Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
-          # Copy content of template file to CHANGELOG.md
-          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
-          # Append git log to CHANGELOG.md
-          echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
-          # Append empty line to CHANGELOG.md
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
-          # Append artifact links to CHANGELOG.md
-          echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
-          for (filename in dist/*) {
-              link="$(basename $filename)"
-              echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ env.VERSION }}/${link})" >> ${{ github.workspace }}/CHANGELOG.md
-          }
+          # Set path to changelog file
+          changelog_file="${{ github.workspace }}/CHANGELOG.md"
+
+          # Get version from Cargo.toml
+          version=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+
+          # Append version information to changelog
+          echo "## Release v${version} - $(date +'%Y-%m-%d')" >> "${changelog_file}"
+
+          # Copy content of template file to changelog
+          cat TEMPLATE.md >> "${changelog_file}"
+
+          # Append git log to changelog
+          echo "$(git log --pretty=format:'%s' --reverse HEAD)" >> "${changelog_file}"
+
+          # Append empty line to changelog
+          echo "" >> "${changelog_file}"
+
+          # Append artifact links to changelog
+          echo "## Artifacts 🎁" >> "${changelog_file}"
+          for filename in dist/*; do
+            link="$(basename "${filename}")"
+            echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+          done
+        shell: bash
 
       # Create the release on GitHub Releases
       - name: Create Release
@@ -101,39 +119,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.VERSION }}
-          release_name: LibMake v${{ env.VERSION }}
+          tag_name: vv${{ steps.update-version.outputs.VERSION }}
+          release_name: LibMake v${{ steps.update-version.outputs.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
-
-  publish:
-    name: Publish library
-    runs-on: ubuntu-latest
-    needs: dist
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          submodules: true
-
-      - uses: actions/upload-artifact@v2.2.4
-        with:
-          name: libs-${{ matrix.build }}
-          path: dist
-
-      # Log in to crates.io
-      - name: Log in to crates.io
-        id: login-crate-io
-        run: cargo login ${{ secrets.CARGO_API_TOKEN }}
-
-      # Publish the Rust library to Crate.io
-      - name: Publish Library to Crate.io
-        id: publish-library
-        uses: actions-rs/cargo@v1
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
-        with:
-          command: publish
-          args: "--no-verify --allow-dirty"
-          use-cross: false
