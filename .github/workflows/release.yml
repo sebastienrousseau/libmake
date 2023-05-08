@@ -92,7 +92,8 @@ jobs:
       - name: Generate Changelog
         id: generate-changelog
         env:
-          RELEASE_URL: https://github.com/<owner>/<repo>/releases/download/
+          RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases/download/
+
         run: |
           # Set path to changelog file
           changelog_file="${{ github.workspace }}/CHANGELOG.md"
