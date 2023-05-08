@@ -89,10 +89,10 @@ jobs:
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
           # Append artifact links to CHANGELOG.md
           echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
-          for filename in dist/*; do
+          for (filename in dist/*) {
               link="$(basename $filename)"
               echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ env.VERSION }}/${link})" >> ${{ github.workspace }}/CHANGELOG.md
-          done
+          }
 
       # Create the release on GitHub Releases
       - name: Create Release
