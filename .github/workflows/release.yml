@@ -48,6 +48,13 @@ jobs:
           target: ${{ matrix.target }}
           override: true
 
+      # Update the version number based on the Cargo.toml file
+      - name: Update version number
+        run: |
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
+        shell: /bin/bash -e {0}
+
       - name: Install OpenSSL
         if: matrix.build == 'aarch64-linux'
         run: sudo apt-get install libssl-dev pkg-config
@@ -62,7 +69,6 @@ jobs:
       - name: Copy library to dist
         run: |
           mkdir -p dist/${{ matrix.target }}
-          cp target/${{ matrix.target }}/release/liblibmake.d dist/${{ matrix.target }}
           cp target/${{ matrix.target }}/release/liblibmake.rlib dist/${{ matrix.target }}
 
       - uses: actions/upload-artifact@v2.2.4
@@ -81,10 +87,7 @@ jobs:
           echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
-
-      - name: Append Artifact Links
-        run: |
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
+          # Append artifact links to CHANGELOG.md
           echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
           for filename in dist/*; do
             link="$(basename $filename)"
@@ -99,7 +102,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
-          release_name: Hash (HSH) 🦀 v${{ env.VERSION }}
+          release_name: LibMake v${{ env.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
