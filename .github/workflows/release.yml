@@ -96,7 +96,7 @@ jobs:
             name="${target}.tar.gz"
             echo "Artifact name: $name"
             mkdir -p target/package
-            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${BUILD_ID}/artifacts/${name}" -o "target/package/${name}"
+            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
           done
         shell: bash
 
@@ -129,11 +129,10 @@ jobs:
 
           # Append artifact links to changelog
           echo "## Artifacts 🎁" >> "${changelog_file}"
-          for filename in target/{{ matrix.target }}/release/.tar.gz; do
-            link="(basename"{filename}")"
-            echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v${{ steps.update-version.outputs.VERSION }}/$link)" >> "{changelog_file}"
+          for filename in target/package/*; do
+            link="$(basename "${filename}")"
+            echo "* [${link}](${RELEASE_URL}/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
           done
-
         shell: bash
 
       # Create the release on GitHub releases
