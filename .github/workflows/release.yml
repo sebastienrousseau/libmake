@@ -63,11 +63,15 @@ jobs:
           command: build
           args: --release --target ${{ matrix.target }} --package libmake
 
-      # Copy the library to the dist folder
-      - name: Copy library to dist
+      # Package the binary for each target
+      - name: Package the binary
+        id: package-binary
         run: |
-          mkdir -p dist/${{ matrix.target }}
-          cp target/${{ matrix.target }}/release/liblibmake.rlib dist/${{ matrix.target }}
+          mkdir -p target/package
+          tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
+          echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+          zip -j target/package/${{ matrix.target }}.zip target/${{ matrix.target }}/release/*
+          echo "${{ matrix.target }}.zip=target/package/${{ matrix.target }}.zip" >> $GITHUB_ENV
 
       # Upload the library as an artifact
       - uses: actions/upload-artifact@v2.2.4
@@ -108,7 +112,7 @@ jobs:
           echo "## Artifacts 🎁" >> "${changelog_file}"
           for filename in dist/*; do
             link="$(basename "${filename}")"
-            echo "* [${link}](${{ github.server_url }}/${{ github.repository }}/releases/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
+            echo "* [${link}](${github.server_url}/${github.repository}/releases/download/v${{ steps.update-version.outputs.VERSION }}/${link})" >> "${changelog_file}"
           done
         shell: bash
 
