@@ -82,8 +82,13 @@ jobs:
 
       # Install OpenSSL
       - name: Install OpenSSL
-        if: matrix.build == 'aarch64-linux'
+        if: matrix.build == 'aarch64-linux' || matrix.build == 'i686-linux'
         run: sudo apt-get install libssl-dev pkg-config
+
+      # Install mingw
+      - name: Install mingw for Windows
+        if: matrix.build == 'i686-windows-gnu'
+        run: sudo apt-get install mingw-w64 mingw-w64-tools
 
       # Build the library
       - name: Build release library
