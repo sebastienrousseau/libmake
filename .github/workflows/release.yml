@@ -31,30 +31,32 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # a list of all the targets
+        build: [aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows]
         include:
-          - TARGET: x86_64-unknown-linux-gnu # tested in a debian container on a mac
-            OS: ubuntu-latest
-          - TARGET: x86_64-unknown-linux-musl # test in an alpine container on a mac
-            OS: ubuntu-latest
-          - TARGET: aarch64-unknown-linux-gnu # tested on aws t4g.nano
-            OS: ubuntu-latest
-          - TARGET: aarch64-unknown-linux-musl # tested on aws t4g.nano in alpine container
-            OS: ubuntu-latest
-          - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4, not tested
-            OS: ubuntu-latest
-          - TARGET: armv7-unknown-linux-musleabihf # raspberry pi 2-3-4, not tested
-            OS: ubuntu-latest
-          - TARGET: arm-unknown-linux-gnueabihf # raspberry pi 0-1, not tested
-            OS: ubuntu-latest
-          - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1, not tested
-            OS: ubuntu-latest
-          - TARGET: x86_64-apple-darwin # tested on a mac, is not properly signed so there are security warnings
-            OS: macos-latest
-          - TARGET: x86_64-pc-windows-msvc # tested on a windows machine
-            OS: windows-latest
-    needs: test
-    runs-on: ${{ matrix.OS }}
+          - build: aarch64-macos
+            os: macos-latest
+            rust: stable
+            target: aarch64-apple-darwin
+            cross: false
+
+          - build: x86_64-linux
+            os: ubuntu-20.04
+            rust: stable
+            target: x86_64-unknown-linux-gnu
+            cross: false
+
+          - build: x86_64-macos
+            os: macos-latest
+            rust: stable
+            target: x86_64-apple-darwin
+            cross: false
+
+          - build: x86_64-windows
+            os: windows-2019
+            rust: stable
+            target: x86_64-pc-windows-msvc
+            cross: false
+    runs-on: ${{ matrix.os }}
     env:
       NAME: libmake
       TARGET: ${{ matrix.TARGET }}
