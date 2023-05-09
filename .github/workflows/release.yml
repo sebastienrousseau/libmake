@@ -5,8 +5,9 @@ permissions:
 
 on:
   push:
-    tags:
-      - v[0-9]+.*
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 env:
   PROJECT_NAME: libmake
