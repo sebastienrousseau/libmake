@@ -11,39 +11,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build:
-          [
-            aarch64-macos,
-            i686-linux,
-            i686-windows-gnu,
-            i686-windows-msvc,
-            x86_64-linux,
-            x86_64-macos,
-            x86_64-windows,
-          ]
+        build: [aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows]
         include:
           - build: aarch64-macos
             os: macos-latest
             rust: stable
             target: aarch64-apple-darwin
-            cross: false
-
-          - build: i686-linux
-            os: ubuntu-20.04
-            rust: stable
-            target: i686-unknown-linux-gnu
-            cross: false
-
-          - build: i686-windows-gnu
-            os: windows-2019
-            rust: stable
-            target: i686-pc-windows-gnu
-            cross: false
-
-          - build: i686-windows-msvc
-            os: windows-2019
-            rust: stable
-            target: i686-pc-windows-msvc
             cross: false
 
           - build: x86_64-linux
@@ -82,27 +55,8 @@ jobs:
 
       # Install OpenSSL
       - name: Install OpenSSL
-        if: matrix.build == 'aarch64-linux' || matrix.build == 'i686-linux'
-        run: |
-          sudo apt-get install libssl-dev pkg-config
-          export OPENSSL_DIR=/usr/lib/i386-linux-gnu/
-          export PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig/
-
-      # Install Chocolatey
-      - name: Install Chocolatey
-        if: matrix.build == 'i686-windows-gnu'
-        run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force; `
-          [System.Net.WebRequest]::DefaultWebProxy.Credentials = `
-          [System.Net.CredentialCache]::DefaultCredentials; `
-          iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-
-      # Install mingw
-      - name: Install mingw for Windows
-        if: matrix.build == 'i686-windows-gnu'
-        run: |
-          choco install mingw-w64 mingw-w64-tools
-          setx PATH "%PATH%;C:\mingw-w64\mingw64\bin"
+        if: matrix.build == 'aarch64-linux'
+        run: sudo apt-get install libssl-dev pkg-config
 
       # Build the library
       - name: Build release library
@@ -132,7 +86,7 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          targets=("aarch64-apple-darwin" "i686-linux" "i686-windows-gnu" "i686-windows-msvc" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
           for target in "${targets[@]}"; do
             echo "Downloading $target artifact"
             name="${target}.tar.gz"
@@ -173,7 +127,7 @@ jobs:
             # Append artifact links to changelog
             echo "## Artifacts 🎁" >> "${changelog_file}"
             ref="$(git rev-parse HEAD)"
-            targets=("aarch64-apple-darwin" "i686-linux" "i686-windows-gnu" "i686-windows-msvc" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+            targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
               echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
@@ -184,7 +138,7 @@ jobs:
       # Create the release on GitHub releases
       - name: Create Release
         id: create-release
-        if: matrix.target == 'x86_64-unknown-linux-gnu' || matrix.target == 'i686-linux'
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -200,7 +154,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          targets=("aarch64-apple-darwin" "i686-linux" "i686-windows-gnu" "i686-windows-msvc" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
           for target in "${targets[@]}"; do
             asset_path="target/package/${target}.tar.gz"
             asset_name="${target}.tar.gz"
