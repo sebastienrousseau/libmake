@@ -1,185 +1,143 @@
 name: 🧪 Release
 
-permissions:
-  contents: write
-
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 env:
-  PROJECT_NAME: libmake
+  CARGO_TERM_COLOR: always
+
+defaults:
+  run:
+    # necessary for windows
+    shell: bash
 
 jobs:
-  dist:
-    name: Release
-    runs-on: ${{ matrix.os }}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cargo cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ./target
+          key: test-cargo-registry
+      - name: List
+        run: find ./
+      - name: Run tests
+        run: cargo test --verbose
+
+  build:
     strategy:
       fail-fast: false
       matrix:
-        build: [aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows]
+        # a list of all the targets
         include:
-          - build: aarch64-macos
-            os: macos-latest
-            rust: stable
-            target: aarch64-apple-darwin
-            cross: false
-
-          - build: x86_64-linux
-            os: ubuntu-20.04
-            rust: stable
-            target: x86_64-unknown-linux-gnu
-            cross: false
-
-          - build: x86_64-macos
-            os: macos-latest
-            rust: stable
-            target: x86_64-apple-darwin
-            cross: false
-
-          - build: x86_64-windows
-            os: windows-2019
-            rust: stable
-            target: x86_64-pc-windows-msvc
-            cross: false
-
+          - TARGET: x86_64-unknown-linux-gnu # tested in a debian container on a mac
+            OS: ubuntu-latest
+          - TARGET: x86_64-unknown-linux-musl # test in an alpine container on a mac
+            OS: ubuntu-latest
+          - TARGET: aarch64-unknown-linux-gnu # tested on aws t4g.nano
+            OS: ubuntu-latest
+          - TARGET: aarch64-unknown-linux-musl # tested on aws t4g.nano in alpine container
+            OS: ubuntu-latest
+          - TARGET: armv7-unknown-linux-gnueabihf # raspberry pi 2-3-4, not tested
+            OS: ubuntu-latest
+          - TARGET: armv7-unknown-linux-musleabihf # raspberry pi 2-3-4, not tested
+            OS: ubuntu-latest
+          - TARGET: arm-unknown-linux-gnueabihf # raspberry pi 0-1, not tested
+            OS: ubuntu-latest
+          - TARGET: arm-unknown-linux-musleabihf # raspberry pi 0-1, not tested
+            OS: ubuntu-latest
+          - TARGET: x86_64-apple-darwin # tested on a mac, is not properly signed so there are security warnings
+            OS: macos-latest
+          - TARGET: x86_64-pc-windows-msvc # tested on a windows machine
+            OS: windows-latest
+    needs: test
+    runs-on: ${{ matrix.OS }}
+    env:
+      NAME: libmake
+      TARGET: ${{ matrix.TARGET }}
+      OS: ${{ matrix.OS }}
     steps:
-      # Checkout the source code
-      - name: Checkout sources
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - name: Cargo cache
+        uses: actions/cache@v2
         with:
-          submodules: true
-
-      # Install Rust toolchain
-      - name: Install ${{ matrix.rust }} toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: ${{ matrix.rust }}
-          target: ${{ matrix.target }}
-          override: true
-
-      # Install OpenSSL
-      - name: Install OpenSSL
-        if: matrix.build == 'aarch64-linux' || matrix.build == 'x86_64-linux'
-        run: sudo apt-get install libssl-dev pkg-config
-
-      # Build the library
-      - name: Build release library
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --verbose --workspace --release --target ${{ matrix.target }}
-
-      # Package the binary for each target
-      - name: Package the binary
-        id: package-binary
-        # if: github.ref == 'refs/heads/main'
+          path: |
+            ~/.cargo/registry
+            ./target
+          key: build-cargo-registry-${{matrix.TARGET}}
+      - name: List
+        run: find ./
+      - name: Install and configure dependencies
         run: |
-          mkdir -p target/package
-          tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
-          echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
-        shell: bash
-
-      # Download the artifacts from the build job
-      - name: Download artifacts
-        run: |
-          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-          for target in "${targets[@]}"; do
-            echo "Downloading $target artifact"
-            name="${target}.tar.gz"
-            echo "Artifact name: $name"
-            mkdir -p target/package
-            curl -sSL -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
-          done
-        shell: bash
-
-      # Generate the changelog based on the git log
-      - name: Generate Changelog
-        id: generate-changelog
-        env:
-          BUILD_ID: ${{ github.run_id }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases
-
-        run: |
-          if [[ ! -f CHANGELOG.md ]]; then
-            # Set path to changelog file
-            changelog_file="${{ github.workspace }}/CHANGELOG.md"
-
-            # Get version from Cargo.toml
-            version=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-
-            # Append version information to changelog
-            echo "## Release v${version} - $(date +'%Y-%m-%d')" >> "${changelog_file}"
-
-            # Copy content of template file to changelog
-            cat TEMPLATE.md >> "${changelog_file}"
-
-            # Append git log to changelog
-            echo "$(git log --pretty=format:'%s' --reverse HEAD)" >> "${changelog_file}"
-
-            # Append empty line to changelog
-            echo "" >> "${changelog_file}"
-
-            # Append artifact links to changelog
-            echo "## Artifacts 🎁" >> "${changelog_file}"
-            ref="$(git rev-parse HEAD)"
-            targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-            for target in "${targets[@]}"; do
-              link="${target}.tar.gz"
-              echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
-            done
+          # dependencies are only needed on ubuntu as that's the only place where
+          # we make cross-compilation
+          if [[ $OS =~ ^ubuntu.*$ ]]; then
+            sudo apt-get install -qq crossbuild-essential-arm64 crossbuild-essential-armhf
           fi
-        shell: bash
 
-      # Create the release on GitHub releases
-      - name: Create Release
-        id: create-release
-        if: matrix.target == 'x86_64-unknown-linux-gnu'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.update-version.outputs.VERSION }}
-          release_name: LibMake 🦀 v${{ steps.update-version.outputs.VERSION }}
-          body_path: ${{ github.workspace }}/CHANGELOG.md
-          draft: true
-          prerelease: false
-
-      # Deploy the binary to GitHub releases
-      - name: Deploy binary
-        id: deploy-binary
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.target }}.tar.gz
-          path: target/package/${{ matrix.target }}.tar.gz
-
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        id: update-version
+          # some additional configuration for cross-compilation on linux
+          cat >>~/.cargo/config <<EOF
+          [target.aarch64-unknown-linux-gnu]
+          linker = "aarch64-linux-gnu-gcc"
+          [target.aarch64-unknown-linux-musl]
+          linker = "aarch64-linux-gnu-gcc"
+          [target.armv7-unknown-linux-gnueabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          [target.armv7-unknown-linux-musleabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          [target.arm-unknown-linux-gnueabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          [target.arm-unknown-linux-musleabihf]
+          linker = "arm-linux-gnueabihf-gcc"
+          EOF
+      - name: Install rust target
+        run: rustup target add $TARGET
+      - name: Run build
+        run: cargo build --release --verbose --target $TARGET
+      - name: List target
+        run: find ./target
+      - name: Compress
         run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "::set-output name=VERSION::$NEW_VERSION"
-        shell: bash
+          mkdir -p ./artifacts
+          # windows is the only OS using a different convention for executable file name
+          if [[ $OS =~ ^windows.*$ ]]; then
+              EXEC=$NAME.exe
+          else
+              EXEC=$NAME
+          fi
+          if [[ $GITHUB_REF_TYPE =~ ^tag$ ]]; then
+            TAG=$GITHUB_REF_NAME
+          else
+            TAG=$GITHUB_SHA
+          fi
+          mv ./target/$TARGET/release/$EXEC ./$EXEC
+          tar -czf ./artifacts/$NAME-$TARGET-$TAG.tar.gz $EXEC
+      - name: Archive artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: result
+          path: |
+            ./artifacts
 
-      # Upload artifacts as release assets
-      - name: Upload Release Assets
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-          for target in "${targets[@]}"; do
-            asset_path="target/package/${target}.tar.gz"
-            asset_name="${target}.tar.gz"
-            echo "Uploading asset: ${asset_name}"
-            curl \
-              --progress-bar \
-              --location \
-              --request POST \
-              --header "Authorization: Bearer ${GITHUB_TOKEN}" \
-              --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
-              --upload-file "${asset_path}" \
-              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
-          done
-        shell: bash
+  # deploys to github releases on tag
+  deploy:
+    # if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: result
+          path: ./artifacts
+      - name: List
+        run: find ./artifacts
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ./artifacts/*.tar.gz
