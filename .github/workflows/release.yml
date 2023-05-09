@@ -62,9 +62,9 @@ jobs:
       - name: Build release library
         uses: actions-rs/cargo@v1
         with:
-          use-cross: ${{ matrix.cross }}
+          use-cross: true
           command: build
-          args: --release --target ${{ matrix.target }} --package libmake
+          args: --all --release --target=${{ matrix.target }}
 
       # Package the binary for each target
       - name: Package the binary
@@ -92,7 +92,7 @@ jobs:
             name="${target}.tar.gz"
             echo "Artifact name: $name"
             mkdir -p target/package
-            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
+            curl -sSL -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
           done
         shell: bash
 
