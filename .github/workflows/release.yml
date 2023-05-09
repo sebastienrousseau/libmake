@@ -3,7 +3,10 @@ name: 🧪 Release
 permissions:
   contents: write
 
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - v[0-9]+.*
 
 env:
   PROJECT_NAME: libmake
