@@ -11,15 +11,16 @@ env:
 jobs:
   create-release:
     runs-on: ubuntu-latest
-    steps:
-        - uses: actions/checkout@v3
 
-        - uses: taiki-e/create-gh-release-action@v1
-        with:
-            # (optional) Path to changelog.
-            changelog: RELEASES.md
-            # (required) GitHub token for creating GitHub Releases.
-            token: ${{ secrets.GITHUB_TOKEN }}
+steps:
+    - uses: actions/checkout@v3
+
+    - uses: taiki-e/create-gh-release-action@v1
+    with:
+        # (optional) Path to changelog.
+        changelog: RELEASES.md
+        # (required) GitHub token for creating GitHub Releases.
+        token: ${{ secrets.GITHUB_TOKEN }}
 
 upload-assets:
     strategy:
