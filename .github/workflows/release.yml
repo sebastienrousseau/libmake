@@ -11,40 +11,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build:
-          [
-            aarch64-macos,
-            x86_64-linux,
-            x86_64-macos,
-            x86_64-windows,
-            x86_64-unknown-freebsd,
-            x86_64-unknown-illumos,
-            x86_64-unknown-netbsd,
-          ]
+        build: [aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows]
         include:
           - build: aarch64-macos
             os: macos-latest
             rust: stable
             target: aarch64-apple-darwin
             cross: false
-
-          - build: x86_64-unknown-freebsd
-            os: ubuntu-20.04
-            rust: stable
-            target: x86_64-unknown-freebsd
-            cross: true
-
-          - build: x86_64-unknown-illumos
-            os: ubuntu-20.04
-            rust: stable
-            target: x86_64-unknown-illumos
-            cross: true
-
-          - build: x86_64-unknown-netbsd
-            os: ubuntu-20.04
-            rust: stable
-            target: x86_64-unknown-netbsd
-            cross: true
 
           - build: x86_64-linux
             os: ubuntu-20.04
@@ -82,7 +55,7 @@ jobs:
 
       # Install OpenSSL
       - name: Install OpenSSL
-        if: matrix.build == 'aarch64-linux' && matrix.os == 'x86_64-unknown-illumos' && matrix.build == 'x86_64-unknown-freebsd' && matrix.os == 'x86_64-unknown-netbsd'
+        if: matrix.build == 'aarch64-linux'
         run: sudo apt-get install libssl-dev pkg-config
 
       # Build the library
@@ -113,7 +86,7 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-netbsd")
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
           for target in "${targets[@]}"; do
             echo "Downloading $target artifact"
             name="${target}.tar.gz"
@@ -154,7 +127,7 @@ jobs:
             # Append artifact links to changelog
             echo "## Artifacts 🎁" >> "${changelog_file}"
             ref="$(git rev-parse HEAD)"
-            targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-netbsd")
+            targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
               echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
@@ -181,7 +154,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-netbsd")
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
           for target in "${targets[@]}"; do
             asset_path="target/package/${target}.tar.gz"
             asset_name="${target}.tar.gz"
