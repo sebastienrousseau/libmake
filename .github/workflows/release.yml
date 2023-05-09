@@ -82,7 +82,7 @@ jobs:
 
       # Install OpenSSL
       - name: Install OpenSSL
-        if: matrix.build == 'aarch64-linux'
+        if: matrix.build == 'aarch64-linux' && matrix.os == 'x86_64-unknown-illumos' && matrix.build == 'x86_64-unknown-freebsd' && matrix.os == 'x86_64-unknown-netbsd'
         run: sudo apt-get install libssl-dev pkg-config
 
       # Build the library
