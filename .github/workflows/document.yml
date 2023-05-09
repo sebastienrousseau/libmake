@@ -1,5 +1,14 @@
 name: 🧪 Document
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - feat/libmake
+  pull_request:
+    branches:
+      - feat/libmake
+  release:
+    types: [created]
+
 jobs:
   all:
     name: Document
