@@ -68,37 +68,30 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --all --release --target=${{ matrix.target }}
+          args: --verbose --workspace --release --target ${{ matrix.target }}
 
       # Package the binary for each target
       - name: Package the binary
         id: package-binary
+        # if: github.ref == 'refs/heads/main'
         run: |
           mkdir -p target/package
           tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
           echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
         shell: bash
 
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        id: update-version
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "::set-output name=VERSION::$NEW_VERSION"
-        shell: bash
-
       # Download the artifacts from the build job
-      - name: Download artifacts
-        run: |
-          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-          for target in "${targets[@]}"; do
-            echo "Downloading $target artifact"
-            name="${target}.tar.gz"
-            echo "Artifact name: $name"
-            mkdir -p target/package
-            curl -sSL -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
-          done
-        shell: bash
+      # - name: Download artifacts
+      #   run: |
+      #     targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+      #     for target in "${targets[@]}"; do
+      #       echo "Downloading $target artifact"
+      #       name="${target}.tar.gz"
+      #       echo "Artifact name: $name"
+      #       mkdir -p target/package
+      #       curl -sSL -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
+      #     done
+      #   shell: bash
 
       # Generate the changelog based on the git log
       - name: Generate Changelog
@@ -148,28 +141,45 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.update-version.outputs.VERSION }}
-          release_name: LibMake - A Rust Code generator library 🦀
+          release_name: LibMake 🦀 v${{ steps.update-version.outputs.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
 
-      # Upload artifacts as release assets
-      - name: Upload Release Assets
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Deploy the binary to GitHub releases
+      - name: Deploy binary
+        id: deploy-binary
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}.tar.gz
+          path: target/package/${{ matrix.target }}.tar.gz
+
+      # Update the version number based on the Cargo.toml file
+      - name: Update version number
+        id: update-version
         run: |
-          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-          for target in "${targets[@]}"; do
-            asset_path="target/package/${target}.tar.gz"
-            asset_name="${target}.tar.gz"
-            echo "Uploading asset: ${asset_name}"
-            curl \
-              --progress-bar \
-              --location \
-              --request POST \
-              --header "Authorization: Bearer ${GITHUB_TOKEN}" \
-              --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
-              --upload-file "${asset_path}" \
-              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
-          done
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "::set-output name=VERSION::$NEW_VERSION"
         shell: bash
+
+      # Upload artifacts as release assets
+      # - name: Upload Release Assets
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+      #     for target in "${targets[@]}"; do
+      #       asset_path="target/package/${target}.tar.gz"
+      #       asset_name="${target}.tar.gz"
+      #       echo "Uploading asset: ${asset_name}"
+      #       curl \
+      #         --progress-bar \
+      #         --location \
+      #         --request POST \
+      #         --header "Authorization: Bearer ${GITHUB_TOKEN}" \
+      #         --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
+      #         --upload-file "${asset_path}" \
+      #         "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
+      #     done
+      #   shell: bash
