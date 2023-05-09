@@ -81,17 +81,17 @@ jobs:
         shell: bash
 
       # Download the artifacts from the build job
-      # - name: Download artifacts
-      #   run: |
-      #     targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-      #     for target in "${targets[@]}"; do
-      #       echo "Downloading $target artifact"
-      #       name="${target}.tar.gz"
-      #       echo "Artifact name: $name"
-      #       mkdir -p target/package
-      #       curl -sSL -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
-      #     done
-      #   shell: bash
+      - name: Download artifacts
+        run: |
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+          for target in "${targets[@]}"; do
+            echo "Downloading $target artifact"
+            name="${target}.tar.gz"
+            echo "Artifact name: $name"
+            mkdir -p target/package
+            curl -sSL -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${{ github.run_id }}/artifacts/${name}" -o "target/package/${name}"
+          done
+        shell: bash
 
       # Generate the changelog based on the git log
       - name: Generate Changelog
@@ -164,22 +164,22 @@ jobs:
         shell: bash
 
       # Upload artifacts as release assets
-      # - name: Upload Release Assets
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-      #     for target in "${targets[@]}"; do
-      #       asset_path="target/package/${target}.tar.gz"
-      #       asset_name="${target}.tar.gz"
-      #       echo "Uploading asset: ${asset_name}"
-      #       curl \
-      #         --progress-bar \
-      #         --location \
-      #         --request POST \
-      #         --header "Authorization: Bearer ${GITHUB_TOKEN}" \
-      #         --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
-      #         --upload-file "${asset_path}" \
-      #         "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
-      #     done
-      #   shell: bash
+      - name: Upload Release Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+          for target in "${targets[@]}"; do
+            asset_path="target/package/${target}.tar.gz"
+            asset_name="${target}.tar.gz"
+            echo "Uploading asset: ${asset_name}"
+            curl \
+              --progress-bar \
+              --location \
+              --request POST \
+              --header "Authorization: Bearer ${GITHUB_TOKEN}" \
+              --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
+              --upload-file "${asset_path}" \
+              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
+          done
+        shell: bash
