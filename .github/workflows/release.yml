@@ -85,8 +85,8 @@ jobs:
         if: matrix.build == 'aarch64-linux' || matrix.build == 'i686-linux'
         run: |
           sudo apt-get install libssl-dev pkg-config
-          sudo export OPENSSL_DIR=/usr/lib/i386-linux-gnu/
-          sudo export PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig/
+          export OPENSSL_DIR=/usr/lib/i386-linux-gnu/
+          export PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig/
 
       # Install Chocolatey
       - name: Install Chocolatey
