@@ -21,7 +21,7 @@ jobs:
         with:
           ref: refs/tags/v0.1.8
           # (optional) Path to changelog.
-          changelog: RELEASES.md
+          changelog: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           # (required) GitHub token for creating GitHub Releases.
           token: ${{ secrets.GITHUB_TOKEN }}
