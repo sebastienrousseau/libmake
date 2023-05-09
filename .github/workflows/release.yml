@@ -130,7 +130,7 @@ jobs:
             # Append artifact links to changelog
             echo "## Artifacts 🎁" >> "${changelog_file}"
             ref="$(git rev-parse HEAD)"
-            targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin")
+            targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin" "x86_64-pc-windows-msvc" "aarch64-apple-darwin")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
               echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
