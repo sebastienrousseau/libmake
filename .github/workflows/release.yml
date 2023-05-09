@@ -11,15 +11,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build:
-          [
-            x86_64-linux,
-            x86_64-macos,
-            aarch64-macos,
-            x86_64-windows,
-            aarch64-macos,
-          ]
+        build: [aarch64-macos, x86_64-linux, x86_64-macos, x86_64-windows]
         include:
+          - build: aarch64-macos
+            os: macos-latest
+            rust: stable
+            target: aarch64-apple-darwin
+            cross: false
           - build: x86_64-linux
             os: ubuntu-20.04
             rust: stable
@@ -35,10 +33,6 @@ jobs:
             rust: stable
             target: x86_64-pc-windows-msvc
             cross: false
-          - build: aarch64-macos
-            os: macos-latest
-            rust: stable
-            target: aarch64-apple-darwin
 
     steps:
       # Checkout the source code
@@ -89,7 +83,7 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin" "x86_64-pc-windows-msvc" "aarch64-apple-darwin")
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
           for target in "${targets[@]}"; do
             echo "Downloading $target artifact"
             name="${target}.tar.gz"
@@ -130,7 +124,7 @@ jobs:
             # Append artifact links to changelog
             echo "## Artifacts 🎁" >> "${changelog_file}"
             ref="$(git rev-parse HEAD)"
-            targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin" "x86_64-pc-windows-msvc" "aarch64-apple-darwin")
+            targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
             for target in "${targets[@]}"; do
               link="${target}.tar.gz"
               echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
@@ -157,7 +151,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          targets=("x86_64-unknown-linux-gnu" "x86_64-pc-windows-gnu" "x86_64-apple-darwin" "x86_64-pc-windows-msvc" "aarch64-apple-darwin")
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
           for target in "${targets[@]}"; do
             asset_path="target/package/${target}.tar.gz"
             asset_name="${target}.tar.gz"
