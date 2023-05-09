@@ -86,7 +86,7 @@ jobs:
         run: |
           sudo apt-get install libssl-dev pkg-config
           sudo export OPENSSL_DIR=/usr/lib/i386-linux-gnu/
-          sudo export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/
+          sudo export PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig/
 
       # Install Chocolatey
       - name: Install Chocolatey
@@ -102,7 +102,7 @@ jobs:
         if: matrix.build == 'i686-windows-gnu'
         run: |
           choco install mingw-w64 mingw-w64-tools
-          export PATH="/mingw64/bin:$PATH"
+          setx PATH "%PATH%;C:\mingw-w64\mingw64\bin"
 
       # Build the library
       - name: Build release library
