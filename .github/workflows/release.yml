@@ -35,8 +35,6 @@ jobs:
             os: ubuntu-latest
           - target: x86_64-apple-darwin
             os: macos-latest
-          - target: x86_64-apple-darwin
-            os: macos-latest
           - target: x86_64-pc-windows-msvc
             os: windows-latest
     runs-on: ${{ matrix.os }}
@@ -51,3 +49,7 @@ jobs:
           target: ${{ matrix.target }}
           # (required) GitHub token for uploading assets to GitHub Releases.
           token: ${{ secrets.GITHUB_TOKEN }}
+          # (optional) File extension to package.
+          archive: ${{ env.PROJECT_NAME }}-v0.1.8-${{ matrix.target }}
+          # (optional) Output path of compressed binary file.
+          asset: target/package/${{ env.PROJECT_NAME }}-v0.1.8-${{ matrix.target }}.${{ matrix.os == 'windows-latest' && 'zip' || 'tar.gz' }}
