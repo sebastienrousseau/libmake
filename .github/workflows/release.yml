@@ -85,10 +85,20 @@ jobs:
         if: matrix.build == 'aarch64-linux' || matrix.build == 'i686-linux'
         run: sudo apt-get install libssl-dev pkg-config
 
+      # Install Chocolatey
+      - name: Install Chocolatey
+        if: matrix.build == 'i686-windows-gnu'
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force; `
+          [System.Net.WebRequest]::DefaultWebProxy.Credentials = `
+          [System.Net.CredentialCache]::DefaultCredentials; `
+          iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
       # Install mingw
       - name: Install mingw for Windows
         if: matrix.build == 'i686-windows-gnu'
-        run: sudo apt-get install mingw-w64 mingw-w64-tools
+        run: choco install mingw 
+
 
       # Build the library
       - name: Build release library
