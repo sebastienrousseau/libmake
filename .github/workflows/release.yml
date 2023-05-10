@@ -244,9 +244,9 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          for target in $TARGET; do
+          for target in ${{ env.TARGET }}; do
             echo "Downloading $target artifact"
-            name="$TARGET.tar.gz"
+            name="${target}.tar.gz"
             echo "Artifact name: $name"
             mkdir -p target/package
             curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${BUILD_ID}/artifacts/${name}" -o "target/package/${name}"
@@ -290,6 +290,7 @@ jobs:
         env:
           VERSION: ${{ env.VERSION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILD_ID: ${{ github.run_id }}
         with:
           tag_name: v${VERSION}
           release_name: LibMake 🦀 v${VERSION}
