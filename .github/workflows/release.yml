@@ -264,6 +264,7 @@ jobs:
           BUILD_ID: ${{ github.run_id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases
+          TARGET: ${{ env.TARGET }}
 
         run: |
           if [[ ! -f CHANGELOG.md ]]; then
@@ -288,8 +289,7 @@ jobs:
             # Append artifact links to changelog
             echo "## Artifacts 🎁" >> "${changelog_file}"
             ref="$(git rev-parse HEAD)"
-            targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-            for target in "${targets[@]}"; do
+            for target in ${{ env.TARGET }}; do
               link="${target}.tar.gz"
               echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
             done
@@ -299,13 +299,12 @@ jobs:
       # Create the release on GitHub releases
       - name: Create Release
         id: create-release
-        if: matrix.target == 'x86_64-unknown-linux-gnu'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.update-version.outputs.VERSION }}
-          release_name: LibMake 🦀 v${{ steps.update-version.outputs.VERSION }}
+          tag_name: v$VERSION
+          release_name: LibMake 🦀 v$VERSION
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
@@ -316,8 +315,8 @@ jobs:
         # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.target }}.tar.gz
-          path: target/package/${{ matrix.target }}.tar.gz
+          name: $TARGET.tar.gz
+          path: target/package/$TARGET.tar.gz
 
       # Update the version number based on the Cargo.toml file
       - name: Update version number
@@ -331,9 +330,11 @@ jobs:
       - name: Upload Release Assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.VERSION }}
+          TARGET: ${{ env.TARGET }}
+
         run: |
-          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
-          for target in "${targets[@]}"; do
+          for target in ${{ env.TARGET }}; do
             asset_path="target/package/${target}.tar.gz"
             asset_name="${target}.tar.gz"
             echo "Uploading asset: ${asset_name}"
