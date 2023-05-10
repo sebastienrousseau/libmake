@@ -258,15 +258,14 @@ jobs:
       # Generate the changelog based on git log and template file
       - name: Generate Changelog
         run: |
-          # Append version information to CHANGELOG.md
-          echo "## Release v${ VERSION } - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
-          # Copy content of template file to CHANGELOG.md
-          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
-          # Append git log to CHANGELOG.md
-          echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
-          # Append empty line to CHANGELOG.md
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
-
+            # Append version information to CHANGELOG.md
+            echo "## Release v${VERSION} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
+            # Copy content of template file to CHANGELOG.md
+            cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
+            # Append git log to CHANGELOG.md
+            echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
+            # Append empty line to CHANGELOG.md
+            echo "" >> ${{ github.workspace }}/CHANGELOG.md
         env:
           VERSION: ${{ env.VERSION }}
 
