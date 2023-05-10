@@ -179,6 +179,8 @@ jobs:
           use-cross: true
           command: build
           args: --verbose --workspace --release --target ${{ matrix.target }}
+        env:
+          target: ${{ matrix.target }}
 
       # Package the binary for each target
       - name: Package the binary
@@ -232,7 +234,7 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          for target in ${{ matrix.target }}; do
+          for target in ${target}; do
             echo "Downloading $target artifact"
             name="${target}.tar.gz"
             echo "Artifact name: $name"
@@ -243,13 +245,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUILD_ID: ${{ github.run_id }}
-          MATRIX_TARGET: ${{ runner.target }}
+          target: ${{ env.target }}
 
       # Generate the changelog based on git log and template file
       - name: Generate Changelog
         run: |
           # Append version information to CHANGELOG.md
-          echo "## Release v${{ env.VERSION }} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "## Release v${VERSION} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
           # Copy content of template file to CHANGELOG.md
           cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
           # Append git log to CHANGELOG.md
@@ -264,7 +266,7 @@ jobs:
           echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
           for filename in target/package/*.tar.gz; do
             link="$(basename $filename)"
-            echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v${{ env.VERSION }}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
+            echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
           done
 
       # Create the release on GitHub Releases
@@ -274,8 +276,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.VERSION }}
-          release_name: Hash (HSH) 🦀 v${{ env.VERSION }}
+          tag_name: v${VERSION}
+          release_name: Hash (HSH) 🦀 v${VERSION}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
