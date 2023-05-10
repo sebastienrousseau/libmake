@@ -267,6 +267,9 @@ jobs:
           # Append empty line to CHANGELOG.md
           echo "" >> ${{ github.workspace }}/CHANGELOG.md
 
+        env:
+          VERSION: ${{ env.VERSION }}
+
       # Append the artifact links to the changelog
       - name: Append Artifact Links
         run: |
@@ -276,6 +279,8 @@ jobs:
             link="$(basename $filename)"
             echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
           done
+        env:
+          VERSION: ${{ env.VERSION }}
 
       # Create the release on GitHub Releases
       - name: Create Release
