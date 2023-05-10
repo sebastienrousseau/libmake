@@ -297,8 +297,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ env.VERSION }}
         with:
-          tag_name: v${VERSION}
-          release_name: LibMake 🦀 v${VERSION}
+          tag_name: v${{ env.VERSION }}
+          release_name: LibMake 🦀 v${{ env.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
