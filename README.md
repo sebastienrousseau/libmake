@@ -94,12 +94,41 @@ or later (stable).
 
 `LibMake` is supported and has been tested on the following platforms:
 
-| | Operating System | Target | Description |
-| --- | --- | --- | --- |
-| ✅ | Linux   | x86_64-unknown-linux-gnu | 64-bit Linux (kernel 2.6.32+, glibc 2.11+) |
-| ✅ | macOS   | x86_64-apple-darwin | 64-bit macOS (10.7 Lion or later) |
-| ✅ | macOS   | aarch64-apple-darwin | 64-bit macOS on ARM architecture |
-| ✅ | Windows | x86_64-pc-windows-msvc | 64-bit Windows (7 or later) |
+#### Tier 1 platforms 🏆
+
+| Operating System | Target | Description |
+| --- | --- | --- |
+| Linux   | aarch64-unknown-linux-gnu | 64-bit Linux systems on ARM architecture |
+| Linux   | i686-unknown-linux-gnu | 32-bit Linux (kernel 3.2+, glibc 2.17+) |
+| Linux   | x86_64-unknown-linux-gnu | 64-bit Linux (kernel 2.6.32+, glibc 2.11+) |
+| macOS   | x86_64-apple-darwin | 64-bit macOS (10.7 Lion or later) |
+| Windows | i686-pc-windows-gnu | 32-bit Windows (7 or later) |
+| Windows | i686-pc-windows-msvc | 32-bit Windows (7 or later) |
+| Windows | x86_64-pc-windows-gnu | 64-bit Windows (7 or later) |
+| Windows | x86_64-pc-windows-msvc | 64-bit Windows (7 or later) |
+
+#### Tier 2 platforms 🥈
+
+| Operating System | Target | Description |
+| --- | --- | --- |
+| 64-bit Linux | x86_64-unknown-linux-musl | 64-bit Linux (kernel 2.6.32+, musl libc) |
+| ARM64 Linux | aarch64-unknown-linux-musl | 64-bit Linux systems on ARM architecture |
+| ARM64 macOS | aarch64-apple-darwin | 64-bit macOS on Apple Silicon |
+| ARM64 Windows | aarch64-pc-windows-msvc | 64-bit Windows (aarch64-pc-windows-msvc) |
+| ARMv6 Linux | arm-unknown-linux-gnueabi | ARMv6 Linux (kernel 3.2, glibc 2.17) |
+| ARMv6 Linux, hardfloat | arm-unknown-linux-gnueabihf | ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17) |
+| ARMv7 Linux, hardfloat | armv7-unknown-linux-gnueabihf | ARMv7 Linux, hardfloat (kernel 3.2, glibc 2.17) |
+| FreeBSD  | x86_64-unknown-freebsd | 64-bit FreeBSD on x86-64 |
+| MIPS (LE) Linux | mipsel-unknown-linux-gnu | MIPSel Linux (kernel 2.6.32+, glibc 2.11+) |
+| MIPS Linux | mips-unknown-linux-gnu | MIPS Linux (kernel 2.6.32+, glibc 2.11+) |
+| MIPS64 (LE) Linux | mips64el-unknown-linux-gnuabi64 | MIPS64el Linux (kernel 2.6.32+, glibc 2.11+) |
+| MIPS64 Linux | mips64-unknown-linux-gnuabi64 | MIPS64 Linux (kernel 2.6.32+, glibc 2.11+) |
+| NetBSD  | x86_64-unknown-netbsd | 64-bit NetBSD on x86-64 |
+| PowerPC Linux | powerpc-unknown-linux-gnu | PowerPC Linux (kernel 3.2, glibc 2.17) |
+| PPC64 Linux | powerpc64-unknown-linux-gnu | PowerPC64 Linux (kernel 3.2, glibc 2.17) |
+| PPC64LE Linux | powerpc64le-unknown-linux-gnu | PowerPC64le Linux (kernel 3.2, glibc 2.17) |
+| RISC-V Linux | riscv64gc-unknown-linux-gnu | RISC-V Linux (kernel 3.2, glibc 2.17) |
+| S390x Linux | s390x-unknown-linux-gnu | s390x Linux (kernel 3.2, glibc 2.17) |
 
 The [GitHub Actions][11] shows the platforms in which the `LibMake`
 library tests are run.

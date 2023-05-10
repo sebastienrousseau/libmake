@@ -1,22 +1,29 @@
-<!-- markdownlint-disable MD041 -->
-## A code generator to reduce repetitive tasks and build high-quality Rust libraries
+<!-- markdownlint-disable MD033 MD041 -->
 
-[![Made With Rust][made-with-rust-badge]][5] [![Crates.io][crates-badge]][7] [![Lib.rs][libs-badge]][9] [![Docs.rs][docs-badge]][8] [![License][license-badge]][2] [![Codecov][codecov-badge]][14]
+<img src="https://kura.pro/libmake/images/logos/libmake.svg"
+alt="LibMake logo" width="261" align="right" />
 
-## Welcome to `libmake` 👋
+<!-- markdownlint-enable MD033 MD041 -->
+# LibMake v0.1.8 🦀
 
-![libmake Banner][banner]
+A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 
-<!-- markdownlint-disable MD033 -->
+*Part of the [Mini Functions][0] family of libraries.*
+
+<!-- markdownlint-disable MD033 MD041 -->
 <center>
+<!-- markdownlint-enable MD033 MD041 -->
 
-**[Website][0]
-• [Documentation][8]
-• [Report Bug][3]
-• [Request Feature][3]
-• [Contributing Guidelines][4]**
+![Libmake Banner][banner]
 
+[![Made With Rust][made-with-rust-badge]][13] [![Crates.io][crates-badge]][8] [![Lib.rs][libs-badge]][10] [![Docs.rs][docs-badge]][9]
+[![License][license-badge]][3] [![Codecov][codecov-badge]][14]
+
+• [Website][1] • [Documentation][9] • [Report Bug][4] • [Request Feature][4] • [Contributing Guidelines][5]
+
+<!-- markdownlint-disable MD033 MD041 -->
 </center>
+<!-- markdownlint-enable MD033 MD041 -->
 
 <!-- markdownlint-enable MD033 -->
 
@@ -34,22 +41,25 @@ The library is designed to be used as a command-line tool. It is available on [C
 
 - Create your Rust library with ease using the command line interface or by providing a configuration file in CSV, JSON, TOML, or YAML format.
 - Rapidly generate new library projects with a pre-defined structure and boilerplate code that you can customize with your own template.
+- Generate a library pre-defined GitHub Actions workflow to help you automate your library development and testing.
 - Automatically generate basic functions, methods, and macros to get you started with your Rust library.
 - Enforce best practices and standards with starter documentation, test suites, and benchmark suites that are designed to help you get up and running quickly.
 
 ## Changelog 📚
 
-[0]: https://libmake.com
-[2]: http://opensource.org/licenses/MIT
-[3]: https://github.com/sebastienrousseau/libmake/issues
-[4]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md
-[5]: https://github.com/sebastienrousseau/libmake/graphs/contributors
-[7]: https://crates.io/crates/libmake
-[8]: https://docs.rs/libmake
-[9]: https://lib.rs/crates/libmake
-[14]: https://codecov.io/github/sebastienrousseau/libmake?branch=main
+[0]: https://minifunctions.com/libmake "Mini Functions"
+[1]: https://libmake.com "LibMake"
+[3]: http://opensource.org/licenses/MIT "MIT license"
+[4]: https://github.com/sebastienrousseau/libmake/issues "Issues"
+[5]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md "Contributing"
+[7]: http://semver.org/ "Semantic Versioning"
+[8]: https://crates.io/crates/libmake "LibMake on crates.io"
+[9]: https://docs.rs/libmake "LibMake on docs.rs"
+[10]: https://lib.rs/crates/libmake "LibMake on lib.rs"
+[13]: https://www.rust-lang.org "The Rust Programming Language"
+[14]: https://codecov.io/gh/sebastienrousseau/libmake "Codecov"
 
-[banner]: https://kura.pro/libmake/images/banners/banner-libmake.svg "LibMake Banner"
+[banner]: https://kura.pro/libmake/images/titles/title-libmake.svg "LibMake Banner"
 [codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 'Codecov'
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
