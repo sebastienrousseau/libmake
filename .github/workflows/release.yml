@@ -8,7 +8,18 @@ jobs:
     # This job builds the project for all the targets and generates a
     # release artifact that contains the binaries for all the targets.
     name: ❯ Build 🛠
+
+    # Only run this job on the main branch when a commit is pushed.
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    # Set up the job environment variables.
+    env:
+      BUILD_ID: ${{ github.run_id }}
+      CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OS: ${{ matrix.os }}
+      TARGET: ${{ matrix.target }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -136,12 +147,12 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      # Check out the repository code
+      # Check out the repository code.
       - name: Checkout sources
         id: checkout
         uses: actions/checkout@v3
 
-      # Install the stable Rust toolchain
+      # Install the stable Rust toolchain.
       - name: Install stable toolchain
         id: install-toolchain
         uses: actions-rs/toolchain@v1
@@ -149,7 +160,7 @@ jobs:
           toolchain: stable
           override: true
 
-      # Cache dependencies to speed up subsequent builds
+      # Cache dependencies to speed up subsequent builds.
       - name: Cache dependencies
         id: cache-dependencies
         uses: actions/cache@v3
@@ -161,12 +172,13 @@ jobs:
       # Install the targets for the cross-compilation toolchain
       - name: Install target
         id: install-target
-        run: rustup target add ${{ matrix.target }}
+        run: rustup target add ${{ env.TARGET }}
 
       - name: Install Cross and clean artifacts
         run: |
           # Install cross
           cargo install cross
+
           # Clean the build artifacts
           cargo clean --verbose
         shell: bash
@@ -178,24 +190,22 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --verbose --workspace --release --target ${{ matrix.target }}
-        env:
-          target: ${{ matrix.target }}
+          args: --verbose --workspace --release --target ${{ env.TARGET }}
 
       # Package the binary for each target
       - name: Package the binary
         id: package-binary
         run: |
           mkdir -p target/package
-          tar czf target/package/${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release .
-          echo "${{ matrix.target }}.tar.gz=target/package/${{ matrix.target }}.tar.gz" >> $GITHUB_ENV
+          tar czf target/package/${{ env.TARGET }}.tar.gz -C target/${{ env.TARGET }}/release .
+          echo "${{ env.TARGET }}.tar.gz=target/package/${{ env.TARGET }}.tar.gz" >> $GITHUB_ENV
 
       # Upload the binary for each target
       - name: Upload the binary
         id: upload-binary
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.target }}.tar.gz
+          name: ${{ env.TARGET }}.tar.gz
           path: ${{ format('{0}.tar.gz', matrix.target) }}
 
   # Release the binary to GitHub Releases
@@ -234,24 +244,22 @@ jobs:
       # Download the artifacts from the build job
       - name: Download artifacts
         run: |
-          for target in ${target}; do
+          for target in ${ env.TARGET }; do
             echo "Downloading $target artifact"
-            name="${target}.tar.gz"
+            name="${ env.TARGET }.tar.gz"
             echo "Artifact name: $name"
             mkdir -p target/package
             curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${BUILD_ID}/artifacts/${name}" -o "target/package/${name}"
           done
 
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BUILD_ID: ${{ github.run_id }}
-          target: ${{ env.target }}
+          VERSION: ${{ env.VERSION }}
 
       # Generate the changelog based on git log and template file
       - name: Generate Changelog
         run: |
           # Append version information to CHANGELOG.md
-          echo "## Release v${VERSION} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
+          echo "## Release v${ VERSION } - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
           # Copy content of template file to CHANGELOG.md
           cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
           # Append git log to CHANGELOG.md
@@ -274,7 +282,7 @@ jobs:
         id: create-release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.VERSION }}
         with:
           tag_name: v${VERSION}
           release_name: Hash (HSH) 🦀 v${VERSION}
