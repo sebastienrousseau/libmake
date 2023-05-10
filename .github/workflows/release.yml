@@ -286,13 +286,6 @@ jobs:
             # Append empty line to changelog
             echo "" >> "${changelog_file}"
 
-            # Append artifact links to changelog
-            echo "## Artifacts 🎁" >> "${changelog_file}"
-            ref="$(git rev-parse HEAD)"
-            for target in ${{ env.TARGET }}; do
-              link="${target}.tar.gz"
-              echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
-            done
           fi
         shell: bash
 
@@ -302,52 +295,13 @@ jobs:
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ env.VERSION }}
         with:
-          tag_name: v$VERSION
-          release_name: LibMake 🦀 v$VERSION
+          tag_name: v${VERSION}
+          release_name: LibMake 🦀 v${VERSION}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
-
-      # Deploy the binary to GitHub releases
-      - name: Deploy binary
-        id: deploy-binary
-        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
-        uses: actions/upload-artifact@v3
-        with:
-          name: $TARGET.tar.gz
-          path: target/package/$TARGET.tar.gz
-
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        id: update-version
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "::set-output name=VERSION::$NEW_VERSION"
-        shell: bash
-
-      # Upload artifacts as release assets
-      - name: Upload Release Assets
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ env.VERSION }}
-          TARGET: ${{ env.TARGET }}
-
-        run: |
-          for target in ${{ env.TARGET }}; do
-            asset_path="target/package/${target}.tar.gz"
-            asset_name="${target}.tar.gz"
-            echo "Uploading asset: ${asset_name}"
-            curl \
-              --progress-bar \
-              --location \
-              --request POST \
-              --header "Authorization: Bearer ${GITHUB_TOKEN}" \
-              --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
-              --upload-file "${asset_path}" \
-              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
-          done
-        shell: bash
 
   # Publish the release to Crates.io automatically
   crate:
