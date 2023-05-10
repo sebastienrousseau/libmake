@@ -206,7 +206,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.TARGET }}.tar.gz
-          path: ${{ format('{0}.tar.gz', matrix.target) }}
+          path: target/package/${{ env.TARGET }}.tar.gz
 
   # Release the binary to GitHub Releases
   release:
