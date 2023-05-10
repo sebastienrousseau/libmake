@@ -257,46 +257,96 @@ jobs:
           TARGET: ${{ env.TARGET }}
           OS: ${{ env.OS }}
 
-      # Generate the changelog based on git log and template file
+      # Generate the changelog based on the git log
       - name: Generate Changelog
-        run: |
-          # Append version information to CHANGELOG.md
-          echo "## Release v${VERSION} - $(date +'%Y-%m-%d')" >> ${{ github.workspace }}/CHANGELOG.md
-          # Copy content of template file to CHANGELOG.md
-          cat TEMPLATE.md >> ${{ github.workspace }}/CHANGELOG.md
-          # Append git log to CHANGELOG.md
-          echo "$(git log --pretty=format:'%s' --reverse $(git describe --tags --abbrev=0)..HEAD)" >> ${{ github.workspace }}/CHANGELOG.md
-          # Append empty line to CHANGELOG.md
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
+        id: generate-changelog
         env:
-          VERSION: ${{ env.VERSION }}
+          BUILD_ID: ${{ github.run_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases
 
-      # Append the artifact links to the changelog
-      - name: Append Artifact Links
         run: |
-          echo "" >> ${{ github.workspace }}/CHANGELOG.md
-          echo "## Artifacts 🎁" >> ${{ github.workspace }}/CHANGELOG.md
-          for filename in target/package/*.tar.gz; do
-            link="$(basename $filename)"
-            echo "* [${link}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/v${VERSION}/$link)" >> ${{ github.workspace }}/CHANGELOG.md
-          done
-        env:
-          VERSION: ${{ env.VERSION }}
+          if [[ ! -f CHANGELOG.md ]]; then
+            # Set path to changelog file
+            changelog_file="${{ github.workspace }}/CHANGELOG.md"
 
-      # Create the release on GitHub Releases
+            # Get version from Cargo.toml
+            version=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+
+            # Append version information to changelog
+            echo "## Release v${version} - $(date +'%Y-%m-%d')" >> "${changelog_file}"
+
+            # Copy content of template file to changelog
+            cat TEMPLATE.md >> "${changelog_file}"
+
+            # Append git log to changelog
+            echo "$(git log --pretty=format:'%s' --reverse HEAD)" >> "${changelog_file}"
+
+            # Append empty line to changelog
+            echo "" >> "${changelog_file}"
+
+            # Append artifact links to changelog
+            echo "## Artifacts 🎁" >> "${changelog_file}"
+            ref="$(git rev-parse HEAD)"
+            targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+            for target in "${targets[@]}"; do
+              link="${target}.tar.gz"
+              echo "* [${link}](${RELEASE_URL}/download/v${version}/${link})" >> "${changelog_file}"
+            done
+          fi
+        shell: bash
+
+      # Create the release on GitHub releases
       - name: Create Release
         id: create-release
+        if: matrix.target == 'x86_64-unknown-linux-gnu'
         uses: actions/create-release@v1
         env:
-          VERSION: ${VERSION}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BUILD_ID: ${{ github.run_id }}
         with:
-          tag_name: v${VERSION}
-          release_name: LibMake 🦀 v${VERSION}
+          tag_name: v${{ steps.update-version.outputs.VERSION }}
+          release_name: LibMake 🦀 v${{ steps.update-version.outputs.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
+
+      # Deploy the binary to GitHub releases
+      - name: Deploy binary
+        id: deploy-binary
+        # if: github.ref == 'refs/heads/main' && !github.event.check_run.conclusion
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}.tar.gz
+          path: target/package/${{ matrix.target }}.tar.gz
+
+      # Update the version number based on the Cargo.toml file
+      - name: Update version number
+        id: update-version
+        run: |
+          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
+          echo "::set-output name=VERSION::$NEW_VERSION"
+        shell: bash
+
+      # Upload artifacts as release assets
+      - name: Upload Release Assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          targets=("aarch64-apple-darwin" "x86_64-apple-darwin" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc" "x86_64-unknown-linux-gnu")
+          for target in "${targets[@]}"; do
+            asset_path="target/package/${target}.tar.gz"
+            asset_name="${target}.tar.gz"
+            echo "Uploading asset: ${asset_name}"
+            curl \
+              --progress-bar \
+              --location \
+              --request POST \
+              --header "Authorization: Bearer ${GITHUB_TOKEN}" \
+              --header "Content-Type: $(file -b --mime-type "${asset_path}")" \
+              --upload-file "${asset_path}" \
+              "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${{ steps.create-release.outputs.id }}/assets?name=${asset_name}"
+          done
+        shell: bash
 
   # Publish the release to Crates.io automatically
   crate:
