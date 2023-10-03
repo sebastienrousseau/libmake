@@ -6,3 +6,4 @@ build
 Cargo.lock
 Icon?
 src/.DS_Store
+/my_library/

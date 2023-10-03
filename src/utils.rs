@@ -1,3 +1,6 @@
+// Copyright © 2023 LibMake. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 use std::env;
 use std::fs::File;
 use std::path::Path;

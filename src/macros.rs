@@ -1,3 +1,6 @@
+// Copyright © 2023 LibMake. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 //! Macros for the `libmake` crate.
 //!
 //! This module bundles all macros used across the `libmake` crate.
