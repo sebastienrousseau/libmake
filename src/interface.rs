@@ -1,3 +1,6 @@
+// Copyright © 2023 LibMake. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 use std::{
     fs::File,
     io::{BufRead, BufReader, Write},

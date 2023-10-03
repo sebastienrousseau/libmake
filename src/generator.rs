@@ -1,3 +1,6 @@
+// Copyright © 2023 LibMake. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 use crate::interface::replace_placeholders;
 use reqwest::blocking::get;
 // use assert_cmd::Command;

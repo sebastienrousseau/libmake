@@ -1,3 +1,6 @@
+// Copyright © 2023 LibMake. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 use clap::ArgMatches;
 
 use crate::generator::{
@@ -13,9 +16,10 @@ use super::generator::{
 /// # Arguments
 ///
 /// * `matches` - An instance of `clap::ArgMatches` containing the
-///               parsed command line arguments.
+/// parsed command line arguments.
 ///
-pub fn process_arguments(matches: ArgMatches) {
+pub fn process_arguments(matches: &ArgMatches) {
+    // Extracting optional argument values from the parsed matches.
     let author = matches.get_one::<String>("author");
     let build = matches.get_one::<String>("build");
     let categories = matches.get_one::<String>("categories");
@@ -34,6 +38,7 @@ pub fn process_arguments(matches: ArgMatches) {
     let version = matches.get_one::<String>("version");
     let website = matches.get_one::<String>("website");
 
+    // Check which subcommand was used and perform the corresponding action.
     if matches.contains_id("csv") {
         let csv_file_path = matches.get_one::<String>("csv").unwrap();
         generate_from_csv(csv_file_path)
@@ -54,6 +59,8 @@ pub fn process_arguments(matches: ArgMatches) {
         generate_from_toml(toml_file_path)
             .expect("Failed to generate the template files");
     } else if !matches.args_present() {
+        // If no subcommand is used and there are additional arguments,
+        // create a parameter struct and generate files.
         let params = FileGenerationParams {
             author: author.cloned(),
             build: build.cloned(),

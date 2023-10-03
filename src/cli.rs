@@ -1,3 +1,6 @@
+// Copyright © 2023 LibMake. All rights reserved.
+// SPDX-License-Identifier: Apache-2.0 OR MIT
+
 use clap::{Arg, ArgMatches, Command, Error};
 
 /// Builds and returns a set of command-line arguments using the Clap
@@ -147,7 +150,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("version")
-                .default_value("0.1.8")
+                .default_value("0.1.9")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')
