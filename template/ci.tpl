@@ -28,7 +28,7 @@ jobs:
       # Check out the repository code
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
@@ -68,7 +68,7 @@ jobs:
       # Check out the repository code
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
@@ -108,7 +108,7 @@ jobs:
       # Check out the repository code
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
@@ -162,7 +162,7 @@ jobs:
       # Check out the repository code
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -288,7 +288,7 @@ jobs:
       # Check out the repository code
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
@@ -364,7 +364,7 @@ jobs:
     steps:
       # Check out the repository code
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
@@ -447,7 +447,7 @@ jobs:
     steps:
       # Check out the repository code
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain

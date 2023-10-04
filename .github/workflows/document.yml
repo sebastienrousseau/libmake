@@ -18,11 +18,11 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
     steps:
-      - uses: hecrj/setup-rust-action@v1
+      - uses: hecrj/setup-rust-action@v2
         with:
           rust-version: nightly
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Update libssl
         run: |
