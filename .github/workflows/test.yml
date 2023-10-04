@@ -16,8 +16,8 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: hecrj/setup-rust-action@v1
-      - uses: actions/checkout@master
+      - uses: hecrj/setup-rust-action@v2
+      - uses: actions/checkout@v4
       - name: Run tests
         run: cargo test --verbose --workspace
       - name: Run tests with all features
