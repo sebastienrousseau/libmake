@@ -4,5 +4,5 @@ version = 1
 name = "rust"
 enabled = true
 
-  [analyzers.meta]
-  msrv = "stable"
+[analyzers.meta]
+msrv = "stable"

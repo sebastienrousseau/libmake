@@ -89,6 +89,8 @@ pub mod generator;
 /// The `interface` module contains functions for displaying the
 /// interface.
 pub mod interface;
+/// The `loggers` module contains the loggers for the library.
+pub mod loggers;
 /// The `macros` module contains functions for generating macros.
 pub mod macros;
 /// The `utils` module contains a function for reading a CSV file at the
