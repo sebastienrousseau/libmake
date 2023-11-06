@@ -150,7 +150,7 @@ fn test_assert_generate_files() {
     params.output =
         Some(temp_dir.as_path().to_str().unwrap().to_owned());
 
-    assert_generate_files!(params);
+    assert_generate_files!(params.clone());
     assert!(temp_dir.exists());
     std::fs::remove_dir_all(temp_dir).unwrap();
 }
