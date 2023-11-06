@@ -105,7 +105,7 @@ mod tests {
             Some(&file_path.to_string())
         );
 
-        process_arguments(&matches);
+        process_arguments(&matches).unwrap();
         // Check that the files were generated
         let expected_files = vec![
             "Cargo.toml",

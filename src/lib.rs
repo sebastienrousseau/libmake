@@ -118,7 +118,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     // Build the command-line interface and process the arguments
     let matches = cli::build_cli()?;
-    args::process_arguments(&matches);
+    args::process_arguments(&matches)?;
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
     if std::env::args().len() == 1 {
