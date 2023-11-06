@@ -1,9 +1,9 @@
-// Copyright © 2023 LibMake. All rights reserved.
+// Copyright © 2023 xtasks. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
+//! # LibMake
 //!
-//! A code generator to reduce repetitive tasks and build high-quality Rust
-//! libraries.
+//! A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 //!
 //! *Part of the [Mini Functions][0] family of libraries.*
 //!
@@ -60,18 +60,19 @@
 //! [`serde`]: https://github.com/serde-rs/serde
 //! [0]: https://minifunctions.com/libmake "Mini Functions"
 //!
+#![allow(clippy::must_use_candidate)]
 #![cfg_attr(feature = "bench", feature(test))]
 #![deny(dead_code)]
 #![deny(rustc::existing_doc_keyword)]
-#![forbid(missing_debug_implementations)]
-#![forbid(missing_docs)]
-#![forbid(unreachable_pub)]
-#![forbid(unsafe_code)]
 #![doc(
     html_favicon_url = "https://kura.pro/libmake/images/favicon.ico",
     html_logo_url = "https://kura.pro/libmake/images/logos/libmake.svg",
     html_root_url = "https://docs.rs/libmake"
 )]
+#![forbid(missing_debug_implementations)]
+#![forbid(missing_docs)]
+#![forbid(unreachable_pub)]
+#![forbid(unsafe_code)]
 #![crate_name = "libmake"]
 #![crate_type = "lib"]
 
@@ -97,30 +98,34 @@ pub mod macros;
 /// given file path and returns the value of the given field.
 pub mod utils;
 
-/// Initializes the logger with a file logger and a terminal logger.
+use std::error::Error;
+
+/// Initializes the logger with a file logger and a terminal logger and processes
+/// command-line arguments to generate the new library.
 ///
 /// # Examples
 ///
 /// ```
 /// use libmake::run;
-/// run();
+///
+/// if let Err(e) = run() {
+///     eprintln!("Application error: {}", e);
+/// }
 /// ```
-pub fn run() -> Result<(), Box<dyn std::error::Error>> {
-    // Process the ascii art
+pub fn run() -> Result<(), Box<dyn Error>> {
+    // Generate ASCII art for the tool's CLI
     ascii::generate_ascii_art("LibMake");
 
-    // Process the command-line arguments
-    // let args: Vec<String> = env::args().collect();
-    // println!("{:?}", args);
-
+    // Build the command-line interface and process the arguments
     let matches = cli::build_cli()?;
     args::process_arguments(&matches);
 
-    // Print the welcome message if no arguments were passed
+    // Check the number of arguments, provide a welcome message if no arguments were passed
     if std::env::args().len() == 1 {
         eprintln!(
             "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
         );
     }
+
     Ok(())
 }
