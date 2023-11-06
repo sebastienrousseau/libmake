@@ -11,7 +11,7 @@ mod tests {
 
         // Call the generate_ascii_art function with the test string and assert that no panic occurs
         assert!(std::panic::catch_unwind(|| {
-            generate_ascii_art(text);
+            generate_ascii_art(text).unwrap();
         })
         .is_ok());
     }

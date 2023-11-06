@@ -114,7 +114,7 @@ use std::error::Error;
 /// ```
 pub fn run() -> Result<(), Box<dyn Error>> {
     // Generate ASCII art for the tool's CLI
-    ascii::generate_ascii_art("LibMake");
+    ascii::generate_ascii_art("LibMake")?;
 
     // Build the command-line interface and process the arguments
     let matches = cli::build_cli()?;
