@@ -8,7 +8,7 @@ alt="LibMake logo" width="261" align="right" />
 
 A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 
-*Part of the [Mini Functions][0] family of libraries.*
+*Part of the [Mini Functions][00] family of libraries.*
 
 <!-- markdownlint-disable MD033 MD041 -->
 <center>
@@ -16,10 +16,10 @@ A code generator to reduce repetitive tasks and build high-quality Rust librarie
 
 ![Libmake Banner][banner]
 
-[![Made With Rust][made-with-rust-badge]][13] [![Crates.io][crates-badge]][8] [![Lib.rs][libs-badge]][10] [![Docs.rs][docs-badge]][9]
-[![License][license-badge]][3] [![Codecov][codecov-badge]][14]
+[![Made With Rust][made-with-rust-badge]][09] [![Crates.io][crates-badge]][06] [![Lib.rs][libs-badge]][08] [![Docs.rs][docs-badge]][07]
+[![License][license-badge]][02] [![Codecov][codecov-badge]][10]
 
-• [Website][1] • [Documentation][9] • [Report Bug][4] • [Request Feature][4] • [Contributing Guidelines][5]
+• [Website][01] • [Documentation][07] • [Report Bug][03] • [Request Feature][03] • [Contributing Guidelines][04]
 
 <!-- markdownlint-disable MD033 MD041 -->
 </center>
@@ -33,7 +33,7 @@ A code generator to reduce repetitive tasks and build high-quality Rust librarie
 
 With `LibMake`, you can easily generate a new Rust library code base structure with all the necessary files, layouts, build configurations, code, tests, benchmarks, documentation, and much more in a matter of seconds.
 
-The library is designed to be used as a command-line tool. It is available on [Crates.io][7] and [Lib.rs][8].
+The library is designed to be used as a command-line tool. It is available on [Crates.io][05] and [Lib.rs][06].
 
 ## Features ✨
 
@@ -47,22 +47,22 @@ The library is designed to be used as a command-line tool. It is available on [C
 
 ## Changelog 📚
 
-[0]: https://minifunctions.com/libmake "Mini Functions"
-[1]: https://libmake.com "LibMake"
-[3]: http://opensource.org/licenses/MIT "MIT license"
-[4]: https://github.com/sebastienrousseau/libmake/issues "Issues"
-[5]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md "Contributing"
-[7]: http://semver.org/ "Semantic Versioning"
-[8]: https://crates.io/crates/libmake "LibMake on crates.io"
-[9]: https://docs.rs/libmake "LibMake on docs.rs"
-[10]: https://lib.rs/crates/libmake "LibMake on lib.rs"
-[13]: https://www.rust-lang.org "The Rust Programming Language"
-[14]: https://codecov.io/gh/sebastienrousseau/libmake "Codecov"
+[00]: https://minifunctions.com/libmake "Mini Functions"
+[01]: https://libmake.com "LibMake"
+[02]: http://opensource.org/licenses/MIT "MIT license"
+[03]: https://github.com/sebastienrousseau/libmake/issues "Issues"
+[04]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md "Contributing"
+[05]: http://semver.org/ "Semantic Versioning"
+[06]: https://crates.io/crates/libmake "LibMake on Crates.io"
+[07]: https://docs.rs/libmake "LibMake on docs.rs"
+[08]: https://lib.rs/crates/libmake "LibMake on lib.rs"
+[09]: https://www.rust-lang.org "The Rust Programming Language"
+[10]: https://codecov.io/gh/sebastienrousseau/libmake "Codecov"
 
 [banner]: https://kura.pro/libmake/images/titles/title-libmake.svg "LibMake Banner"
-[codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 'Codecov'
-[crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
-[docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.2.0-orange.svg?style=for-the-badge 'Lib.rs Badge'
-[license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
-[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'
+[codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 "Codecov Badge"
+[crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge "Crates.io Badge"
+[docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge "Docs.rs Badge"
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.2.0-orange.svg?style=for-the-badge "Lib.rs Badge"
+[license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge "License Badge"
+[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust "Made With Rust Badge"
