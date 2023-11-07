@@ -141,16 +141,13 @@ support additional platforms, please submit a pull request.
 
 ### Documentation
 
-> ℹ️ **Info:** Do check out our [website][01] for more information. You
-can find our documentation on [docs.rs][09], [lib.rs][10] and
-[crates.io][08].
+**Info:** Do check out our [website][01] for more information. You can find our documentation on [docs.rs][09], [lib.rs][10] and [crates.io][08].
 
 ## Usage
 
 ### Command-line interface
 
-`LibMake` provides a command-line interface to generate a new library
-project. There are a few options available to help you get started.
+`LibMake` provides a command-line interface to generate a new library project. There are a few options available to help you get started.
 
 #### Generate a new library using a CSV file
 
@@ -270,11 +267,9 @@ cargo run -- --author "John Smith" \
 
 ### Examples
 
-To get started with `LibMake`, you can use the examples provided in the
-`examples` directory of the project.
+To get started with `LibMake`, you can use the examples provided in the `examples` directory of the project.
 
-To run the examples, clone the repository and run the following command
-in your terminal from the project root directory.
+To run the examples, clone the repository and run the following command in your terminal from the project root directory.
 
 | Example | Description | Command |
 |---------|-------------|---------|
