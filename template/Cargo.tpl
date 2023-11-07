@@ -42,8 +42,13 @@ path = "benches/criterion.rs"
 debug = true
 
 [dependencies]
-serde = { version = "1.0.162", features = ["derive"] }
-serde_json = "1.0.96"
+anyhow = "1.0.75"
+dtt = "0.0.4"
+serde = { version = "1.0.190", features = ["derive"] }
+serde_json = "1.0.108"
+serde_yaml = "0.9.27"
+toml = "0.8.6"
+vrd = "0.0.4"
 
 [dev-dependencies]
 criterion = "0.4.0"

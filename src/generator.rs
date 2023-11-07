@@ -3,7 +3,6 @@
 
 use crate::interface::replace_placeholders;
 use reqwest::blocking::get;
-// use assert_cmd::Command;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_yaml;
@@ -16,12 +15,10 @@ use std::{
 ///
 /// # Description
 ///
-/// * The parameters are optional, but the output directory is required.
-/// * The output directory is the directory where the project files will be created.
+/// * The `output` directory is the directory where the project files will be created.
 /// * The other parameters are optional and will be used to replace the placeholders in the template files.
 /// * The template files are located in the template directory of the project.
 /// * The template files are copied to the output directory and the placeholders are replaced with the values of the parameters.
-///
 ///
 #[derive(
     Clone,
@@ -58,7 +55,7 @@ pub struct FileGenerationParams {
     pub license: Option<String>,
     /// The name of the project (optional).
     pub name: Option<String>,
-    /// The output directory where the project files will be created (required).
+    /// The output directory where the project files will be created (optional).
     pub output: Option<String>,
     /// The name of the readme file (optional).
     pub readme: Option<String>,
@@ -73,7 +70,8 @@ pub struct FileGenerationParams {
 }
 
 impl FileGenerationParams {
-    /// Creates a default instance with default values.
+    /// Creates a default instance with default values for all fields.
+    /// Fields that are truly optional without a default are initialized as `None`.
     pub fn default_params() -> Self {
         Self {
             author: Some("John Smith".to_string()),
@@ -211,34 +209,42 @@ pub fn create_template_folder() -> io::Result<()> {
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
+        "loggers.tpl",
         "macros.tpl",
         "main.tpl",
         "README.tpl",
         "rustfmt.tpl",
         "TEMPLATE.tpl",
         "test.tpl",
+        "test_loggers.tpl"
     ];
     for file in &files {
-        let file_url = format!("{}{}", url, file);
         let file_path = template_dir_path.join(file);
-        let response = get(&file_url).map_err(|e| {
-            io::Error::new(
-                io::ErrorKind::Other,
-                format!("Failed to download template file: {}", e),
-            )
-        })?;
-        let file_contents = response.text().map_err(|e| {
-            io::Error::new(
-                io::ErrorKind::Other,
-                format!("Failed to read response body: {}", e),
-            )
-        })?;
-        std::fs::write(
-            &file_path,
-            file_contents
-                .trim_start_matches('\n')
-                .trim_end_matches('\n'),
-        )?;
+        // Check if the file already exists
+        if !file_path.exists() {
+            let file_url = format!("{}{}", url, file);
+            let response = reqwest::blocking::get(&file_url).map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::Other,
+                    format!("Failed to download template file: {}", e),
+                )
+            })?;
+
+            let file_contents = response.text().map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::Other,
+                    format!("Failed to read response body: {}", e),
+                )
+            })?;
+
+            // Write the file contents, trimming any leading or trailing newline characters
+            std::fs::write(
+                &file_path,
+                file_contents
+                    .trim_start_matches('\n')
+                    .trim_end_matches('\n'),
+            )?;
+        }
     }
     Ok(())
 }
@@ -426,6 +432,13 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         &project_directory,
         &params,
     )?;
+    // Copying the `lib.tpl` file to the new library directory
+    copy_and_replace_template(
+        "loggers.tpl",
+        "src/loggers.rs",
+        &project_directory,
+        &params,
+    )?;
     // Copying the `macros.tpl` file to the new library directory
     copy_and_replace_template(
         "macros.tpl",
@@ -465,6 +478,14 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     copy_and_replace_template(
         "test.tpl",
         "tests/test.rs",
+        &project_directory,
+        &params,
+    )?;
+
+    // Copying the `test.tpl` file to the new library directory
+    copy_and_replace_template(
+        "test_loggers.tpl",
+        "tests/test_loggers.rs",
         &project_directory,
         &params,
     )?;
