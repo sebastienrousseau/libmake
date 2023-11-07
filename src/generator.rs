@@ -329,29 +329,21 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     // Creating the template directory
     create_template_folder()?;
 
-    // Creating the src directory
-    let src_directory = project_directory.join("src");
-    create_directory(&src_directory)?;
+    // Define the subdirectories to be created within the project directory
+    let subdirectories = [
+        "src",
+        "benches",
+        "examples",
+        "tests",
+        ".github/",
+        ".github/workflows",
+    ];
 
-    // Creating the benches directory
-    let benches_directory = project_directory.join("benches");
-    create_directory(&benches_directory)?;
-
-    // Creating the examples directory
-    let examples_directory = project_directory.join("examples");
-    create_directory(&examples_directory)?;
-
-    // Creating the tests directory
-    let tests_directory = project_directory.join("tests");
-    create_directory(&tests_directory)?;
-
-    // Creating the .github directory
-    let github_directory = project_directory.join(".github");
-    create_directory(&github_directory)?;
-
-    // Creating the .github/workflows directory
-    let workflows_directory = github_directory.join("workflows");
-    create_directory(&workflows_directory)?;
+    // Iterate over the subdirectories and create them
+    for subdir in &subdirectories {
+        let dir_path = project_directory.join(subdir);
+        create_directory(&dir_path)?;
+    }
 
     // Copying the template files to the new library directory
     let templates = [
@@ -372,8 +364,8 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     ("README.tpl", "README.md"),
     ("rustfmt.tpl", "rustfmt.toml"),
     ("TEMPLATE.tpl", "TEMPLATE.md"),
-    ("test.tpl", "tests/test.rs"),
     ("test_loggers.tpl", "tests/test_loggers.rs"),
+    ("test.tpl", "tests/test.rs"),
     ];
 
     for (template, target) in templates {
