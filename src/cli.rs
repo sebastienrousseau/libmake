@@ -141,7 +141,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("version")
-                .default_value("0.1.9")
+                .default_value("0.2.0")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')

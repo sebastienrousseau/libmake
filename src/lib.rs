@@ -99,6 +99,7 @@ pub mod macros;
 pub mod utils;
 
 use std::error::Error;
+use crate::ascii::generate_ascii_art;
 
 /// Initializes the logger with a file logger and a terminal logger and processes
 /// command-line arguments to generate the new library.
@@ -113,8 +114,24 @@ use std::error::Error;
 /// }
 /// ```
 pub fn run() -> Result<(), Box<dyn Error>> {
-    // Generate ASCII art for the tool's CLI
-    ascii::generate_ascii_art("LibMake")?;
+    // // Generate ASCII art for the tool's CLI
+    // macro_log_info!(
+    //     LogLevel::INFO,
+    //     "deps",
+    //     "Starting generating ASCII art for the tool's CLI...",
+    //     LogFormat::CLF
+    // );
+    match generate_ascii_art("LibMake") {
+        Ok(ascii_art) => println!("{}", ascii_art),
+        Err(e) => eprintln!("Error generating ASCII art: {}", e),
+    }
+    // ascii::generate_ascii_art("LibMake");
+    // macro_log_info!(
+    //     LogLevel::INFO,
+    //     "deps",
+    //     "Finished generating ASCII art for the tool's CLI.",
+    //     LogFormat::CLF
+    // );
 
     // Build the command-line interface and process the arguments
     let matches = cli::build_cli()?;
