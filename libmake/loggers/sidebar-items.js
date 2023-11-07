@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["LogFormat","LogLevel"],"struct":["Log"]};

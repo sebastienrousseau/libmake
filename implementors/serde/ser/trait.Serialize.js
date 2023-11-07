@@ -1,3 +1,3 @@
 (function() {var implementors = {
-"libmake":[["impl <a class=\"trait\" href=\"https://docs.rs/serde/1.0.162/serde/ser/trait.Serialize.html\" title=\"trait serde::ser::Serialize\">Serialize</a> for <a class=\"struct\" href=\"libmake/generator/struct.FileGenerationParams.html\" title=\"struct libmake::generator::FileGenerationParams\">FileGenerationParams</a>"]]
+"libmake":[["impl <a class=\"trait\" href=\"https://docs.rs/serde/1.0.192/serde/ser/trait.Serialize.html\" title=\"trait serde::ser::Serialize\">Serialize</a> for <a class=\"struct\" href=\"libmake/generator/struct.FileGenerationParams.html\" title=\"struct libmake::generator::FileGenerationParams\">FileGenerationParams</a>"]]
 };if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["generate_ascii_art"]};
+window.SIDEBAR_ITEMS = {"enum":["AsciiArtError"],"fn":["generate_ascii_art"]};
