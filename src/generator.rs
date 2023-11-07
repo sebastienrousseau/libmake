@@ -1,8 +1,7 @@
 // Copyright © 2023 LibMake. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
-use crate::interface::replace_placeholders;
-use reqwest::blocking::get;
+use super::interface::replace_placeholders;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_yaml;

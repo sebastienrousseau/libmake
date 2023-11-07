@@ -1,24 +1,24 @@
 [package]
-authors = ["{author} <{email}>"]                            # Add your name and email here.
-build = "{build}"                                           # Add your build command here (e.g. build.rs).
-categories = {categories}                                   # Add your categories here. See https://doc.rust-lang.org/cargo/reference/manifest.html?highlight=keywords#the-categories-field for more information.
-description = "{description}"                               # Add your description here.
-documentation = "{documentation}"                           # Add your documentation link here.
-edition = "{edition}"                                       # Add your edition here (e.g. 2018).
+authors = ["{author} <{email}>"]
+build = "{build}"
+categories = ["{categories}"]
+description = "{description}"
+documentation = "{documentation}"
+edition = "{edition}"
 exclude = [
     "/.git/*",
     "/.github/*",
     "/.gitignore",
     "/.vscode/*"
-    ]                                                       # Add files to exclude here
-homepage = "{homepage}"                                     # Add your homepage here
-keywords = ["{keywords}"]                                   # Add your keywords here. See https://doc.rust-lang.org/cargo/reference/manifest.html?highlight=keywords#the-keywords-field for more information.
-license = "{license}"                                       # Add your license here.
-name = "{name}"                                             # Add your library name here.
-readme = "{readme}"                                         # Add your readme here.
-repository = "{repository}"                                 # Add your repository here.
-rust-version = "{rustversion}"                              # Add your rust version here.
-version = "{version}"                                       # Add your version here.
+    ]
+homepage = "{homepage}"
+keywords = ["{keywords}"]
+license = "{license}"
+name = "{name}"
+readme = "{readme}"
+repository = "{repository}"
+rust-version = "{rustversion}"
+version = "{version}"
 include = [
     "/benches/**",
     "/build.rs",
@@ -31,7 +31,7 @@ include = [
     "/src/**",
     "/tests/**",
     "/xtask/**",
-]                                                           # Add files to include here.
+]
 
 [[bench]]
 name = "benchmark"
@@ -44,14 +44,14 @@ debug = true
 [dependencies]
 anyhow = "1.0.75"
 dtt = "0.0.4"
-serde = { version = "1.0.190", features = ["derive"] }
+serde = { version = "1.0.192", features = ["derive"] }
 serde_json = "1.0.108"
 serde_yaml = "0.9.27"
-toml = "0.8.6"
+toml = "0.8.8"
 vrd = "0.0.4"
 
 [dev-dependencies]
-criterion = "0.4.0"
+criterion = "0.5.1"
 
 [lib]
 crate-type = ["lib"]
@@ -65,36 +65,36 @@ default = []
 all-features = true
 
 [profile.dev]
-codegen-units = 256                                         # Number of parallel codegen units
-debug = true                                                # Enable debug symbols
-debug-assertions = true                                     # Enable debug assertions
-incremental = true                                          # Enable incremental compilation
-lto = false                                                 # Disable link-time optimization
-opt-level = 0                                               # Optimize for speed
-overflow-checks = true                                      # Enable overflow checks
-panic = 'unwind'                                            # Use unwinding panic handling
-rpath = false                                               # Disable rpath
-strip = false                                               # Disable symbol stripping
+codegen-units = 256
+debug = true
+debug-assertions = true
+incremental = true
+lto = false
+opt-level = 0
+overflow-checks = true
+panic = 'unwind'
+rpath = false
+strip = false
 
 [profile.release]
-codegen-units = 1                                           # Number of parallel codegen units
-debug = false                                               # Disable debug symbols
-debug-assertions = false                                    # Disable debug assertions
-incremental = false                                         # Disable incremental compilation
-lto = true                                                  # Enable link-time optimization
-opt-level = "s"                                             # Optimize for size
-overflow-checks = false                                     # Disable overflow checks
-panic = "abort"                                             # Use aborting panic handling
-rpath = false                                               # Disable rpath
-strip = "symbols"                                           # Strip symbols
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = false
+lto = true
+opt-level = "s"
+overflow-checks = false
+panic = "abort"
+rpath = false
+strip = "symbols"
 
 [profile.test]
-codegen-units = 256                                         # Number of parallel codegen units
-debug = true                                                # Enable debug symbols
-debug-assertions = true                                     # Enable debug assertions
-incremental = true                                          # Enable incremental compilation
-lto = false                                                 # Disable link-time optimization
-opt-level = 0                                               # Optimize for speed
-overflow-checks = true                                      # Enable overflow checks
-rpath = false                                               # Disable rpath
-strip = false                                               # Disable symbol stripping
+codegen-units = 256
+debug = true
+debug-assertions = true
+incremental = true
+lto = false
+opt-level = 0
+overflow-checks = true
+rpath = false
+strip = false
