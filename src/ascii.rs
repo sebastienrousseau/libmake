@@ -2,24 +2,42 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
 use figlet_rs::FIGfont;
+use std::fmt;
+use std::error::Error;
 
-/// Generates ASCII art from the given text using the specified FIGfont
-/// file.
+/// Error type for ASCII art generation failures.
+#[derive(Debug)]
+pub enum AsciiArtError {
+    /// Represents a failure to load the FIGfont.
+    FontLoadError,
+    /// Represents a failure to convert text to ASCII art.
+    ConversionError,
+}
+
+impl fmt::Display for AsciiArtError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {
+            AsciiArtError::FontLoadError => write!(f, "Failed to load FIGfont"),
+            AsciiArtError::ConversionError => write!(f, "Failed to convert text to ASCII art"),
+        }
+    }
+}
+
+impl Error for AsciiArtError {}
+
+/// Generates ASCII art from the given text using the standard FIGfont.
 ///
 /// # Arguments
 ///
-/// - `text` - The text to convert to ASCII art in the form of a string.
-/// - `font_file` - The path to the FIGfont file to use for the
-/// conversion in the form of a string.
+/// * `text` - The text to convert to ASCII art.
 ///
-/// # Panics
+/// # Returns
 ///
-/// This function panics if the FIGfont file cannot be loaded or if the
-/// conversion from text to ASCII art fails.
+/// This function returns a `Result` with the ASCII art as `String` or
+/// an `AsciiArtError` if the operation fails.
 ///
-pub fn generate_ascii_art(text: &str) {
-    let standard_font = FIGfont::standard().unwrap();
-    let figure = standard_font.convert(text);
-    assert!(figure.is_some());
-    println!("{}", figure.unwrap());
+pub fn generate_ascii_art(text: &str) -> Result<String, AsciiArtError> {
+    let standard_font = FIGfont::standard().map_err(|_| AsciiArtError::FontLoadError)?;
+    let figure = standard_font.convert(text).ok_or(AsciiArtError::ConversionError)?;
+    Ok(figure.to_string())
 }

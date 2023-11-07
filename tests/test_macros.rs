@@ -3,7 +3,7 @@ mod tests {
 
     extern crate libmake;
     use libmake::generator::{
-        create_directory, generate_files, generate_from_csv,
+        generate_files, generate_from_csv,
         generate_from_json, generate_from_yaml,
     };
     use libmake::generator::{
@@ -27,7 +27,7 @@ mod tests {
     fn test_generate_files() {
         let mut params = FileGenerationParams::new();
         params.output = Some("my_library".into());
-        assert_generate_files!(params);
+        assert_generate_files!(params.clone());
     }
     // Unit test for the `generate_from_csv()` function.
     #[test]

@@ -1,9 +1,9 @@
-// Copyright © 2023 LibMake. All rights reserved.
+// Copyright © 2023 xtasks. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
+//! # LibMake
 //!
-//! A code generator to reduce repetitive tasks and build high-quality Rust
-//! libraries.
+//! A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 //!
 //! *Part of the [Mini Functions][0] family of libraries.*
 //!
@@ -13,7 +13,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.9-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.0-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -60,18 +60,19 @@
 //! [`serde`]: https://github.com/serde-rs/serde
 //! [0]: https://minifunctions.com/libmake "Mini Functions"
 //!
+#![allow(clippy::must_use_candidate)]
 #![cfg_attr(feature = "bench", feature(test))]
 #![deny(dead_code)]
 #![deny(rustc::existing_doc_keyword)]
-#![forbid(missing_debug_implementations)]
-#![forbid(missing_docs)]
-#![forbid(unreachable_pub)]
-#![forbid(unsafe_code)]
 #![doc(
     html_favicon_url = "https://kura.pro/libmake/images/favicon.ico",
     html_logo_url = "https://kura.pro/libmake/images/logos/libmake.svg",
     html_root_url = "https://docs.rs/libmake"
 )]
+#![forbid(missing_debug_implementations)]
+#![forbid(missing_docs)]
+#![forbid(unreachable_pub)]
+#![forbid(unsafe_code)]
 #![crate_name = "libmake"]
 #![crate_type = "lib"]
 
@@ -89,36 +90,58 @@ pub mod generator;
 /// The `interface` module contains functions for displaying the
 /// interface.
 pub mod interface;
+/// The `loggers` module contains the loggers for the library.
+pub mod loggers;
 /// The `macros` module contains functions for generating macros.
 pub mod macros;
 /// The `utils` module contains a function for reading a CSV file at the
 /// given file path and returns the value of the given field.
 pub mod utils;
 
-/// Initializes the logger with a file logger and a terminal logger.
+use std::error::Error;
+use crate::ascii::generate_ascii_art;
+
+/// Initializes the logger with a file logger and a terminal logger and processes
+/// command-line arguments to generate the new library.
 ///
 /// # Examples
 ///
 /// ```
 /// use libmake::run;
-/// run();
+///
+/// if let Err(e) = run() {
+///     eprintln!("Application error: {}", e);
+/// }
 /// ```
-pub fn run() -> Result<(), Box<dyn std::error::Error>> {
-    // Process the ascii art
-    ascii::generate_ascii_art("LibMake");
+pub fn run() -> Result<(), Box<dyn Error>> {
+    // Generate ASCII art for the tool's CLI
+    macro_log_info!(
+        LogLevel::INFO,
+        "deps",
+        "Starting generating ASCII art for the tool's CLI...",
+        LogFormat::CLF
+    );
+    match generate_ascii_art("LibMake") {
+        Ok(ascii_art) => println!("{}", ascii_art),
+        Err(e) => eprintln!("Error generating ASCII art: {}", e),
+    }
+    macro_log_info!(
+        LogLevel::INFO,
+        "deps",
+        "Finished generating ASCII art for the tool's CLI.",
+        LogFormat::CLF
+    );
 
-    // Process the command-line arguments
-    // let args: Vec<String> = env::args().collect();
-    // println!("{:?}", args);
-
+    // Build the command-line interface and process the arguments
     let matches = cli::build_cli()?;
-    args::process_arguments(&matches);
+    args::process_arguments(&matches)?;
 
-    // Print the welcome message if no arguments were passed
+    // Check the number of arguments, provide a welcome message if no arguments were passed
     if std::env::args().len() == 1 {
         eprintln!(
             "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
         );
     }
+
     Ok(())
 }

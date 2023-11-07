@@ -63,7 +63,10 @@
 #![crate_name = "{name}"]
 #![crate_type = "lib"]
 
-/// The `macros` module.
+/// The `loggers` module contains the loggers for the library.
+pub mod loggers;
+
+/// The `macros` module contains functions for generating macros.
 pub mod macros;
 
 use serde::{Deserialize, Serialize};

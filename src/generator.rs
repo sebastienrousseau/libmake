@@ -1,9 +1,7 @@
 // Copyright © 2023 LibMake. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
-use crate::interface::replace_placeholders;
-use reqwest::blocking::get;
-// use assert_cmd::Command;
+use super::interface::replace_placeholders;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use serde_yaml;
@@ -16,12 +14,10 @@ use std::{
 ///
 /// # Description
 ///
-/// * The parameters are optional, but the output directory is required.
-/// * The output directory is the directory where the project files will be created.
+/// * The `output` directory is the directory where the project files will be created.
 /// * The other parameters are optional and will be used to replace the placeholders in the template files.
 /// * The template files are located in the template directory of the project.
 /// * The template files are copied to the output directory and the placeholders are replaced with the values of the parameters.
-///
 ///
 #[derive(
     Clone,
@@ -58,7 +54,7 @@ pub struct FileGenerationParams {
     pub license: Option<String>,
     /// The name of the project (optional).
     pub name: Option<String>,
-    /// The output directory where the project files will be created (required).
+    /// The output directory where the project files will be created (optional).
     pub output: Option<String>,
     /// The name of the readme file (optional).
     pub readme: Option<String>,
@@ -73,7 +69,8 @@ pub struct FileGenerationParams {
 }
 
 impl FileGenerationParams {
-    /// Creates a default instance with default values.
+    /// Creates a default instance with default values for all fields.
+    /// Fields that are truly optional without a default are initialized as `None`.
     pub fn default_params() -> Self {
         Self {
             author: Some("John Smith".to_string()),
@@ -101,7 +98,7 @@ impl FileGenerationParams {
             repository: Some(
                 "https://github.com/example/my_library".to_string(),
             ),
-            rustversion: Some("1.69.0".to_string()),
+            rustversion: Some("1.71.1".to_string()),
             version: Some("0.1.0".to_string()),
             website: Some("https://example.com/john-smith".to_string()),
         }
@@ -211,34 +208,42 @@ pub fn create_template_folder() -> io::Result<()> {
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
+        "loggers.tpl",
         "macros.tpl",
         "main.tpl",
         "README.tpl",
         "rustfmt.tpl",
         "TEMPLATE.tpl",
         "test.tpl",
+        "test_loggers.tpl"
     ];
     for file in &files {
-        let file_url = format!("{}{}", url, file);
         let file_path = template_dir_path.join(file);
-        let response = get(&file_url).map_err(|e| {
-            io::Error::new(
-                io::ErrorKind::Other,
-                format!("Failed to download template file: {}", e),
-            )
-        })?;
-        let file_contents = response.text().map_err(|e| {
-            io::Error::new(
-                io::ErrorKind::Other,
-                format!("Failed to read response body: {}", e),
-            )
-        })?;
-        std::fs::write(
-            &file_path,
-            file_contents
-                .trim_start_matches('\n')
-                .trim_end_matches('\n'),
-        )?;
+        // Check if the file already exists
+        if !file_path.exists() {
+            let file_url = format!("{}{}", url, file);
+            let response = reqwest::blocking::get(&file_url).map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::Other,
+                    format!("Failed to download template file: {}", e),
+                )
+            })?;
+
+            let file_contents = response.text().map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::Other,
+                    format!("Failed to read response body: {}", e),
+                )
+            })?;
+
+            // Write the file contents, trimming any leading or trailing newline characters
+            std::fs::write(
+                &file_path,
+                file_contents
+                    .trim_start_matches('\n')
+                    .trim_end_matches('\n'),
+            )?;
+        }
     }
     Ok(())
 }
@@ -323,151 +328,53 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     // Creating the template directory
     create_template_folder()?;
 
-    // Creating the src directory
-    let src_directory = project_directory.join("src");
-    create_directory(&src_directory)?;
+    // Define the subdirectories to be created within the project directory
+    let subdirectories = [
+        "src",
+        "benches",
+        "examples",
+        "tests",
+        ".github/",
+        ".github/workflows",
+    ];
 
-    // Creating the benches directory
-    let benches_directory = project_directory.join("benches");
-    create_directory(&benches_directory)?;
-
-    // Creating the examples directory
-    let examples_directory = project_directory.join("examples");
-    create_directory(&examples_directory)?;
-
-    // Creating the tests directory
-    let tests_directory = project_directory.join("tests");
-    create_directory(&tests_directory)?;
-
-    // Creating the .github directory
-    let github_directory = project_directory.join(".github");
-    create_directory(&github_directory)?;
-
-    // Creating the .github/workflows directory
-    let workflows_directory = github_directory.join("workflows");
-    create_directory(&workflows_directory)?;
+    // Iterate over the subdirectories and create them
+    for subdir in &subdirectories {
+        let dir_path = project_directory.join(subdir);
+        create_directory(&dir_path)?;
+    }
 
     // Copying the template files to the new library directory
+    let templates = [
+    ("AUTHORS.tpl", "AUTHORS.md"),
+    ("build.tpl", "build.rs"),
+    ("Cargo.tpl", "Cargo.toml"),
+    ("ci.tpl", ".github/workflows/ci.yml"),
+    ("CONTRIBUTING.tpl", "CONTRIBUTING.md"),
+    ("criterion.tpl", "benches/criterion.rs"),
+    ("deepsource.tpl", ".deepsource.toml"),
+    ("deny.tpl", "deny.toml"),
+    ("example.tpl", "examples/example.rs"),
+    ("gitignore.tpl", ".gitignore"),
+    ("lib.tpl", "src/lib.rs"),
+    ("loggers.tpl", "src/loggers.rs"),
+    ("macros.tpl", "src/macros.rs"),
+    ("main.tpl", "src/main.rs"),
+    ("README.tpl", "README.md"),
+    ("rustfmt.tpl", "rustfmt.toml"),
+    ("TEMPLATE.tpl", "TEMPLATE.md"),
+    ("test_loggers.tpl", "tests/test_loggers.rs"),
+    ("test.tpl", "tests/test.rs"),
+    ];
 
-    // Copying the `AUTHORS.tpl` file to the new library directory
-    copy_and_replace_template(
-        "AUTHORS.tpl",
-        "AUTHORS.md",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `build.tpl` file to the new library directory
-    copy_and_replace_template(
-        "build.tpl",
-        "build.rs",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `Cargo.tpl` file to the new library directory
-    copy_and_replace_template(
-        "Cargo.tpl",
-        "Cargo.toml",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `ci.tpl` file to the new library directory
-    copy_and_replace_template(
-        "ci.tpl",
-        ".github/workflows/ci.yml",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `CONTRIBUTING.tpl` file to the new library directory
-    copy_and_replace_template(
-        "CONTRIBUTING.tpl",
-        "CONTRIBUTING.md",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `criterion.tpl` file to the new library directory
-    copy_and_replace_template(
-        "criterion.tpl",
-        "benches/criterion.rs",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `deepsource.tpl` file to the new library directory
-    copy_and_replace_template(
-        "deepsource.tpl",
-        ".deepsource.toml",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `deny.tpl` file to the new library directory
-    copy_and_replace_template(
-        "deny.tpl",
-        "deny.toml",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `example.tpl` file to the new library directory
-    copy_and_replace_template(
-        "example.tpl",
-        "examples/example.rs",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `gitignore.tpl` file to the new library directory
-    copy_and_replace_template(
-        "gitignore.tpl",
-        ".gitignore",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `lib.tpl` file to the new library directory
-    copy_and_replace_template(
-        "lib.tpl",
-        "src/lib.rs",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `macros.tpl` file to the new library directory
-    copy_and_replace_template(
-        "macros.tpl",
-        "src/macros.rs",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `main.tpl` file to the new library directory
-    copy_and_replace_template(
-        "main.tpl",
-        "src/main.rs",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `README.tpl` file to the new library directory
-    copy_and_replace_template(
-        "README.tpl",
-        "README.md",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `rustfmt.tpl` file to the new library directory
-    copy_and_replace_template(
-        "rustfmt.tpl",
-        "rustfmt.toml",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `TEMPLATE.tpl` file to the new library directory
-    copy_and_replace_template(
-        "TEMPLATE.tpl",
-        "TEMPLATE.md",
-        &project_directory,
-        &params,
-    )?;
-    // Copying the `test.tpl` file to the new library directory
-    copy_and_replace_template(
-        "test.tpl",
-        "tests/test.rs",
-        &project_directory,
-        &params,
-    )?;
+    for (template, target) in templates {
+        copy_and_replace_template(
+            template,
+            target,
+            &project_directory,
+            &params,
+        )?;
+    }
 
     // Displaying the argument and value pairs
     println!("{:<15}Value", "Argument");

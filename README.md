@@ -1,29 +1,24 @@
 <!-- markdownlint-disable MD033 MD041 -->
 
-<img src="https://kura.pro/libmake/images/logos/libmake.svg"
+<img src="https://kura.pro/libmake/images/logos/libmake.webp"
 alt="LibMake logo" width="261" align="right" />
 
 <!-- markdownlint-enable MD033 MD041 -->
 # LibMake
 
-A code generator to reduce repetitive tasks and build high-quality Rust
-libraries.
+A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 
-*Part of the [Mini Functions][0] family of libraries.*
+*Part of the [Mini Functions][00] family of libraries.*
 
 <!-- markdownlint-disable MD033 MD041 -->
 <center>
 <!-- markdownlint-enable MD033 MD041 -->
 
-![Libmake Banner][banner]
+![Banner of Libmake][banner]
 
-[![Made With Rust][made-with-rust-badge]][13]
-[![Crates.io][crates-badge]][8] [![Lib.rs][libs-badge]][10]
-[![Docs.rs][docs-badge]][9] [![License][license-badge]][3]
-[![Codecov][codecov-badge]][14]
+[![Made With Rust][made-with-rust-badge]][13] [![Crates.io][crates-badge]][08] [![Lib.rs][libs-badge]][10] [![Docs.rs][docs-badge]][09] [![License][license-badge]][03] [![Codecov][codecov-badge]][14]
 
-• [Website][1] • [Documentation][9] • [Report Bug][4]
-• [Request Feature][4] • [Contributing Guidelines][5]
+• [Website][01] • [Documentation][09] • [Report Bug][04] • [Request Feature][04] • [Contributing Guidelines][05]
 
 <!-- markdownlint-disable MD033 MD041 -->
 </center>
@@ -31,48 +26,63 @@ libraries.
 
 <!-- markdownlint-enable MD033 -->
 
-## Overview 📖
+![divider][divider]
 
-`LibMake` is a tool designed to quickly help creating high-quality Rust
-libraries by generating a set of pre-filled and pre-defined templated
-files. This opinionated boilerplate scaffolding tool aims to greatly
-reduces development time and minimizes repetitive tasks, allowing you to
-focus on your business logic while enforcing standards, best practices,
-consistency, and providing style guides for your library.
+## Overview
 
-With `LibMake`, you can easily generate a new Rust library code base
-structure with all the necessary files, layouts, build configurations,
-code, tests, benchmarks, documentation, and much more in a matter of
-seconds.
+`LibMake` is a tool designed to quickly help creating high-quality Rust libraries by generating a set of pre-filled and pre-defined templated files. This opinionated boilerplate scaffolding tool aims to greatly reduce development time and minimizes repetitive tasks, allowing you to focus on your business logic while enforcing standards, best practices, consistency, and providing style guides for your library.
 
-The library is designed to be used as a command-line tool. It is
-available on [Crates.io][7] and [Lib.rs][8].
+With `LibMake`, you can easily generate a new Rust library code base structure with all the necessary files, layouts, build configurations, code, tests, benchmarks, documentation, and much more in a matter of seconds.
 
-## Features ✨
+The library is designed to be used as a command-line tool. It is available on [Crates.io][07] and [Lib.rs][08].
+
+## Table of Contents
+
+- [LibMake](#libmake)
+  - [Overview](#overview)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Requirements](#requirements)
+      - [Tier 1 platforms](#tier-1-platforms)
+      - [Tier 2 platforms](#tier-2-platforms)
+    - [Documentation](#documentation)
+  - [Usage](#usage)
+    - [Command-line interface](#command-line-interface)
+      - [Generate a new library using a CSV file](#generate-a-new-library-using-a-csv-file)
+      - [Generate a new library using a JSON file](#generate-a-new-library-using-a-json-file)
+      - [Generate a new library using a TOML file](#generate-a-new-library-using-a-toml-file)
+      - [Generate a new library using a YAML file](#generate-a-new-library-using-a-yaml-file)
+      - [Generate a new library using the command-line interface (CLI) directly](#generate-a-new-library-using-the-command-line-interface-cli-directly)
+    - [Examples](#examples)
+  - [Semantic Versioning Policy](#semantic-versioning-policy)
+  - [License](#license)
+  - [Contribution](#contribution)
+  - [Acknowledgements](#acknowledgements)
+
+## Features
 
 `LibMake` offers the following features and benefits:
 
-- Create your Rust library with ease using the command line interface or
-  by providing a configuration file in CSV, JSON, TOML, or YAML format.
-- Rapidly generate new library projects with a pre-defined structure and
-  boilerplate code that you can customize with your own template.
-- Generate a library pre-defined GitHub Actions workflow to help you
-  automate your library development and testing.
-- Automatically generate basic functions, methods, and macros to get you
-  started with your Rust library.
-- Enforce best practices and standards with starter documentation, test
-  suites, and benchmark suites that are designed to help you get up and
-  running quickly.
+- **Simplicity**: Create Rust libraries effortlessly via CLI or configuration files in CSV, JSON, TOML, or YAML.
+- **Speed**: Instantly scaffold new libraries with a standard structure and essential boilerplate.
+- **Automation**: Generate predefined GitHub Actions workflows for streamlined development and testing.
+- **Foundation**: Jumpstart your project with automatically generated functions, methods, and macros.
+- **Standards**: Embrace best practices from the start with starter documentation, tests, and benchmarks.
 
-## Getting Started 🚀
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+You will need Rust and Cargo installed on your system. If you don't have them installed, you can install them from the official Rust website.
 
 It takes just a few seconds to get up and running with `LibMake`.
 
 ### Installation
-
-To install `LibMake`, you need to have the Rust toolchain installed on
-your machine. You can install the Rust toolchain by following the
-instructions on the [Rust website][12].
 
 Once you have the Rust toolchain installed, you can install `LibMake`
 using the following command:
@@ -89,8 +99,7 @@ libmake --help
 
 ### Requirements
 
-The minimum supported Rust toolchain version is currently Rust `1.69.0`
-or later (stable).
+The minimum supported Rust toolchain version is currently Rust `1.71.1` or later (stable).
 
 `LibMake` is supported and has been tested on the following platforms:
 
@@ -126,22 +135,19 @@ The [GitHub Actions][11] shows the platforms in which the `LibMake`
 library tests are run.
 
 Should you encounter any issues with the library on any of the above
-platforms, please [report a bug][4]. We will do our best to resolve the
+platforms, please [report a bug][04]. We will do our best to resolve the
 issue as soon as possible. If you would like to contribute to help us to
 support additional platforms, please submit a pull request.
 
 ### Documentation
 
-> ℹ️ **Info:** Do check out our [website][1] for more information. You
-can find our documentation on [docs.rs][9], [lib.rs][10] and
-[crates.io][8].
+**Info:** Do check out our [website][01] for more information. You can find our documentation on [docs.rs][09], [lib.rs][10] and [crates.io][08].
 
-## Usage 📖
+## Usage
 
 ### Command-line interface
 
-`LibMake` provides a command-line interface to generate a new library
-project. There are a few options available to help you get started.
+`LibMake` provides a command-line interface to generate a new library project. There are a few options available to help you get started.
 
 #### Generate a new library using a CSV file
 
@@ -232,7 +238,7 @@ libmake \
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.69.0" \
+    --rustversion "1.71.1" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
@@ -254,18 +260,16 @@ cargo run -- --author "John Smith" \
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.69.0" \
+    --rustversion "1.71.1" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
 
 ### Examples
 
-To get started with `LibMake`, you can use the examples provided in the
-`examples` directory of the project.
+To get started with `LibMake`, you can use the examples provided in the `examples` directory of the project.
 
-To run the examples, clone the repository and run the following command
-in your terminal from the project root directory.
+To run the examples, clone the repository and run the following command in your terminal from the project root directory.
 
 | Example | Description | Command |
 |---------|-------------|---------|
@@ -276,23 +280,23 @@ in your terminal from the project root directory.
 | `generate_from_toml` | Generates a library template from a TOML file. | `cargo run --example generate_from_toml` |
 | `generate_from_yaml` | Generates a library template from a YAML file. | `cargo run --example generate_from_yaml` |
 
-## Semantic Versioning Policy 🚥
+## Semantic Versioning Policy
 
 For transparency into our release cycle and in striving to maintain
-backward compatibility, `libmake` follows [semantic versioning][7].
+backward compatibility, `libmake` follows [semantic versioning][07].
 
-## License 📝
+## License
 
 The project is licensed under the terms of both the MIT license and the
 Apache License (Version 2.0).
 
-- [Apache License, Version 2.0][2]
-- [MIT license][3]
+- [Apache License, Version 2.0][02]
+- [MIT license][03]
 
-## Contribution 🤝
+## Contribution
 
 We welcome all people who want to contribute. Please see the
-[contributing instructions][5] for more information.
+[contributing instructions][05] for more information.
 
 Contributions in any form (issues, pull requests, etc.) to this project
 must adhere to the [Rust's Code of Conduct][12].
@@ -302,23 +306,22 @@ submitted for inclusion in the work by you, as defined in the
 Apache-2.0 license, shall be dual licensed as above, without any
 additional terms or conditions.
 
-## Acknowledgements 💙
+## Acknowledgements
 
-A big thank you to all the awesome contributors of [libmake][6] for
-their help and support. A special thank you goes to the
-[Rust Reddit][15] community for providing a lot of useful suggestions on how to improve
-this project.
+A big thank you to all the awesome contributors of [libmake][06] for their help
+and support. A special thank you goes to the [Rust Reddit][15] community for
+providing a lot of useful suggestions on how to improve this project.
 
-[0]: https://minifunctions.com/libmake "Mini Functions"
-[1]: https://libmake.com "LibMake"
-[2]: https://opensource.org/license/apache-2-0/ "Apache License, Version 2.0"
-[3]: http://opensource.org/licenses/MIT "MIT license"
-[4]: https://github.com/sebastienrousseau/libmake/issues "Issues"
-[5]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md "Contributing"
-[6]: https://github.com/sebastienrousseau/libmake/graphs/contributors "Contributors"
-[7]: http://semver.org/ "Semantic Versioning"
-[8]: https://crates.io/crates/libmake "LibMake on crates.io"
-[9]: https://docs.rs/libmake "LibMake on docs.rs"
+[00]: https://minifunctions.com/libmake "Mini Functions"
+[01]: https://libmake.com "LibMake"
+[02]: https://opensource.org/license/apache-2-0/ "Apache License, Version 2.0"
+[03]: http://opensource.org/licenses/MIT "MIT license"
+[04]: https://github.com/sebastienrousseau/libmake/issues "Issues"
+[05]: https://github.com/sebastienrousseau/libmake/blob/main/CONTRIBUTING.md "Contributing"
+[06]: https://github.com/sebastienrousseau/libmake/graphs/contributors "Contributors"
+[07]: http://semver.org/ "Semantic Versioning"
+[08]: https://crates.io/crates/libmake "LibMake on crates.io"
+[09]: https://docs.rs/libmake "LibMake on docs.rs"
 [10]: https://lib.rs/crates/libmake "LibMake on lib.rs"
 [11]: https://github.com/sebastienrousseau/libmake/actions "GitHub Actions"
 [12]: https://www.rust-lang.org/policies/code-of-conduct "Rust's Code of Conduct"
@@ -327,9 +330,10 @@ this project.
 [15]: https://www.reddit.com/r/rust/ "Rust Reddit"
 
 [banner]: https://kura.pro/libmake/images/titles/title-libmake.svg "LibMake Banner"
-[codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 'Codecov'
-[crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge 'Crates.io Badge'
-[docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge 'Docs.rs Badge'
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.1.9-orange.svg?style=for-the-badge 'Lib.rs Badge'
-[license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge 'License Badge'
-[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust Badge'
+[codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 "Codecov Badge"
+[crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge "Crates.io Badge"
+[divider]: https://kura.pro/common/images/elements/divider.svg "divider"
+[docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge "Docs.rs Badge"
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.2.0-orange.svg?style=for-the-badge "Lib.rs Badge"
+[license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge "License Badge"
+[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust "Made With Rust Badge"

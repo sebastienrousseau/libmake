@@ -111,8 +111,7 @@ library tests are run.
 
 ### Documentation
 
-> ℹ️ **Info:** Please check out our [website][0] for more information.
-You can find our documentation on [docs.rs][8], [lib.rs][9] and
+**Info:** Please check out our [website][0] for more information. You can find our documentation on [docs.rs][8], [lib.rs][9] and
 [crates.io][7].
 
 ## Usage 📖
@@ -195,4 +194,4 @@ providing a lot of useful suggestions on how to improve this project.
 [docs-badge]: https://img.shields.io/docsrs/{name}.svg?style=for-the-badge 'Docs.rs badge'
 [libs-badge]: https://img.shields.io/badge/lib.rs-v{version}-orange.svg?style=for-the-badge 'Lib.rs badge'
 [license-badge]: https://img.shields.io/crates/l/{name}.svg?style=for-the-badge 'License badge'
-[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust badge'
+[made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust 'Made With Rust badge'

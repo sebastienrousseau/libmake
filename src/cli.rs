@@ -3,24 +3,15 @@
 
 use clap::{Arg, ArgMatches, Command, Error};
 
-/// Builds and returns a set of command-line arguments using the Clap
-/// library.
+/// Constructs the CLI for the application using Clap, including all necessary arguments.
 ///
-/// # Arguments
-///
-/// None
-///
-/// # Returns
-///
-/// * `Result<ArgMatches, Error>` - A struct containing the parsed
-/// command-line arguments and their values, or an error if the
-/// arguments could not be parsed.
+/// Returns a `Result` containing the `ArgMatches` if successful, or an `Error` if parsing fails.
 ///
 /// # Examples
 ///
 /// ```
 /// use libmake::cli;
-/// let matches = cli::build_cli().unwrap();
+/// let matches = cli::build_cli().expect("CLI parsing failed");
 /// ```
 pub fn build_cli() -> Result<ArgMatches, Error> {
     let matches = Command::new("My Library")
@@ -142,7 +133,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("rustversion")
-                .default_value("1.69.0")
+                .default_value("1.71.1")
                 .help("Sets the Rust version of the library")
                 .long("rustversion")
                 .short('r')
@@ -150,7 +141,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("version")
-                .default_value("0.1.9")
+                .default_value("0.2.0")
                 .help("Sets the version of the library")
                 .long("version")
                 .short('v')
