@@ -1,2 +1,2 @@
 author,build,categories,description,documentation,edition,email,homepage,keywords,license,name,output,readme,repository,rustversion,version,website
-Me,build.rs,"['category 1', 'category 2']",A library for doing things,https://lib.rs/crates/my_library,2021,test@test.com,https://test.com,"['keyword1', 'keyword2']",MIT OR Apache-2.0,my_library,my_library,README.md,https://github.com/test/test,1.69.0,0.1.9,https://test.com
+Me,build.rs,"['category 1', 'category 2']",A library for doing things,https://lib.rs/crates/my_library,2021,test@test.com,https://test.com,"['keyword1', 'keyword2']",MIT OR Apache-2.0,my_library,my_library,README.md,https://github.com/test/test,1.71.1,0.2.0,https://test.com

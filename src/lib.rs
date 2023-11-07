@@ -13,7 +13,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.1.9-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.0-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -114,24 +114,23 @@ use crate::ascii::generate_ascii_art;
 /// }
 /// ```
 pub fn run() -> Result<(), Box<dyn Error>> {
-    // // Generate ASCII art for the tool's CLI
-    // macro_log_info!(
-    //     LogLevel::INFO,
-    //     "deps",
-    //     "Starting generating ASCII art for the tool's CLI...",
-    //     LogFormat::CLF
-    // );
+    // Generate ASCII art for the tool's CLI
+    macro_log_info!(
+        LogLevel::INFO,
+        "deps",
+        "Starting generating ASCII art for the tool's CLI...",
+        LogFormat::CLF
+    );
     match generate_ascii_art("LibMake") {
         Ok(ascii_art) => println!("{}", ascii_art),
         Err(e) => eprintln!("Error generating ASCII art: {}", e),
     }
-    // ascii::generate_ascii_art("LibMake");
-    // macro_log_info!(
-    //     LogLevel::INFO,
-    //     "deps",
-    //     "Finished generating ASCII art for the tool's CLI.",
-    //     LogFormat::CLF
-    // );
+    macro_log_info!(
+        LogLevel::INFO,
+        "deps",
+        "Finished generating ASCII art for the tool's CLI.",
+        LogFormat::CLF
+    );
 
     // Build the command-line interface and process the arguments
     let matches = cli::build_cli()?;

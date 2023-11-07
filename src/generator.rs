@@ -98,7 +98,7 @@ impl FileGenerationParams {
             repository: Some(
                 "https://github.com/example/my_library".to_string(),
             ),
-            rustversion: Some("1.69.0".to_string()),
+            rustversion: Some("1.71.1".to_string()),
             version: Some("0.1.0".to_string()),
             website: Some("https://example.com/john-smith".to_string()),
         }

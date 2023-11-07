@@ -133,7 +133,7 @@ pub fn build_cli() -> Result<ArgMatches, Error> {
         )
         .arg(
             Arg::new("rustversion")
-                .default_value("1.69.0")
+                .default_value("1.71.1")
                 .help("Sets the Rust version of the library")
                 .long("rustversion")
                 .short('r')
