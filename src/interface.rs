@@ -35,7 +35,10 @@ pub fn replace_placeholders(
                 "{author}",
                 params.author.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{build}", params.build.as_ref().unwrap_or(&"".to_string()))
+            .replace(
+                "{build}",
+                params.build.as_ref().unwrap_or(&"".to_string()),
+            )
             .replace(
                 "{categories}",
                 params.categories.as_ref().unwrap_or(&"".to_string()),
@@ -46,13 +49,19 @@ pub fn replace_placeholders(
             )
             .replace(
                 "{documentation}",
-                params.documentation.as_ref().unwrap_or(&"".to_string()),
+                params
+                    .documentation
+                    .as_ref()
+                    .unwrap_or(&"".to_string()),
             )
             .replace(
                 "{edition}",
                 params.edition.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{email}", params.email.as_ref().unwrap_or(&"".to_string()))
+            .replace(
+                "{email}",
+                params.email.as_ref().unwrap_or(&"".to_string()),
+            )
             .replace(
                 "{homepage}",
                 params.homepage.as_ref().unwrap_or(&"".to_string()),
@@ -65,7 +74,10 @@ pub fn replace_placeholders(
                 "{license}",
                 params.license.as_ref().unwrap_or(&"".to_string()),
             )
-            .replace("{name}", params.name.as_ref().unwrap_or(&"".to_string()))
+            .replace(
+                "{name}",
+                params.name.as_ref().unwrap_or(&"".to_string()),
+            )
             .replace(
                 "{repository}",
                 params.repository.as_ref().unwrap_or(&"".to_string()),

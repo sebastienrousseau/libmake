@@ -196,38 +196,43 @@ pub fn create_template_folder() -> io::Result<()> {
     // println!("Creating template directory: {:?}", template_dir_path);
     create_directory(&template_dir_path)?;
     let url = "https://raw.githubusercontent.com/sebastienrousseau/libmake/main/template/";
-    let files = [
-        "AUTHORS.tpl",
-        "build.tpl",
-        "Cargo.tpl",
-        "ci.tpl",
-        "CONTRIBUTING.tpl",
-        "criterion.tpl",
-        "deepsource.tpl",
-        "deny.tpl",
-        "example.tpl",
-        "gitignore.tpl",
-        "lib.tpl",
-        "loggers.tpl",
-        "macros.tpl",
-        "main.tpl",
-        "README.tpl",
-        "rustfmt.tpl",
-        "TEMPLATE.tpl",
-        "test.tpl",
-        "test_loggers.tpl"
-    ];
+    let files =
+        [
+            "AUTHORS.tpl",
+            "build.tpl",
+            "Cargo.tpl",
+            "ci.tpl",
+            "CONTRIBUTING.tpl",
+            "criterion.tpl",
+            "deepsource.tpl",
+            "deny.tpl",
+            "example.tpl",
+            "gitignore.tpl",
+            "lib.tpl",
+            "loggers.tpl",
+            "macros.tpl",
+            "main.tpl",
+            "README.tpl",
+            "rustfmt.tpl",
+            "TEMPLATE.tpl",
+            "test.tpl",
+            "test_loggers.tpl",
+        ];
     for file in &files {
         let file_path = template_dir_path.join(file);
         // Check if the file already exists
         if !file_path.exists() {
             let file_url = format!("{}{}", url, file);
-            let response = reqwest::blocking::get(&file_url).map_err(|e| {
-                io::Error::new(
-                    io::ErrorKind::Other,
-                    format!("Failed to download template file: {}", e),
-                )
-            })?;
+            let response =
+                reqwest::blocking::get(&file_url).map_err(|e| {
+                    io::Error::new(
+                        io::ErrorKind::Other,
+                        format!(
+                            "Failed to download template file: {}",
+                            e
+                        ),
+                    )
+                })?;
 
             let file_contents = response.text().map_err(|e| {
                 io::Error::new(
@@ -310,15 +315,16 @@ pub fn copy_and_replace_template(
 /// - `website` - The website of the project (optional).
 ///
 pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
-    let output = match params.output {
-        Some(ref output) => output,
-        None => {
-            return Err(io::Error::new(
-                io::ErrorKind::Other,
-                "Output directory is not specified",
-            ))
-        }
-    };
+    let output =
+        match params.output {
+            Some(ref output) => output,
+            None => {
+                return Err(io::Error::new(
+                    io::ErrorKind::Other,
+                    "Output directory is not specified",
+                ))
+            }
+        };
 
     let project_directory = PathBuf::from(output.clone());
 
@@ -329,14 +335,15 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     create_template_folder()?;
 
     // Define the subdirectories to be created within the project directory
-    let subdirectories = [
-        "src",
-        "benches",
-        "examples",
-        "tests",
-        ".github/",
-        ".github/workflows",
-    ];
+    let subdirectories =
+        [
+            "src",
+            "benches",
+            "examples",
+            "tests",
+            ".github/",
+            ".github/workflows",
+        ];
 
     // Iterate over the subdirectories and create them
     for subdir in &subdirectories {
@@ -346,25 +353,25 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 
     // Copying the template files to the new library directory
     let templates = [
-    ("AUTHORS.tpl", "AUTHORS.md"),
-    ("build.tpl", "build.rs"),
-    ("Cargo.tpl", "Cargo.toml"),
-    ("ci.tpl", ".github/workflows/ci.yml"),
-    ("CONTRIBUTING.tpl", "CONTRIBUTING.md"),
-    ("criterion.tpl", "benches/criterion.rs"),
-    ("deepsource.tpl", ".deepsource.toml"),
-    ("deny.tpl", "deny.toml"),
-    ("example.tpl", "examples/example.rs"),
-    ("gitignore.tpl", ".gitignore"),
-    ("lib.tpl", "src/lib.rs"),
-    ("loggers.tpl", "src/loggers.rs"),
-    ("macros.tpl", "src/macros.rs"),
-    ("main.tpl", "src/main.rs"),
-    ("README.tpl", "README.md"),
-    ("rustfmt.tpl", "rustfmt.toml"),
-    ("TEMPLATE.tpl", "TEMPLATE.md"),
-    ("test_loggers.tpl", "tests/test_loggers.rs"),
-    ("test.tpl", "tests/test.rs"),
+        ("AUTHORS.tpl", "AUTHORS.md"),
+        ("build.tpl", "build.rs"),
+        ("Cargo.tpl", "Cargo.toml"),
+        ("ci.tpl", ".github/workflows/ci.yml"),
+        ("CONTRIBUTING.tpl", "CONTRIBUTING.md"),
+        ("criterion.tpl", "benches/criterion.rs"),
+        ("deepsource.tpl", ".deepsource.toml"),
+        ("deny.tpl", "deny.toml"),
+        ("example.tpl", "examples/example.rs"),
+        ("gitignore.tpl", ".gitignore"),
+        ("lib.tpl", "src/lib.rs"),
+        ("loggers.tpl", "src/loggers.rs"),
+        ("macros.tpl", "src/macros.rs"),
+        ("main.tpl", "src/main.rs"),
+        ("README.tpl", "README.md"),
+        ("rustfmt.tpl", "rustfmt.toml"),
+        ("TEMPLATE.tpl", "TEMPLATE.md"),
+        ("test_loggers.tpl", "tests/test_loggers.rs"),
+        ("test.tpl", "tests/test.rs"),
     ];
 
     for (template, target) in templates {
@@ -563,9 +570,9 @@ pub fn generate_from_json(path: &str) -> std::io::Result<()> {
 pub fn generate_from_yaml(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_yaml::from_str(&contents)
-        .map_err(|e| {
-            std::io::Error::new(std::io::ErrorKind::Other, e)
-        })?;
+        .map_err(
+            |e| std::io::Error::new(std::io::ErrorKind::Other, e)
+        )?;
     generate_files(params)?;
     Ok(())
 }
@@ -596,9 +603,9 @@ pub fn generate_from_yaml(path: &str) -> std::io::Result<()> {
 pub fn generate_from_toml(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = toml::from_str(&contents)
-        .map_err(|e| {
-            std::io::Error::new(std::io::ErrorKind::Other, e)
-        })?;
+        .map_err(
+            |e| std::io::Error::new(std::io::ErrorKind::Other, e)
+        )?;
     generate_files(params)?;
     Ok(())
 }

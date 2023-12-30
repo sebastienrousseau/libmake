@@ -98,8 +98,8 @@ pub mod macros;
 /// given file path and returns the value of the given field.
 pub mod utils;
 
-use std::error::Error;
 use crate::ascii::generate_ascii_art;
+use std::error::Error;
 
 /// Initializes the logger with a file logger and a terminal logger and processes
 /// command-line arguments to generate the new library.

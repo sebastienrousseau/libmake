@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
 use figlet_rs::FIGfont;
-use std::fmt;
 use std::error::Error;
+use std::fmt;
 
 /// Error type for ASCII art generation failures.
 #[derive(Debug)]
@@ -17,8 +17,12 @@ pub enum AsciiArtError {
 impl fmt::Display for AsciiArtError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
-            AsciiArtError::FontLoadError => write!(f, "Failed to load FIGfont"),
-            AsciiArtError::ConversionError => write!(f, "Failed to convert text to ASCII art"),
+            AsciiArtError::FontLoadError => {
+                write!(f, "Failed to load FIGfont")
+            }
+            AsciiArtError::ConversionError => {
+                write!(f, "Failed to convert text to ASCII art")
+            }
         }
     }
 }
@@ -37,7 +41,10 @@ impl Error for AsciiArtError {}
 /// an `AsciiArtError` if the operation fails.
 ///
 pub fn generate_ascii_art(text: &str) -> Result<String, AsciiArtError> {
-    let standard_font = FIGfont::standard().map_err(|_| AsciiArtError::FontLoadError)?;
-    let figure = standard_font.convert(text).ok_or(AsciiArtError::ConversionError)?;
+    let standard_font = FIGfont::standard()
+        .map_err(|_| AsciiArtError::FontLoadError)?;
+    let figure = standard_font
+        .convert(text)
+        .ok_or(AsciiArtError::ConversionError)?;
     Ok(figure.to_string())
 }

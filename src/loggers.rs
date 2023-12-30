@@ -176,10 +176,12 @@ impl Log {
                     self.session_id
                 )
             }
-            _ => Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
-                "Unsupported log format",
-            )),
+            _ => {
+                Err(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    "Unsupported log format",
+                ))
+            }
         }?;
         file.flush()?;
         Ok(())

@@ -19,9 +19,13 @@
 /// Panics if the directory cannot be created.
 macro_rules! assert_create_directory {
     ($path:expr) => {
-        use std::path::Path;
         use std::fs::{self, create_dir_all};
-        assert!(create_dir_all(Path::new($path)).is_ok(), "Failed to create directory at: {}", $path);
+        use std::path::Path;
+        assert!(
+            create_dir_all(Path::new($path)).is_ok(),
+            "Failed to create directory at: {}",
+            $path
+        );
     };
 }
 
@@ -38,7 +42,11 @@ macro_rules! assert_create_directory {
 /// Panics if the files cannot be generated.
 macro_rules! assert_generate_files {
     ($params:expr) => {
-        assert!(generate_files($params).is_ok(), "Failed to generate files with parameters: {:?}", $params);
+        assert!(
+            generate_files($params).is_ok(),
+            "Failed to generate files with parameters: {:?}",
+            $params
+        );
     };
 }
 
@@ -55,7 +63,11 @@ macro_rules! assert_generate_files {
 /// Panics if the files cannot be generated from the CSV.
 macro_rules! assert_generate_from_csv {
     ($csv_path:expr) => {
-        assert!(generate_from_csv($csv_path).is_ok(), "Failed to generate files from CSV at: {}", $csv_path);
+        assert!(
+            generate_from_csv($csv_path).is_ok(),
+            "Failed to generate files from CSV at: {}",
+            $csv_path
+        );
     };
 }
 
@@ -72,7 +84,11 @@ macro_rules! assert_generate_from_csv {
 /// Panics if the files cannot be generated from the JSON.
 macro_rules! assert_generate_from_json {
     ($json_path:expr) => {
-        assert!(generate_from_json($json_path).is_ok(), "Failed to generate files from JSON at: {}", $json_path);
+        assert!(
+            generate_from_json($json_path).is_ok(),
+            "Failed to generate files from JSON at: {}",
+            $json_path
+        );
     };
 }
 
@@ -89,7 +105,11 @@ macro_rules! assert_generate_from_json {
 /// Panics if the files cannot be generated from the YAML.
 macro_rules! assert_generate_from_yaml {
     ($yaml_path:expr) => {
-        assert!(generate_from_yaml($yaml_path).is_ok(), "Failed to generate files from YAML at: {}", $yaml_path);
+        assert!(
+            generate_from_yaml($yaml_path).is_ok(),
+            "Failed to generate files from YAML at: {}",
+            $yaml_path
+        );
     };
 }
 
@@ -107,7 +127,12 @@ macro_rules! assert_generate_from_yaml {
 /// Panics if the files cannot be generated from the configuration file.
 macro_rules! assert_generate_from_config {
     ($path:expr, $file_type:expr) => {
-        assert!(generate_from_config($path, $file_type).is_ok(), "Failed to generate files from {} configuration at: {}", $file_type, $path);
+        assert!(
+            generate_from_config($path, $file_type).is_ok(),
+            "Failed to generate files from {} configuration at: {}",
+            $file_type,
+            $path
+        );
     };
 }
 // Macro for logging information with various log levels and formats.

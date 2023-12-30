@@ -27,11 +27,12 @@ fn test_get_csv_field() {
 fn test_get_json_field() {
     let file_path = "./tests/data/mylibrary.json";
     let field_name = "mylibrary";
-    let value = if Path::new(file_path).exists() {
-        get_json_field(Some(file_path), field_name)
-    } else {
-        String::new()
-    };
+    let value =
+        if Path::new(file_path).exists() {
+            get_json_field(Some(file_path), field_name)
+        } else {
+            String::new()
+        };
     assert_eq!(value, "null");
 }
 
@@ -41,11 +42,12 @@ fn test_get_json_field() {
 fn test_get_yaml_field() {
     let file_path = "./tests/data/mylibrary.yaml";
     let field_name = "mylibrary";
-    let value = if Path::new(file_path).exists() {
-        get_yaml_field(Some(file_path), field_name)
-    } else {
-        String::new()
-    };
+    let value =
+        if Path::new(file_path).exists() {
+            get_yaml_field(Some(file_path), field_name)
+        } else {
+            String::new()
+        };
     assert_eq!(value, "null");
 }
 

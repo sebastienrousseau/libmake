@@ -11,12 +11,12 @@ mod tests {
         format: LogFormat,
     ) {
         let log =
-        macro_log_info!(level, component, description, format);
+            macro_log_info!(level, component, description, format);
         assert_eq!(log.level, level);
         assert_eq!(log.component, component);
         assert_eq!(log.description, description);
         assert_eq!(log.format, format);
-        }
+    }
 
     #[test]
     fn test_macros() {
