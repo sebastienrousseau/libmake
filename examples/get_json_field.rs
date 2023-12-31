@@ -52,5 +52,5 @@ fn main() {
     } else {
         String::new()
     };
-    println!("🦀 get_json_field, ✅ {}: {}", field_author, value);
+    println!("🦀 get_json_field, ✅ {field_author}: {value}");
 }

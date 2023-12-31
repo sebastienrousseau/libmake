@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use libmake::cli::build_cli;
+    use libmake::cli::build;
 
     #[test]
     // Test that the arguments for the build CLI are correctly set
@@ -20,26 +20,25 @@ mod tests {
             ("name", "my_library"),
             ("output", "my_library"),
             ("readme", "README.md"),
-            ("repository", "https://github.com/test/test"),
+            ("repository", "https://github.com/example/my_library"),
             ("rustversion", "1.71.1"),
             ("version", "0.2.1"),
             ("website", "https://test.com"),
         ];
 
         // Call the build_cli function to get the command-line arguments
-        let args = build_cli().unwrap();
+        let args = build().unwrap();
 
         // Iterate through the expected argument values
-        for (arg_name, expected_value) in arg_specs.iter() {
+        for (arg_name, expected_value) in &arg_specs {
             // Get the actual value for the argument
             let arg_value: Option<&String> = args.get_one(arg_name);
 
             // Compare the actual and expected values
             assert_eq!(
-                Some(&expected_value.to_string()),
+                Some(&(*expected_value).to_string()),
                 arg_value,
-                "Incorrect value for argument {}",
-                arg_name
+                "Incorrect value for argument {arg_name}",
             );
         }
     }

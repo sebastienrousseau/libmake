@@ -15,6 +15,7 @@ mod tests {
     // file path as input and asserting that the result is an Ok value,
     // indicating that the template files were generated successfully
     // from the CSV file.
+    #[allow(clippy::uninlined_format_args)]
     #[test]
     fn test_generate_from_csv() {
         let csv_file = "./tests/data/mylibrary.csv";
@@ -72,6 +73,7 @@ mod tests {
     // extract the file path and call generate_from_csv function with
     // the file path. Finally, it should generate the expected files in
     // the current directory.
+    #[allow(clippy::manual_assert)]
     #[test]
     fn test_process_arguments_with_csv() {
         let file_path = "./tests/data/mylibrary.csv";
@@ -117,7 +119,7 @@ mod tests {
         for file in &expected_files {
             let path = Path::new(file);
             if !path.exists() {
-                println!("Expected file not found: {:?}", path);
+                println!("Expected file not found: {path:?}");
             }
             assert!(path.exists());
         }
@@ -132,9 +134,7 @@ mod tests {
     fn test_process_arguments_with_json() {
         let json_file_path = "./tests/data/mylibrary.json";
         let path = Path::new(json_file_path);
-        if !path.exists() {
-            panic!("File {} does not exist", json_file_path);
-        }
+        assert!(path.exists(), "File {json_file_path} does not exist");
 
         let matches = Command::new("myapp")
             .arg(Arg::new("json").short('j').long("json"))
@@ -150,8 +150,8 @@ mod tests {
         let result = generate_from_json(json_file_path);
         assert!(
             result.is_ok(),
-            "Failed to generate the template files: {:?}",
-            result
+            "Failed to generate the template files: {}",
+            result.unwrap_err()
         );
 
         // Check that the files were generated
@@ -164,9 +164,10 @@ mod tests {
         ];
         for file in &expected_files {
             let path = Path::new(file);
-            if !path.exists() {
-                panic!("Failed to generate the template files");
-            }
+            assert!(
+                path.exists(),
+                "Failed to generate the template files"
+            );
         }
     }
 
@@ -221,10 +222,14 @@ mod tests {
     #[test]
     fn test_process_arguments_with_yaml() {
         let file_path = "./tests/data/mylibrary.yaml";
-        let contents = fs::read_to_string(file_path);
+        let path = Path::new(file_path);
+        assert!(path.exists(), "File {file_path} does not exist");
+
+        let contents = fs::read_to_string(file_path).unwrap();
         let mut params: FileGenerationParams =
-            serde_yaml::from_str(&contents.unwrap()).unwrap();
+            serde_yaml::from_str(&contents).unwrap();
         params.output = Some(".".to_string());
+
         let matches = Command::new("myapp")
             .arg(Arg::new("author").short('a').long("author"))
             .arg(Arg::new("build").short('b').long("build"))

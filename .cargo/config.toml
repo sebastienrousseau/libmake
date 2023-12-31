@@ -1,2 +1,2 @@
 [alias]
-xtask = "run --package xtask --bin xtask --"
+xtask = "run --package xtasks --bin xtasks --"

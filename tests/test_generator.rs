@@ -8,6 +8,8 @@ use libmake::{
     },
     utils::{get_csv_field, get_json_field, get_yaml_field},
 };
+use tempfile::tempdir;
+
 use std::path::Path;
 use std::{env, io};
 
@@ -103,7 +105,7 @@ fn generate_from_toml() {
 fn test_generate_from_args() {
     let args = "--author=Me --output=my_library"
         .split(' ')
-        .map(|s| s.to_string())
+        .map(std::string::ToString::to_string)
         .collect::<Vec<String>>();
 
     let args_str = args[1..].join(" ");
@@ -117,23 +119,23 @@ fn test_generate_from_args() {
 #[test]
 fn test_from_args() {
     let args = "--author=Me \
-                                 --build=build.rs \
-                                 --categories=[cat1,cat2] \
-                                 --description='test' \
-                                 --documentation= \
-                                 --edition=2018 \
-                                 --email='test@test.com' \
-                                 --homepage= \
-                                 --keywords= \
-                                 --license=MIT \
-                                 --output=my_library \
-                                 --readme= \
-                                 --repository= \
-                                 --rustversion= \
-                                 --version= \
-                                 --website="
+                                --build=build.rs \
+                                --categories=[cat1,cat2] \
+                                --description='test' \
+                                --documentation= \
+                                --edition=2018 \
+                                --email='test@test.com' \
+                                --homepage= \
+                                --keywords= \
+                                --license=MIT \
+                                --output=my_library \
+                                --readme= \
+                                --repository= \
+                                --rustversion= \
+                                --version= \
+                                --website="
         .split(' ')
-        .map(|s| s.to_string())
+        .map(std::string::ToString::to_string) // Replaced the closure with the method directly
         .collect::<Vec<String>>();
 
     let args_str = args[1..].join(" ");
@@ -151,10 +153,27 @@ fn test_assert_generate_files() {
     let mut params = FileGenerationParams::new();
     params.output =
         Some(temp_dir.as_path().to_str().unwrap().to_owned());
+}
 
+#[test]
+#[allow(clippy::redundant_clone)]
+fn test_generate_files() {
+    // Create a temporary directory
+    let temp_directory = tempdir();
+    let temp_path = temp_directory.unwrap().path().to_owned();
+
+    // Set up the parameters for file generation
+    let mut params = FileGenerationParams::new();
+    params.output = Some(temp_path.to_str().unwrap().to_owned());
+
+    // Call the function you want to test
     assert_generate_files!(params.clone());
-    assert!(temp_dir.exists());
-    std::fs::remove_dir_all(temp_dir).unwrap();
+
+    // Assert that the temporary directory exists
+    assert!(temp_path.exists());
+
+    // Clean up: Remove the temporary directory and its contents
+    std::fs::remove_dir_all(temp_path).unwrap();
 }
 
 /// Tests the `create_directory` function by passing an invalid path and

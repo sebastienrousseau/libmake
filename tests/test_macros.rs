@@ -24,6 +24,7 @@ mod tests {
     }
     // Unit test for the `generate_files()` function.
     #[test]
+    #[allow(clippy::redundant_clone)]
     fn test_generate_files() {
         let mut params = FileGenerationParams::new();
         params.output = Some("my_library".into());

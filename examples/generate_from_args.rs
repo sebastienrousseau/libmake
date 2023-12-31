@@ -25,17 +25,17 @@
 // Import the necessary function for generating files from arguments
 use libmake::generator::generate_from_args;
 
-fn main() -> std::io::Result<()> {
+fn main() {
     // Simulate command line arguments
     let args = "--author=Me --output=my_library"
         .split(' ')
-        .map(|s| s.to_string())
+        .map(std::string::ToString::to_string) // Directly using the method
         .collect::<Vec<String>>();
 
     // Check if there are at least two arguments (program name and at least one option)
     if args.len() < 2 {
         eprintln!("Usage: {} <args>", args[0]);
-        return Ok(());
+        return;
     }
 
     // Join the arguments (excluding the program name) into a single string
@@ -43,13 +43,11 @@ fn main() -> std::io::Result<()> {
 
     // Call the `generate_from_args` function with the arguments string
     let result = generate_from_args(&args_str);
-    println!("{:?}", result);
+    println!("{result:?}");
 
     // Check the result of the function call and print a message accordingly
     match result {
         Ok(()) => println!("Successfully generated files!"),
-        Err(err) => eprintln!("Error: {}", err),
+        Err(err) => eprintln!("Error: {err}"),
     }
-
-    Ok(())
 }

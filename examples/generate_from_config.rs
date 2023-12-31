@@ -44,8 +44,8 @@ fn main() {
     // This function generates template files based on the configuration.
     match generate_from_config(file_path, file_type) {
         // If generation is successful, do nothing (the template files are created).
-        Ok(_) => (),
+        Ok(()) => (),
         // If there is an error during generation, print an error message.
-        Err(err) => eprintln!("Error: {}", err),
+        Err(err) => eprintln!("Error: {err}"),
     }
 }

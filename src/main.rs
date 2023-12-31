@@ -30,13 +30,16 @@
 //!
 //! This application allows you to interact with and use the functionality provided by the `libmake` crate.
 
+extern crate xtasks;
 use libmake::run;
 
 /// This is the main entry point for the libmake application.
 fn main() {
     // Call the `run()` function from the `libmake` module.
+    let _ = xtasks::tasks::ci::CIBuilder::default().run();
+
     if let Err(ref e) = run() {
-        eprintln!("Error running libmake: {}", e);
+        eprintln!("Error running libmake: {e}");
         std::process::exit(1);
     }
 }

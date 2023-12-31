@@ -63,12 +63,12 @@ fn main() {
                 .split('\n')
                 .map(|s| s.trim_start_matches("- "))
                 .filter(|s| !s.is_empty())
-                .map(|s| format!("\"{}\"", s))
+                .map(|s| format!("\"{s}\""))
                 .collect();
         format!("[{}]", keywords.join(", "))
     } else {
         String::new()
     };
 
-    println!("🦀 get_yaml_field, ✅ {}: {}", field_keywords, value);
+    println!("🦀 get_yaml_field, ✅ {field_keywords}: {value}");
 }

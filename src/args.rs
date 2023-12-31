@@ -17,6 +17,20 @@ use std::error::Error;
 /// * `matches` - An instance of `clap::ArgMatches` containing the
 /// parsed command line arguments.
 ///
+/// # Errors
+///
+/// This function will return an error in the following situations:
+///
+/// - If a specified file path for a subcommand (CSV, YAML, JSON, TOML) is invalid or the file cannot be read.
+/// - If there is an error in parsing the file contents into the respective file format (CSV, YAML, JSON, TOML).
+/// - If there is an error in generating files based on the parameters derived from the command line arguments.
+///
+/// # Panics
+///
+/// This function will panic if a required command line argument is not provided.
+/// For example, it will panic if the `csv` subcommand is used without specifying
+/// a CSV file path.
+///
 pub fn process_arguments(
     matches: &ArgMatches,
 ) -> Result<(), Box<dyn Error>> {

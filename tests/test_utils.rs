@@ -6,24 +6,7 @@ mod tests {
     };
     // Unit test for the `get_csv_field()` function.
     #[test]
-    fn test_get_csv_field_from_csv() {
-        let file_path = "./tests/data/mylibrary.csv";
-        let field_author_index = 0;
-        let value = get_csv_field(Some(file_path), field_author_index);
-        assert_eq!(value, Some(vec!["Me".to_string()]));
-    }
-    // Unit test for the `get_csv_field()` function.
-    #[test]
-    fn test_get_csv_field_empty() {
-        let file_path = "./tests/data/mylibrary.csv";
-        let field_author_index = 20;
-        let value = get_csv_field(Some(file_path), field_author_index);
-        assert_eq!(value, Some(vec!["".to_string()]));
-    }
-    // Unit test for the `get_csv_field()` function.
-    #[test]
     fn test_get_csv_field() {
-        // Test with valid field index
         let file_path = "./tests/data/mylibrary.csv";
         let field_index = 0;
         let expected_value = Some(vec!["Me".to_string()]);
@@ -32,7 +15,7 @@ mod tests {
 
         // Test with invalid field index
         let field_index = 100;
-        let expected_value = Some(vec!["".to_string()]);
+        let expected_value = Some(vec![String::new()]);
         let actual_value = get_csv_field(Some(file_path), field_index);
         assert_eq!(expected_value, actual_value);
     }
@@ -117,7 +100,7 @@ mod tests {
     fn test_get_json_field_existing() {
         let file_path = None;
         let field_name = "null";
-        let expected_value = "".to_string();
+        let expected_value = "";
         let actual_value = get_json_field(file_path, field_name);
         assert_eq!(expected_value, actual_value);
     }
@@ -126,7 +109,7 @@ mod tests {
     fn test_get_yaml_field_existing() {
         let file_path = None;
         let field_name = "null";
-        let expected_value = "".to_string();
+        let expected_value = "";
         let actual_value = get_yaml_field(file_path, field_name);
         assert_eq!(expected_value, actual_value);
     }
@@ -135,7 +118,7 @@ mod tests {
     fn test_get_config_field_existing() {
         let file_path = None;
         let field_name = "nonexistent";
-        let expected_value = "".to_string();
+        let expected_value = "";
 
         let actual_yaml_value =
             get_config_field(file_path, Some("yaml"), field_name);

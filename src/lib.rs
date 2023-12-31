@@ -1,7 +1,7 @@
 // Copyright © 2023 xtasks. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
-//! # LibMake
+//! # `LibMake`
 //!
 //! A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 //!
@@ -13,7 +13,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.0-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.1-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -113,6 +113,16 @@ use std::error::Error;
 ///     eprintln!("Application error: {}", e);
 /// }
 /// ```
+///
+///
+/// # Errors
+///
+/// This function will return an error in the following situations:
+///
+/// - If there is a problem generating ASCII art for the tool's CLI.
+/// - If an error occurs while building the command-line interface or processing arguments.
+/// - Any other errors that may arise from operations performed within the function.
+///
 pub fn run() -> Result<(), Box<dyn Error>> {
     // Generate ASCII art for the tool's CLI
     macro_log_info!(
@@ -122,8 +132,8 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         LogFormat::CLF
     );
     match generate_ascii_art("LibMake") {
-        Ok(ascii_art) => println!("{}", ascii_art),
-        Err(e) => eprintln!("Error generating ASCII art: {}", e),
+        Ok(ascii_art) => println!("{ascii_art}"),
+        Err(e) => eprintln!("Error generating ASCII art: {e}"),
     }
     macro_log_info!(
         LogLevel::INFO,
@@ -133,7 +143,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     );
 
     // Build the command-line interface and process the arguments
-    let matches = cli::build_cli()?;
+    let matches = cli::build()?;
     args::process_arguments(&matches)?;
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
