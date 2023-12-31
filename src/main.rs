@@ -36,7 +36,10 @@ use libmake::run;
 /// This is the main entry point for the libmake application.
 fn main() {
     // Call the `run()` function from the `libmake` module.
-    let _ = xtasks::tasks::ci::CIBuilder::default().run();
+    if args.len() > 1 && args[1] == "xtask" {
+        // The user ran the "xtask" command, so execute your code
+        let _ = xtasks::tasks::ci::CIBuilder::default().run();
+    }
 
     if let Err(ref e) = run() {
         eprintln!("Error running libmake: {e}");

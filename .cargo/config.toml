@@ -1,2 +1,2 @@
 [alias]
-xtask = "run --package xtasks --bin xtasks --"
+xtask = "run --package libmake --bin libmake --"
