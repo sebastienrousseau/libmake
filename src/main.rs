@@ -32,11 +32,14 @@
 
 extern crate xtasks;
 use libmake::run;
+use std::env::args;
 
 /// This is the main entry point for the libmake application.
 fn main() {
-    // Call the `run()` function from the `libmake` module.
-    if args.len() > 1 && args[1] == "xtask" {
+    let args: Vec<String> = std::env::args().collect();
+
+    // Check if the command-line arguments contain "xtask"
+    if args.iter().any(|arg| arg == "xtask") {
         // The user ran the "xtask" command, so execute your code
         let _ = xtasks::tasks::ci::CIBuilder::default().run();
     }
