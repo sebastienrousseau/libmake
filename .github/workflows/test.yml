@@ -36,7 +36,6 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: xtask
-          args: coverage
 
       # Upload the coverage report to codecov
       - name: Upload coverage report to codecov
