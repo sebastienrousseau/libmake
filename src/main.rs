@@ -32,7 +32,6 @@
 
 extern crate xtasks;
 use libmake::run;
-use std::env::args;
 
 /// This is the main entry point for the libmake application.
 fn main() {
