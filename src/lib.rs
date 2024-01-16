@@ -76,6 +76,16 @@
 #![crate_name = "libmake"]
 #![crate_type = "lib"]
 
+// Import necessary dependencies
+use crate::ascii::generate_ascii_art;
+use dtt::DateTime;
+use env_logger::Env;
+use rlg::macro_log;
+use rlg::{LogFormat, LogLevel};
+use std::error::Error;
+use std::fs::File;
+use std::io::Write;
+
 /// The `args` module contains functions for processing command-line
 /// arguments.
 pub mod args;
@@ -97,9 +107,6 @@ pub mod macros;
 /// The `utils` module contains a function for reading a CSV file at the
 /// given file path and returns the value of the given field.
 pub mod utils;
-
-use crate::ascii::generate_ascii_art;
-use std::error::Error;
 
 /// Initializes the logger with a file logger and a terminal logger and processes
 /// command-line arguments to generate the new library.
@@ -124,23 +131,47 @@ use std::error::Error;
 /// - Any other errors that may arise from operations performed within the function.
 ///
 pub fn run() -> Result<(), Box<dyn Error>> {
+    let date = DateTime::new();
+    let iso = date.iso_8601;
+
+    // Initialize the logger using the `env_logger` crate
+    env_logger::Builder::from_env(
+        Env::default().default_filter_or("info"),
+    )
+    .format(|buf, record| {
+        writeln!(buf, "[{}] - {}", record.level(), record.args())
+    })
+    .init();
+
+    // Open the log file for appending
+    let mut log_file = File::create("ssg.log")?;
+
     // Generate ASCII art for the tool's CLI
-    macro_log_info!(
-        LogLevel::INFO,
+    let log = macro_log!(
+        "id",
+        &iso,
+        &LogLevel::INFO,
         "deps",
-        "Starting generating ASCII art for the tool's CLI...",
-        LogFormat::CLF
+        "ASCII art generation event started.",
+        &LogFormat::CLF
     );
+    // Write the log to both the console and the file
+    writeln!(log_file, "{}", log)?;
+
     match generate_ascii_art("LibMake") {
         Ok(ascii_art) => println!("{ascii_art}"),
         Err(e) => eprintln!("Error generating ASCII art: {e}"),
     }
-    macro_log_info!(
-        LogLevel::INFO,
+    let log = macro_log!(
+        "id",
+        &iso,
+        &LogLevel::INFO,
         "deps",
-        "Finished generating ASCII art for the tool's CLI.",
-        LogFormat::CLF
+        "ASCII art generation event completed.",
+        &LogFormat::CLF
     );
+    // Write the log to both the console and the file
+    writeln!(log_file, "{}", log)?;
 
     // Build the command-line interface and process the arguments
     let matches = cli::build()?;
