@@ -34,6 +34,7 @@ include = [
     "/README.md",
     "/src/**",
     "/tests/**",
+    "/xtask/**",
 ]
 
 [workspace]
