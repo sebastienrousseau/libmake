@@ -1,8 +1,15 @@
 [package]
-authors = ["Sebastien Rousseau <sebastian.rousseau@gmail.com>"]
+authors = ["LibMake Contributors"]
 categories = ['development-tools', 'command-line-utilities', 'template-engine']
-description = "A code generator to reduce repetitive tasks and build high-quality Rust libraries."
+description = """
+A code generator to reduce repetitive tasks and build high-quality Rust
+libraries and applications, by providing a simple interface to create
+projects, generate code, and manage dependencies.
+"""
+documentation = "https://docs.rs/libmake"
 edition = "2021"
+exclude = ["/.git/*", "/.github/*", "/.gitignore", "/.vscode/*"]
+homepage = "https://libmake.com"
 keywords = [
     'code-generation',
     'generator',
@@ -13,7 +20,7 @@ keywords = [
 license = "MIT OR Apache-2.0"
 name = "libmake"
 repository = "https://github.com/sebastienrousseau/libmake.git"
-rust-version = "1.71.1"
+rust-version = "1.75.0"
 version = "0.2.1"
 include = [
     "/CONTRIBUTING.md",
@@ -27,6 +34,12 @@ include = [
     "/src/**",
     "/tests/**",
 ]
+
+[workspace]
+members = ["xtask"]
+
+[package.metadata.docs.rs]
+all-features = true
 
 [[bench]]
 name = "benchmark"
@@ -61,12 +74,10 @@ predicates = "3.0.4"
 crate-type = ["lib"]
 name = "libmake"
 path = "src/lib.rs"
+required-features = []
 
 [features]
 default = []
-
-[package.metadata.docs.rs]
-all-features = true
 
 [profile.dev]
 codegen-units = 256
