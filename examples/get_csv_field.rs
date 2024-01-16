@@ -31,7 +31,7 @@
 // Title: Test: Retrieving a CSV Field
 use libmake::utils::get_csv_field;
 
-fn main() {
+pub fn main() {
     // Retrieve CSV field
     let file_path = "../tests/data/mylibrary.csv";
     println!(

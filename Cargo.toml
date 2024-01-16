@@ -1,6 +1,6 @@
 [package]
 authors = ["LibMake Contributors"]
-categories = ['development-tools', 'command-line-utilities', 'template-engine']
+categories = ["development-tools", "command-line-utilities", "template-engine"]
 description = """
 A code generator to reduce repetitive tasks and build high-quality Rust
 libraries and applications, by providing a simple interface to create
@@ -19,6 +19,7 @@ keywords = [
 ]
 license = "MIT OR Apache-2.0"
 name = "libmake"
+readme = "README.md"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.75.0"
 version = "0.2.1"

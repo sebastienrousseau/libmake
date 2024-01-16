@@ -53,7 +53,7 @@
 use libmake::utils::get_yaml_field;
 use std::path::Path;
 
-fn main() {
+pub fn main() {
     let file_path = "../tests/data/mylibrary.yaml";
     let field_keywords = "keywords";
 

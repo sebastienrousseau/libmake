@@ -30,7 +30,7 @@ use libmake::generator::generate_from_csv;
 
 /// This is a simple test for generating files from a CSV file using the `generate_from_csv` function.
 /// It attempts to generate template files from a CSV file and expects the operation to be successful.
-fn main() {
+pub fn main() {
     // Define the path to the CSV file to be used for testing.
     let csv_file_path = "./tests/data/mylibrary.csv";
 

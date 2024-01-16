@@ -33,7 +33,7 @@ use libmake::generator::generate_from_json;
 
 /// This test demonstrates how to use the `generate_from_json` function from the `libmake` crate
 /// to generate template files from a JSON file.
-fn main() {
+pub fn main() {
     // Define the path to the JSON file that contains configuration data.
     let json_file_path = "./tests/data/mylibrary.json";
 

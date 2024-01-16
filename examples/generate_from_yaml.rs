@@ -27,7 +27,7 @@
 // Import the necessary function for generating templates from a YAML file.
 use libmake::generator::generate_from_yaml;
 
-fn main() {
+pub fn main() {
     // Specify the path to the YAML file to be used for generating templates.
     let yaml_file_path = "./tests/data/mylibrary.yaml";
 

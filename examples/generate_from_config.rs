@@ -33,7 +33,7 @@
 
 use libmake::generator::generate_from_config;
 
-fn main() {
+pub fn main() {
     // Define the file path for the configuration file.
     let file_path = "./tests/data/mylibrary.yaml";
 

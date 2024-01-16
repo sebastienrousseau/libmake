@@ -16,7 +16,7 @@
 //! use libmake::generator::generate_from_toml;
 //!
 //!     // Define the path to the TOML file containing configuration.
-//!     let toml_file_path = "./tests/data/mylibrary.toml"      
+//!     let toml_file_path = "./tests/data/mylibrary.toml"
 //!     // Generate template files based on the configuration in the TOML file.
 //!     // If generation fails, it will print an error message.
 //!     generate_from_toml(toml_file_path)
@@ -26,7 +26,7 @@
 // Import the necessary function for generating templates from a TOML file.
 use libmake::generator::generate_from_toml;
 
-fn main() {
+pub fn main() {
     // Define the path to the TOML file containing configuration.
     let toml_file_path = "./tests/data/mylibrary.toml";
 

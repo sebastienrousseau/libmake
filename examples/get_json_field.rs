@@ -43,7 +43,7 @@
 use libmake::utils::get_json_field;
 use std::path::Path;
 
-fn main() {
+pub fn main() {
     // Retrieve JSON field
     let file_path = "../tests/data/mylibrary.json";
     let field_author = "author";

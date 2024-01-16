@@ -25,7 +25,7 @@
 // Import the necessary function for generating files from arguments
 use libmake::generator::generate_from_args;
 
-fn main() {
+pub fn main() {
     // Simulate command line arguments
     let args = "--author=Me --output=my_library"
         .split(' ')

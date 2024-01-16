@@ -1,4 +1,4 @@
-// Copyright © 2023 LibMake. All rights reserved.
+// Copyright © 2024 LibMake. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0 OR MIT
 
 use figlet_rs::FIGfont;
