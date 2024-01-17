@@ -1,4 +1,6 @@
-// SPDX-FileCopyrightText: Copyright © 2023 {name}. All rights reserved.
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// Copyright © 2024 {name}. All rights reserved.
 // SPDX-License-Identifier: {license}
 
 /// This is the main entry point for the {name} application.
@@ -8,4 +10,4 @@ fn main() {
         eprintln!("Error running {name}: {}", err);
         std::process::exit(1);
     }
-}
+}

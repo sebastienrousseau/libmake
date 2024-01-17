@@ -1,5 +1,7 @@
-// Copyright © 2023 LibMake. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0 OR MIT
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
 
 //! # Libmake Application
 //!
@@ -20,8 +22,8 @@
 //! ```rust
 //! use libmake::run;
 //!
-//! /// This is the main entry point for the libmake application.
-//! // Call the `run()` function from the `libmake` module.
+//!/ This is the main entry point for the libmake application.
+//! Call the `run()` function from the `libmake` module.
 //! if let Err(ref e) = run() {
 //!     eprintln!("Error running libmake: {}", e);
 //!     std::process::exit(1);
@@ -31,12 +33,22 @@
 //! This application allows you to interact with and use the functionality provided by the `libmake` crate.
 
 use libmake::run;
+use std::env;
 
-/// This is the main entry point for the libmake application.
 fn main() {
-    // Call the `run()` function from the `libmake` module.
-    if let Err(ref e) = run() {
-        eprintln!("Error running libmake: {}", e);
+    // Combined check for "xtask" and execution of associated task
+    let found_xtask = env::args_os().any(|arg| arg == "xtask");
+    if found_xtask {
+        if let Err(e) = xtasks::tasks::ci::CIBuilder::default().run() {
+            eprintln!("Error executing CI task: {e}");
+            std::process::exit(1);
+        }
+    }
+
+    // Handle errors from `run()`
+    if let Err(ref err) = run() {
+        // Renamed error variable for clarity
+        eprintln!("Error running libmake: {err}");
         std::process::exit(1);
     }
 }

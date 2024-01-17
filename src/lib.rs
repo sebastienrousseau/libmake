@@ -1,7 +1,9 @@
-// Copyright © 2023 xtasks. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0 OR MIT
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
 
-//! # LibMake
+//! # `LibMake`
 //!
 //! A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 //!
@@ -13,7 +15,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.0-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.1-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -21,10 +23,10 @@
 //!
 //! ## Overview
 //!
-//! `LibMake` is a tool designed to quickly help creating high-quality
+//! `LibMake` is a tool designed to quickly help create high-quality
 //! Rust libraries by generating a set of pre-filled and pre-defined
 //! templated files. This opinionated boilerplate scaffolding tool aims
-//! to greatly reduces development time and minimizes repetitive tasks,
+//! to greatly reduce development time and minimize repetitive tasks,
 //! allowing you to focus on your business logic while enforcing
 //! standards, best practices, consistency, and providing style guides
 //! for your library.
@@ -42,7 +44,7 @@
 //!
 //! `LibMake` offers the following features and benefits:
 //!
-//! - Create your Rust library with ease using the command line
+//! - Create your Rust library with ease using the command-line
 //!   interface or by providing a configuration file in CSV, JSON, or
 //!   YAML format.
 //! - Rapidly generate new library projects with a pre-defined structure
@@ -76,6 +78,17 @@
 #![crate_name = "libmake"]
 #![crate_type = "lib"]
 
+// Import necessary dependencies
+use crate::args::process_arguments;
+use crate::ascii::generate_ascii_art;
+use crate::cli::build;
+use crate::loggers::init_logger;
+use dtt::DateTime;
+use rlg::{macro_log, LogFormat, LogLevel};
+use std::error::Error;
+use std::fs::File;
+use std::io::Write;
+
 /// The `args` module contains functions for processing command-line
 /// arguments.
 pub mod args;
@@ -98,9 +111,6 @@ pub mod macros;
 /// given file path and returns the value of the given field.
 pub mod utils;
 
-use std::error::Error;
-use crate::ascii::generate_ascii_art;
-
 /// Initializes the logger with a file logger and a terminal logger and processes
 /// command-line arguments to generate the new library.
 ///
@@ -113,28 +123,55 @@ use crate::ascii::generate_ascii_art;
 ///     eprintln!("Application error: {}", e);
 /// }
 /// ```
+///
+/// # Errors
+///
+/// This function will return an error in the following situations:
+///
+/// - If there is a problem generating ASCII art for the tool's CLI.
+/// - If an error occurs while building the command-line interface or processing arguments.
+/// - Any other errors that may arise from operations performed within the function.
+///
 pub fn run() -> Result<(), Box<dyn Error>> {
+    let date = DateTime::new();
+    let iso = date.iso_8601;
+
+    // Initialize the logger using the `env_logger` crate
+    init_logger(None)?;
+
+    // Open the log file for appending
+    let mut log_file = File::create("./ssg.log")?;
+
     // Generate ASCII art for the tool's CLI
-    macro_log_info!(
-        LogLevel::INFO,
+    let log = macro_log!(
+        "id",
+        &iso,
+        &LogLevel::INFO,
         "deps",
-        "Starting generating ASCII art for the tool's CLI...",
-        LogFormat::CLF
+        "ASCII art generation event started.",
+        &LogFormat::CLF
     );
+    // Write the log to both the console and the file
+    writeln!(log_file, "{}", log)?;
+
     match generate_ascii_art("LibMake") {
         Ok(ascii_art) => println!("{}", ascii_art),
-        Err(e) => eprintln!("Error generating ASCII art: {}", e),
+        Err(e) => eprintln!("Error generating ASCII art: {:?}", e),
     }
-    macro_log_info!(
-        LogLevel::INFO,
+    let log = macro_log!(
+        "id",
+        &iso,
+        &LogLevel::INFO,
         "deps",
-        "Finished generating ASCII art for the tool's CLI.",
-        LogFormat::CLF
+        "ASCII art generation event completed.",
+        &LogFormat::CLF
     );
+    // Write the log to both the console and the file
+    writeln!(log_file, "{}", log)?;
 
     // Build the command-line interface and process the arguments
-    let matches = cli::build_cli()?;
-    args::process_arguments(&matches)?;
+    let matches = build()?;
+    process_arguments(&matches)?;
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
     if std::env::args().len() == 1 {

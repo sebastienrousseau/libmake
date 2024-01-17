@@ -1,8 +1,15 @@
 [package]
-authors = ["Sebastien Rousseau <sebastian.rousseau@gmail.com>"]
-categories = ['development-tools', 'command-line-utilities', 'template-engine']
-description = "A code generator to reduce repetitive tasks and build high-quality Rust libraries."
+authors = ["LibMake Contributors"]
+categories = ["development-tools", "command-line-utilities", "template-engine"]
+description = """
+A code generator to reduce repetitive tasks and build high-quality Rust
+libraries and applications, by providing a simple interface to create
+projects, generate code, and manage dependencies.
+"""
+documentation = "https://docs.rs/libmake"
 edition = "2021"
+exclude = ["/.git/*", "/.github/*", "/.gitignore", "/.vscode/*"]
+homepage = "https://libmake.com"
 keywords = [
     'code-generation',
     'generator',
@@ -12,9 +19,10 @@ keywords = [
 ]
 license = "MIT OR Apache-2.0"
 name = "libmake"
+readme = "README.md"
 repository = "https://github.com/sebastienrousseau/libmake.git"
-rust-version = "1.71.1"
-version = "0.2.0"
+rust-version = "1.75.0"
+version = "0.2.1"
 include = [
     "/CONTRIBUTING.md",
     "/LICENSE-APACHE",
@@ -32,6 +40,9 @@ include = [
 [workspace]
 members = ["xtask"]
 
+[package.metadata.docs.rs]
+all-features = true
+
 [[bench]]
 name = "benchmark"
 harness = false
@@ -41,19 +52,23 @@ path = "benches/criterion.rs"
 debug = true
 
 [dependencies]
-anyhow = "1.0.75"
+anyhow = "1.0.77"
 assert_cmd = "2.0.12"
-clap = "4.4.7"
+clap = "4.4.12"
 csv = "1.3.0"
-dtt = "0.0.4"
+dtt = "0.0.5"
+env_logger = "0.10.1"
 figlet-rs = "0.1.5"
-openssl = { version = "0.10.59", features = ["vendored"] }
-reqwest = { version = "0.11.22", features = ["blocking"] }
-serde = { version = "1.0.192", features = ["derive"] }
+openssl = { version = "0.10.62", features = ["vendored"] }
+reqwest = { version = "0.11.23", features = ["blocking"] }
+rlg = "0.0.2"
+serde = { version = "1.0.193", features = ["derive"] }
 serde_json = "1.0.108"
-serde_yaml = "0.9.27"
+serde_yaml = "0.9.29"
+tempfile = "3.9.0"
 toml = "0.8.8"
-vrd = "0.0.4"
+vrd = "0.0.5"
+xtasks = "0.0.2"
 
 [dev-dependencies]
 criterion = "0.5.1"
@@ -63,12 +78,10 @@ predicates = "3.0.4"
 crate-type = ["lib"]
 name = "libmake"
 path = "src/lib.rs"
+required-features = []
 
 [features]
 default = []
-
-[package.metadata.docs.rs]
-all-features = true
 
 [profile.dev]
 codegen-units = 256
@@ -83,16 +96,16 @@ rpath = false
 strip = false
 
 [profile.release]
-codegen-units = 1        # Compile crates one after another so the compiler can optimize better
-debug = false            # Disable debug information
-debug-assertions = false # Disable debug assertions
-incremental = false      # Disable incremental compilation
-lto = true               # Enables link to optimizations
-opt-level = "s"          # Optimize for binary size
-overflow-checks = false  # Disable overflow checks
-panic = "abort"          # Strip expensive panic clean-up logic
-rpath = false            # Disable rpath
-strip = "symbols"        # Automatically strip symbols from the binary.
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = false
+lto = true
+opt-level = "s"
+overflow-checks = false
+panic = "abort"
+rpath = false
+strip = "symbols"
 
 [profile.test]
 codegen-units = 256

@@ -1,194 +1,105 @@
-// Copyright © 2023 LibMake. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0 OR MIT
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
 
 use clap::{Arg, ArgMatches, Command, Error};
 
-/// Constructs the CLI for the application using Clap, including all necessary arguments.
-///
-/// Returns a `Result` containing the `ArgMatches` if successful, or an `Error` if parsing fails.
+/// Constructs the command-line interface for the application using Clap,
+/// including all necessary arguments.
 ///
 /// # Examples
 ///
 /// ```
 /// use libmake::cli;
-/// let matches = cli::build_cli().expect("CLI parsing failed");
+/// let matches = cli::build().expect("CLI parsing failed");
 /// ```
-pub fn build_cli() -> Result<ArgMatches, Error> {
-    let matches = Command::new("My Library")
+///
+/// # Errors
+///
+/// This function will return an error if the command-line argument parsing fails.
+///
+pub fn build() -> Result<ArgMatches, Error> {
+    let mut command = Command::new("My Library")
         .author("Sebastien Rousseau")
         .about(
             "A Rust library generator that helps create high-quality Rust libraries quickly and easily.",
-        )
-        .arg(
-            Arg::new("author")
-                .default_value("Me")
-                .help("Sets the author of the library")
-                .long("author")
-                .short('a')
-                .value_name("AUTHOR"),
-        )
-        .arg(
-            Arg::new("build")
-                .default_value("build.rs")
-                .help("Sets the build script that is used to perform additional build-time operations.")
-                .long("build")
-                .short('b')
-                .value_name("BUILD"),
-        )
-        .arg(
-            Arg::new("categories")
-                .default_value("['category 1', 'category 2']")
-                .help("Sets the categories of the library")
-                .long("categories")
-                .short('c')
-                .value_name("CATEGORIES"),
-        )
-        .arg(
-            Arg::new("description")
-                .default_value("A library for doing things")
-                .help("Sets the description of the library")
-                .long("description")
-                .short('d')
-                .value_name("DESCRIPTION"),
-        )
-        .arg(
-            Arg::new("documentation")
-                .default_value("https://lib.rs/crates/my_library")
-                .help("Sets the documentation URL of the library")
-                .long("documentation")
-                .short('u')
-                .value_name("DOCUMENTATION"),
-        )
-        .arg(
-            Arg::new("edition")
-                .default_value("2021")
-                .help("Sets the edition of the library")
-                .long("edition")
-                .short('e')
-                .value_name("EDITION"),
-        )
-        .arg(
-            Arg::new("email")
-                .default_value("test@test.com")
-                .help("Sets the email of the library author")
-                .long("email")
-                .short('@')
-                .value_name("EMAIL"),
-        )
-        .arg(
-            Arg::new("homepage")
-                .default_value("https://test.com")
-                .help("Sets the homepage of the library")
-                .long("homepage")
-                .short('p')
-                .value_name("HOMEPAGE"),
-        )
-        .arg(
-            Arg::new("keywords")
-                .default_value("['keyword1', 'keyword2']")
-                .help("Sets the keywords of the library")
-                .long("keywords")
-                .short('k')
-                .value_name("KEYWORDS"),
-        )
-        .arg(
-            Arg::new("license")
-                .default_value("MIT OR Apache-2.0")
-                .short('l')
-                .long("license")
-                .value_name("LICENSE")
-                .help("Sets the license of the library"),
-        )
-        .arg(
-            Arg::new("name")
-                .default_value("my_library")
-                .help("Sets the name of the library")
-                .long("name")
-                .short('n')
-                .value_name("NAME"),
-        )
-        .arg(
-            Arg::new("output")
-                .default_value("my_library")
-                .help("Sets the output directory for the library")
-                .long("output")
-                .short('o')
-                .value_name("OUTPUT"),
-        )
-        .arg(
-            Arg::new("readme")
-                .default_value("README.md")
-                .help("Sets the README file for the library")
-                .long("readme")
-                .short('m')
-                .value_name("README"),
-        )
-        .arg(
-            Arg::new("repository")
-                .default_value("https://github.com/test/test")
-                .help("Sets the GitHub repository of the library")
-                .long("repository")
-                .short('g')
-                .value_name("REPOSITORY"),
-        )
-        .arg(
-            Arg::new("rustversion")
-                .default_value("1.71.1")
-                .help("Sets the Rust version of the library")
-                .long("rustversion")
-                .short('r')
-                .value_name("RUSTVERSION"),
-        )
-        .arg(
-            Arg::new("version")
-                .default_value("0.2.0")
-                .help("Sets the version of the library")
-                .long("version")
-                .short('v')
-                .value_name("VERSION"),
-        )
-        .arg(
-            Arg::new("website")
-                .default_value("https://test.com")
-                .help("Sets the website of the library author")
-                .long("website")
-                .short('w')
-                .value_name("WEBSITE"),
-        )
-        .arg(
-            Arg::new("csv")
-                .help("Sets the CSV file to use for generating the library")
-                .long("csv")
-                .short('x')
-                .value_name("CSV"),
-        )
-        .arg(
-            Arg::new("yml")
-                .help("Sets the YML file to use for generating the library")
-                .long("yml")
-                .short('y')
-                .value_name("YAML"),
-        )
-        .arg(
-            Arg::new("json")
-                .help("Sets the JSON file to use for generating the library")
-                .long("json")
-                .short('j')
-                .value_name("JSON"),
-        )
-        .arg(
-            Arg::new("toml")
-                .help("Sets the TOML file to use for generating the library")
-                .long("toml")
-                .short('t')
-                .value_name("TOML"),
         )
         .after_help(
             "By default, if no arguments are passed in, the CLI will \
             throw an error. To see a list of available actions, run \
             `--help`.",
-        )
-        .get_matches();
+        );
+    let args = vec![
+        create_arg_info("author", Some("Me"), "Sets the author of the library", 'a', "author", "AUTHOR"),
+        create_arg_info("build", Some("build.rs"), "Sets the build script that is used to perform additional build-time operations.", 'b', "build", "BUILD"),
+        create_arg_info("categories", Some("['category 1', 'category 2']"), "Sets the categories of the library", 'c', "categories", "CATEGORIES"),
+        create_arg_info("description", Some("A library for doing things"), "Sets the description of the library", 'd', "description", "DESCRIPTION"),
+        create_arg_info("documentation", Some("https://lib.rs/crates/my_library"), "Sets the documentation URL of the library", 'u', "documentation", "DOCUMENTATION"),
+        create_arg_info("edition", Some("2021"), "Sets the edition of the library", 'e', "edition", "EDITION"),
+        create_arg_info("email", Some("test@test.com"), "Sets the email of the library author", '@', "email", "EMAIL"),
+        create_arg_info("homepage", Some("https://test.com"), "Sets the homepage of the library", 'p', "homepage", "HOMEPAGE"),
+        create_arg_info("keywords", Some("['keyword1', 'keyword2']"), "Sets the keywords of the library", 'k', "keywords", "KEYWORDS"),
+        create_arg_info("license", Some("MIT OR Apache-2.0"), "Sets the license of the library", 'l', "license", "LICENSE"),
+        create_arg_info("name", Some("my_library"), "Sets the name of the library", 'n', "name", "NAME"),
+        create_arg_info("output", Some("my_library"), "Sets the output directory for the library", 'o', "output", "OUTPUT"),
+        create_arg_info("readme", Some("README.md"), "Sets the README file for the library", 'm', "readme", "README"),
+        create_arg_info("repository", Some("https://github.com/example/my_library"), "Sets the repository URL of the library", 'g', "repository", "REPOSITORY"),
+        create_arg_info("rustversion", Some("1.71.1"), "Sets the Rust version of the library", 'r', "rustversion", "RUSTVERSION"),
+        create_arg_info("version", Some("0.2.1"), "Sets the version of the library", 'v', "version", "VERSION"),
+        create_arg_info("website", Some("https://test.com"), "Sets the website of the library author", 'w', "website", "WEBSITE"),
+        create_arg_info("csv", Some(""), "Sets the CSV file to use for generating the library", 'x', "csv", "CSV"),
+        create_arg_info("json", Some(""), "Sets the JSON file to use for generating the library", 'j', "json", "JSON"),
+        create_arg_info("yaml", Some(""), "Sets the YAML file to use for generating the library", 'y', "yaml", "YAML"),
+        create_arg_info("toml", Some(""), "Sets the TOML file to use for generating the library", 't', "toml", "TOML"),
+    ];
 
-    Ok(matches)
+    for arg in args {
+        command = command.arg(create_arg(arg));
+    }
+    Ok(command.get_matches())
+}
+
+/// Helper function to create a command-line argument.
+const fn create_arg_info(
+    name: &'static str,
+    default: Option<&'static str>,
+    help: &'static str,
+    short: char,
+    long: &'static str,
+    value_name: &'static str,
+) -> (
+    &'static str,
+    Option<&'static str>,
+    &'static str,
+    char,
+    &'static str,
+    &'static str,
+) {
+    (name, default, help, short, long, value_name)
+}
+
+/// Creates an argument based on provided information.
+fn create_arg(
+    arg_info: (
+        &'static str,
+        Option<&'static str>,
+        &'static str,
+        char,
+        &'static str,
+        &'static str,
+    ),
+) -> Arg {
+    let (name, default, help, short, long, value_name) = arg_info;
+
+    let mut arg = Arg::new(name)
+        .help(help)
+        .short(short)
+        .long(long)
+        .value_name(value_name);
+
+    if let Some(default_value) = default {
+        arg = arg.default_value(default_value);
+    }
+    arg
 }

@@ -1,30 +1,49 @@
 name: 🧪 Test
 
-on:
-  push:
-    branches:
-      - feat/libmake
-  pull_request:
-    branches:
-      - feat/libmake
-  release:
-    types: [created]
-
+on: [pull_request, push]
 jobs:
-  all:
-    # Run tests on Linux
-    name: Test
+  test-lib:
+    name: Test library
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        toolchain: [stable, nightly]
+    continue-on-error: true
+
     steps:
-      - uses: hecrj/setup-rust-action@v2
-      - uses: actions/checkout@v4
-      - name: Run tests
-        run: cargo test --verbose --workspace
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup Rust
+      - name: Setup Rust
+        run: |
+          rustup toolchain add ${{ matrix.toolchain }} --component llvm-tools-preview
+          rustup override set ${{ matrix.toolchain }}
+
+      # Configure cache
+      - name: Configure cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: test-${{ runner.os }}-cargo-${{ matrix.toolchain }}-${{ hashFiles('**/Cargo.lock') }}
+
+      # Run tests with all features
       - name: Run tests with all features
+        id: run-tests-all-features
         run: cargo test --verbose --workspace --all-features
 
       # Install grcov
       - name: Install grcov
+        # Only run this job on the main branch when a commit is pushed.
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: install-grcov
         run: |
           mkdir -p "${HOME}/.local/bin"
           curl -sL https://github.com/mozilla/grcov/releases/download/v0.8.18/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf - -C "${HOME}/.local/bin"
@@ -32,7 +51,9 @@ jobs:
 
       # Use grcov to generate a coverage report
       - name: Generate coverage report
-        id: coverage
+        # Only run this job on the main branch when a commit is pushed.
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: generate-code-coverage
         uses: actions-rs/cargo@v1
         with:
           command: xtask
@@ -40,7 +61,9 @@ jobs:
 
       # Upload the coverage report to codecov
       - name: Upload coverage report to codecov
-        id: codecov
+        # Only run this job on the main branch when a commit is pushed.
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        id: upload-report-codecov
         uses: codecov/codecov-action@v3
         with:
           files: coverage/*.lcov

@@ -1,3 +1,8 @@
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
+
 //! # Example: Generating Templates from a YAML File
 //!
 //! This is a simple example that demonstrates how to use the `generate_from_yaml` function
@@ -27,7 +32,17 @@
 // Import the necessary function for generating templates from a YAML file.
 use libmake::generator::generate_from_yaml;
 
-fn main() {
+/// Generate template files from the specified YAML file.
+///
+/// # Arguments
+///
+/// * `yaml_file_path` - Path to the YAML file to be used for generating templates.
+///
+/// # Returns
+///
+/// * `Result<(), String>` - Returns `Ok(())` if the template files are generated successfully, or returns an error message if there is an error during generation.
+///
+pub fn main() {
     // Specify the path to the YAML file to be used for generating templates.
     let yaml_file_path = "./tests/data/mylibrary.yaml";
 

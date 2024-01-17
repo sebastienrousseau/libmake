@@ -1,132 +1,41 @@
-// Copyright © 2023 {name}. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0 OR MIT
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// Copyright © 2024 {name}. All rights reserved.
+// SPDX-License-Identifier: {license}
 
 #[cfg(test)]
 mod tests {
 
-    fn {name}_log_info(
-        level: LogLevel,
-        component: &str,
-        description: &str,
-        format: LogFormat,
-    ) {
-        let log =
-        {name}_log_info!(level, component, description, format);
-        assert_eq!(log.level, level);
-        assert_eq!(log.component, component);
-        assert_eq!(log.description, description);
-        assert_eq!(log.format, format);
-        }
+    use rlg::macro_log;
+    use rlg::{LogFormat, LogLevel};
 
     #[test]
-    fn test_macros() {
-        {name}_log_info(
-            LogLevel::ALL,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::DEBUG,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::DISABLED,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::ERROR,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::FATAL,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::INFO,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::NONE,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::TRACE,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::VERBOSE,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-        {name}_log_info(
-            LogLevel::WARNING,
-            "component",
-            "description",
-            LogFormat::CLF,
-        );
-    }
+    fn test_logging() {
+        // Create a log entry
+        let log_entry =
+            macro_log!(
+                "session_id",
+                "time",
+                &LogLevel::INFO,
+                "component",
+                "Log message",
+                &LogFormat::CLF
+            );
 
-    use {name}::{
-        loggers::{Log, LogFormat, LogLevel},
-        {name}_log_info,
-    };
+        // Define expected values
+        let expected_session_id = "session_id";
+        let expected_time = "time";
+        let expected_level = LogLevel::INFO;
+        let expected_component = "component";
+        let expected_description = "Log message";
+        let expected_format = LogFormat::CLF;
 
-    #[test]
-    fn test_log_level_display() {
-        let level = LogLevel::INFO;
-        assert_eq!(format!("{level}"), "INFO");
-    }
-
-    #[test]
-    fn test_log_format_display() {
-        let format = LogFormat::JSON;
-        assert_eq!(format!("{format}"), "JSON\n");
-    }
-
-    #[test]
-    fn test_log_new() {
-        let log = Log::new(
-            "session123",
-            "2023-02-28T12:34:56Z",
-            LogLevel::WARNING,
-            "auth",
-            "Invalid credentials",
-            LogFormat::CLF,
-        );
-
-        assert_eq!(log.session_id, "session123");
-        assert_eq!(log.time, "2023-02-28T12:34:56Z");
-        assert_eq!(log.level, LogLevel::WARNING);
-        assert_eq!(log.component, "auth");
-        assert_eq!(log.description, "Invalid credentials");
-        assert_eq!(log.format, LogFormat::CLF);
-    }
-
-    #[test]
-    fn test_log_default() {
-        let log = Log::default();
-
-        assert!(log.session_id.is_empty());
-        assert!(log.time.is_empty());
-        assert_eq!(log.level, LogLevel::INFO);
-        assert!(log.component.is_empty());
-        assert!(log.description.is_empty());
-        assert_eq!(log.format, LogFormat::CLF);
+        // Assert that individual fields match the expected values
+        assert_eq!(log_entry.session_id, expected_session_id);
+        assert_eq!(log_entry.time, expected_time);
+        assert_eq!(log_entry.level, expected_level);
+        assert_eq!(log_entry.component, expected_component);
+        assert_eq!(log_entry.description, expected_description);
+        assert_eq!(log_entry.format, expected_format);
     }
 }

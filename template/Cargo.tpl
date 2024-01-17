@@ -1,7 +1,7 @@
 [package]
 authors = ["{author} <{email}>"]
 build = "{build}"
-categories = ["{categories}"]
+categories = [{categories}]
 description = "{description}"
 documentation = "{documentation}"
 edition = "{edition}"
@@ -29,8 +29,7 @@ include = [
     "/LICENSE-MIT",
     "/README.md",
     "/src/**",
-    "/tests/**",
-    "/xtask/**",
+    "/tests/**"
 ]
 
 [[bench]]
@@ -42,13 +41,15 @@ path = "benches/criterion.rs"
 debug = true
 
 [dependencies]
-anyhow = "1.0.75"
-dtt = "0.0.4"
-serde = { version = "1.0.192", features = ["derive"] }
-serde_json = "1.0.108"
-serde_yaml = "0.9.27"
+anyhow = "1.0.79"
+dtt = "0.0.5"
+env_logger = "0.10.1"
+serde = { version = "1.0.195", features = ["derive"] }
+serde_json = "1.0.111"
+serde_yaml = "0.9.30"
 toml = "0.8.8"
-vrd = "0.0.4"
+vrd = "0.0.5"
+rlg = "0.0.2"
 
 [dev-dependencies]
 criterion = "0.5.1"

@@ -3,8 +3,8 @@ mod tests {
 
     extern crate libmake;
     use libmake::generator::{
-        generate_files, generate_from_csv,
-        generate_from_json, generate_from_yaml,
+        generate_files, generate_from_csv, generate_from_json,
+        generate_from_yaml,
     };
     use libmake::generator::{
         generate_from_config, FileGenerationParams,
@@ -24,6 +24,7 @@ mod tests {
     }
     // Unit test for the `generate_files()` function.
     #[test]
+    #[allow(clippy::redundant_clone)]
     fn test_generate_files() {
         let mut params = FileGenerationParams::new();
         params.output = Some("my_library".into());
