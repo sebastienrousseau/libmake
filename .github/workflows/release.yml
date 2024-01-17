@@ -51,7 +51,7 @@ jobs:
           - powerpc-unknown-linux-gnu # PowerPC Linux (kernel 3.2, glibc 2.17)
           - powerpc64-unknown-linux-gnu # PowerPC64 Linux (kernel 3.2, glibc 2.17)
           - powerpc64le-unknown-linux-gnu # PowerPC64le Linux (kernel 3.2, glibc 2.17)
-          - riscv64gc-unknown-linux-gnu # RISC-V Linux (kernel 3.2, glibc 2.17)
+          # - riscv64gc-unknown-linux-gnu # RISC-V Linux (kernel 3.2, glibc 2.17)
           - s390x-unknown-linux-gnu # s390x Linux (kernel 3.2, glibc 2.17)
           - x86_64-unknown-freebsd # 64-bit FreeBSD on x86-64
           - x86_64-unknown-linux-musl # 64-bit Linux (kernel 2.6.32+, musl libc)
@@ -112,9 +112,9 @@ jobs:
           - target: powerpc64le-unknown-linux-gnu
             os: ubuntu-latest
             cross: true
-          - target: riscv64gc-unknown-linux-gnu
-            os: ubuntu-latest
-            cross: true
+          # - target: riscv64gc-unknown-linux-gnu
+          #   os: ubuntu-latest
+          #   cross: true
           - target: s390x-unknown-linux-gnu
             os: ubuntu-latest
             cross: true
