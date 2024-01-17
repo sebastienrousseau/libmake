@@ -1,10 +1,17 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright notice and licensing information.
-// These lines indicate the copyright of the software and its licensing terms.
-// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
 // Copyright © 2024 LibMake. All rights reserved.
+
+//! This is an example crate for LibMake.
+//!
+//! This crate provides various modules and examples for demonstrating the functionality
+//! of LibMake. Each module focuses on a specific feature or functionality.
+//!
+//! Copyright © 2024 LibMake. All rights reserved.
+//!
+//! Dual-licensed under the terms of the Apache License, Version 2.0, or the MIT License,
+//! at your option. See the 'LICENSE' file for details.
 
 // Module Declarations
 // Each `mod` statement declares a module in the current crate.
@@ -43,15 +50,30 @@ mod get_yaml_field;
 
 /// The main function that runs all the example modules.
 fn main() {
-    // Each line calls the `main()` function from a different module.
-    // This executes the example associated with each module, demonstrating its functionality.
+    // Run the example module `generate_from_args`.
     generate_from_args::main();
+
+    // Run the example module `generate_from_config`.
     generate_from_config::main();
+
+    // Run the example module `generate_from_csv`.
     generate_from_csv::main();
+
+    // Run the example module `generate_from_json`.
     generate_from_json::main();
+
+    // Run the example module `generate_from_toml`.
     generate_from_toml::main();
+
+    // Run the example module `generate_from_yaml`.
     generate_from_yaml::main();
+
+    // Run the example module `get_csv_field`.
     get_csv_field::main();
+
+    // Run the example module `get_json_field`.
     get_json_field::main();
+
+    // Run the example module `get_yaml_field`.
     get_yaml_field::main();
 }

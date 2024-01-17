@@ -1,3 +1,8 @@
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
+
 //! # Test: Retrieving a CSV Field
 //!
 //! This is a test that demonstrates how to retrieve a specific field from a CSV file
@@ -31,6 +36,17 @@
 // Title: Test: Retrieving a CSV Field
 use libmake::utils::get_csv_field;
 
+/// Retrieve CSV field
+///
+/// # Arguments
+///
+/// * `file_path` - Path to CSV file
+/// * `index` - Index of field to retrieve
+///
+/// # Returns
+///
+/// String containing the requested field
+///
 pub fn main() {
     // Retrieve CSV field
     let file_path = "../tests/data/mylibrary.csv";

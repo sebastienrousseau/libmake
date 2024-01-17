@@ -7,6 +7,6 @@
 //!
 //! Currently, it only instructs Cargo to re-run this build script if `build.rs` is changed.
 fn main() {
-    // println!("cargo:rerun-if-changed=src/lib.rs");
-    // println!("cargo:rerun-if-changed=build.rs");
+     // Avoid unnecessary re-building.
+    println!("cargo:rerun-if-changed=build.rs");
 }

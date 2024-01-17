@@ -1,3 +1,8 @@
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
+
 //! # Test: Retrieving a Field from a JSON File
 //!
 //! This is a test that demonstrates how to retrieve a specific field from a JSON file
@@ -43,6 +48,17 @@
 use libmake::utils::get_json_field;
 use std::path::Path;
 
+/// Retrieve JSON field
+///
+/// # Arguments
+///
+/// * `file_path` - Path to the JSON file
+/// * `field_author` - Name of the JSON field to retrieve
+///
+/// # Returns
+///
+/// The value of the JSON field, or an empty string if the file does not exist or the field cannot be found
+///
 pub fn main() {
     // Retrieve JSON field
     let file_path = "../tests/data/mylibrary.json";
