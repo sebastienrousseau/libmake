@@ -2,6 +2,10 @@ name: 🧪 Release
 
 on: [push, pull_request]
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Build the project for all the targets and generate artifacts.
   build:
@@ -183,7 +187,7 @@ jobs:
       # Upload the binary for each target
       - name: Upload the binary
         id: upload-binary
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.TARGET }}.tar.gz
           path: target/package/${{ env.TARGET }}.tar.gz
@@ -278,7 +282,7 @@ jobs:
           VERSION: ${{ env.VERSION }}
         with:
           tag_name: v${{ env.VERSION }}
-          release_name: LibMake 🦀 v${{ env.VERSION }}
+          release_name: Libmake 🦀 v${{ env.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false
