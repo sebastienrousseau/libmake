@@ -1,7 +1,7 @@
 [package]
 authors = ["{author} <{email}>"]
 build = "{build}"
-categories = ["{categories}"]
+categories = [{categories}]
 description = "{description}"
 documentation = "{documentation}"
 edition = "{edition}"
@@ -43,6 +43,7 @@ debug = true
 [dependencies]
 anyhow = "1.0.79"
 dtt = "0.0.5"
+env_logger = "0.10.1"
 serde = { version = "1.0.195", features = ["derive"] }
 serde_json = "1.0.111"
 serde_yaml = "0.9.30"
