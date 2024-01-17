@@ -1,5 +1,7 @@
-// Copyright © 2023 xtasks. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0 OR MIT
+// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
 
 //! # `LibMake`
 //!
@@ -21,10 +23,10 @@
 //!
 //! ## Overview
 //!
-//! `LibMake` is a tool designed to quickly help creating high-quality
+//! `LibMake` is a tool designed to quickly help create high-quality
 //! Rust libraries by generating a set of pre-filled and pre-defined
 //! templated files. This opinionated boilerplate scaffolding tool aims
-//! to greatly reduces development time and minimizes repetitive tasks,
+//! to greatly reduce development time and minimize repetitive tasks,
 //! allowing you to focus on your business logic while enforcing
 //! standards, best practices, consistency, and providing style guides
 //! for your library.
@@ -42,7 +44,7 @@
 //!
 //! `LibMake` offers the following features and benefits:
 //!
-//! - Create your Rust library with ease using the command line
+//! - Create your Rust library with ease using the command-line
 //!   interface or by providing a configuration file in CSV, JSON, or
 //!   YAML format.
 //! - Rapidly generate new library projects with a pre-defined structure
@@ -77,11 +79,12 @@
 #![crate_type = "lib"]
 
 // Import necessary dependencies
+use crate::args::process_arguments;
 use crate::ascii::generate_ascii_art;
+use crate::cli::build;
+use crate::loggers::init_logger;
 use dtt::DateTime;
-use env_logger::Env;
-use rlg::macro_log;
-use rlg::{LogFormat, LogLevel};
+use rlg::{macro_log, LogFormat, LogLevel};
 use std::error::Error;
 use std::fs::File;
 use std::io::Write;
@@ -121,7 +124,6 @@ pub mod utils;
 /// }
 /// ```
 ///
-///
 /// # Errors
 ///
 /// This function will return an error in the following situations:
@@ -135,16 +137,10 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     let iso = date.iso_8601;
 
     // Initialize the logger using the `env_logger` crate
-    env_logger::Builder::from_env(
-        Env::default().default_filter_or("info"),
-    )
-    .format(|buf, record| {
-        writeln!(buf, "[{}] - {}", record.level(), record.args())
-    })
-    .init();
+    init_logger(None)?;
 
     // Open the log file for appending
-    let mut log_file = File::create("ssg.log")?;
+    let mut log_file = File::create("./ssg.log")?;
 
     // Generate ASCII art for the tool's CLI
     let log = macro_log!(
@@ -159,8 +155,8 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     writeln!(log_file, "{}", log)?;
 
     match generate_ascii_art("LibMake") {
-        Ok(ascii_art) => println!("{ascii_art}"),
-        Err(e) => eprintln!("Error generating ASCII art: {e}"),
+        Ok(ascii_art) => println!("{}", ascii_art),
+        Err(e) => eprintln!("Error generating ASCII art: {:?}", e),
     }
     let log = macro_log!(
         "id",
@@ -174,8 +170,8 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     writeln!(log_file, "{}", log)?;
 
     // Build the command-line interface and process the arguments
-    let matches = cli::build()?;
-    args::process_arguments(&matches)?;
+    let matches = build()?;
+    process_arguments(&matches)?;
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
     if std::env::args().len() == 1 {
