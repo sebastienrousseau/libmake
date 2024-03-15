@@ -62,33 +62,21 @@
 //! [`serde`]: https://github.com/serde-rs/serde
 //! [0]: https://minifunctions.com/libmake "Mini Functions"
 //!
-#![allow(clippy::must_use_candidate)]
 #![cfg_attr(feature = "bench", feature(test))]
-#![deny(dead_code)]
-#![deny(rustc::existing_doc_keyword)]
 #![doc(
     html_favicon_url = "https://kura.pro/libmake/images/favicon.ico",
     html_logo_url = "https://kura.pro/libmake/images/logos/libmake.svg",
     html_root_url = "https://docs.rs/libmake"
 )]
-#![forbid(missing_debug_implementations)]
-#![forbid(missing_docs)]
-#![forbid(unreachable_pub)]
-#![forbid(unsafe_code)]
 #![crate_name = "libmake"]
 #![crate_type = "lib"]
 
 // Import necessary dependencies
 use crate::args::process_arguments;
-use crate::ascii::generate_ascii_art;
-use crate::cli::build;
-use crate::loggers::init_logger;
+use crate::{ascii::generate_ascii_art, cli::build};
 use dtt::DateTime;
-use rlg::{macro_log, LogFormat, LogLevel};
-use std::error::Error;
-use std::fs::File;
-use std::io::Write;
-
+use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
+use std::{error::Error, fs::File, io::Write};
 /// The `args` module contains functions for processing command-line
 /// arguments.
 pub mod args;
@@ -103,8 +91,6 @@ pub mod generator;
 /// The `interface` module contains functions for displaying the
 /// interface.
 pub mod interface;
-/// The `loggers` module contains the loggers for the library.
-pub mod loggers;
 /// The `macros` module contains functions for generating macros.
 pub mod macros;
 /// The `utils` module contains a function for reading a CSV file at the
@@ -135,9 +121,6 @@ pub mod utils;
 pub fn run() -> Result<(), Box<dyn Error>> {
     let date = DateTime::new();
     let iso = date.iso_8601;
-
-    // Initialize the logger using the `env_logger` crate
-    init_logger(None)?;
 
     // Open the log file for appending
     let mut log_file = File::create("./ssg.log")?;
