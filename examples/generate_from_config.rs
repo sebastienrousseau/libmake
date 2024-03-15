@@ -49,7 +49,7 @@ use libmake::generator::generate_from_config;
 ///
 /// * `Ok(())` - If generation is successful.
 /// * `Err(String)` - If there is an error during generation.
-pub fn main() {
+pub(crate) fn main() {
     // Define the file path for the configuration file.
     let file_path = "./tests/data/mylibrary.yaml";
 

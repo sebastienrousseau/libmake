@@ -109,7 +109,7 @@ use std::path::Path;
 /// println!("🦀 get_yaml_field, ✅ {}: {}", field_keywords, value);
 /// ```
 ///
-pub fn main() {
+pub(crate) fn main() {
     let file_path = "../tests/data/mylibrary.yaml";
     let field_keywords = "keywords";
 

@@ -53,7 +53,7 @@ use libmake::generator::generate_from_args;
 /// If successful, this program will print "Successfully generated files!".
 ///
 /// If there is an error, it will print an error message.
-pub fn main() {
+pub(crate) fn main() {
     // Simulate command line arguments
     let args = "--author=Me --output=my_library"
         .split(' ')

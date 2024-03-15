@@ -47,7 +47,7 @@ use libmake::utils::get_csv_field;
 ///
 /// String containing the requested field
 ///
-pub fn main() {
+pub(crate) fn main() {
     // Retrieve CSV field
     let file_path = "../tests/data/mylibrary.csv";
     println!(
