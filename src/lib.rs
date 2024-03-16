@@ -134,7 +134,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     let uuid = Uuid::new_v4().to_string();
 
     // Open the log file for appending
-    let mut log_file = File::create("./ssg.log")?;
+    let mut log_file = File::create("./libmake.log")?;
 
     // Generate ASCII art for the tool's CLI
     let log = macro_log!(

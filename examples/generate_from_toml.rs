@@ -41,7 +41,7 @@ use libmake::generator::generate_from_toml;
 ///
 /// * `Result<(), String>` - Returns `Ok(())` if the template files are generated successfully, or returns an error message if generation fails.
 ///
-pub fn main() {
+pub(crate) fn main() {
     // Define the path to the TOML file containing configuration.
     let toml_file_path = "./tests/data/mylibrary.toml";
 

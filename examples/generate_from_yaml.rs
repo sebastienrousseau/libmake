@@ -42,7 +42,7 @@ use libmake::generator::generate_from_yaml;
 ///
 /// * `Result<(), String>` - Returns `Ok(())` if the template files are generated successfully, or returns an error message if there is an error during generation.
 ///
-pub fn main() {
+pub(crate) fn main() {
     // Specify the path to the YAML file to be used for generating templates.
     let yaml_file_path = "./tests/data/mylibrary.yaml";
 

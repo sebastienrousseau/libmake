@@ -59,7 +59,7 @@ use std::path::Path;
 ///
 /// The value of the JSON field, or an empty string if the file does not exist or the field cannot be found
 ///
-pub fn main() {
+pub(crate) fn main() {
     // Retrieve JSON field
     let file_path = "../tests/data/mylibrary.json";
     let field_author = "author";
