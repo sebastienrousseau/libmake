@@ -57,7 +57,7 @@ pub(crate) fn main() {
     // Simulate command line arguments
     let args = "--author=Me --output=my_library"
         .split(' ')
-        .map(std::string::ToString::to_string) // Directly using the method
+        .map(ToString::to_string) // Directly using the method
         .collect::<Vec<String>>();
 
     // Check if there are at least two arguments (program name and at least one option)
