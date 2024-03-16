@@ -51,7 +51,8 @@ pub(crate) fn main() {
     let json_file_path = "./tests/data/mylibrary.json";
 
     // Generate template files based on the data in the JSON file.
-    // If the generation process fails, an error message is printed.
-    generate_from_json(json_file_path)
-        .expect("Failed to generate the template files");
+    // If the generation process fails, print an error message.
+    if let Err(err) = generate_from_json(json_file_path) {
+        eprintln!("Failed to generate the template files: {err}");
+    }
 }

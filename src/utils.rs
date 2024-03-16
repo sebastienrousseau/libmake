@@ -4,6 +4,7 @@
 // Copyright © 2024 LibMake. All rights reserved.
 
 use std::env;
+use std::fs;
 use std::fs::File;
 use std::path::Path;
 
@@ -56,13 +57,37 @@ pub fn get_json_field(
     field_name: &str,
 ) -> String {
     file_path.map_or_else(String::new, |file_path| {
-        let file = File::open(Path::new(file_path)).unwrap();
-        let json: serde_json::Value =
-            serde_json::from_reader(file).unwrap();
-        json[field_name].to_string()
+        // Attempt to read the file into a string
+        match fs::read_to_string(Path::new(file_path)) {
+            Ok(file_content) => {
+                // Parse the JSON from the file content
+                let json: serde_json::Value =
+                    match serde_json::from_str(&file_content) {
+                        Ok(json) => json,
+                        Err(err) => {
+                            eprintln!("Error parsing JSON: {err}");
+                            return String::new(); // Return empty string on error
+                        }
+                    };
+
+                // Extract the value of the specified field from the JSON
+                json.get(field_name).map_or_else(
+                    || {
+                        eprintln!(
+                            "Field '{field_name}' not found in JSON"
+                        );
+                        String::new() // Return empty string if field not found
+                    },
+                    ToString::to_string, // Directly use the to_string method
+                )
+            }
+            Err(err) => {
+                eprintln!("Error reading file: {err}");
+                String::new() // Return empty string on error
+            }
+        }
     })
 }
-
 /// Retrieves a specific field's value from a YAML file.
 ///
 /// # Arguments
@@ -87,14 +112,13 @@ pub fn get_yaml_field(
     field_name: &str,
 ) -> String {
     file_path.map_or_else(String::new, |file_path| {
-        let file =
-            match File::open(Path::new(file_path)) {
-                Ok(file) => file,
-                Err(e) => {
-                    eprintln!("Error opening file: {e}");
-                    return String::new(); // Return a default value on error
-                }
-            };
+        let file = match File::open(Path::new(file_path)) {
+            Ok(file) => file,
+            Err(e) => {
+                eprintln!("Error opening file: {e}");
+                return String::new(); // Return a default value on error
+            }
+        };
 
         let yaml: serde_yaml::Value =
             match serde_yaml::from_reader(file) {
@@ -104,10 +128,14 @@ pub fn get_yaml_field(
                     return String::new(); // or handle the error as appropriate
                 }
             };
-        let field_value = &yaml[field_name];
-        let field_value_str =
-            serde_yaml::to_string(&field_value).unwrap();
-        field_value_str.trim().to_string()
+
+        match serde_yaml::to_string(&yaml[field_name]) {
+            Ok(field_value_str) => field_value_str.trim().to_string(),
+            Err(e) => {
+                eprintln!("Error serializing YAML: {e}");
+                String::new() // Return a default value on error
+            }
+        }
     })
 }
 

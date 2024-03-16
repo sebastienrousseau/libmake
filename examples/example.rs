@@ -3,12 +3,12 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
 // Copyright © 2024 LibMake. All rights reserved.
 
-//! This is an example crate for LibMake.
+//! This is an example crate for `LibMake`.
 //!
 //! This crate provides various modules and examples for demonstrating the functionality
-//! of LibMake. Each module focuses on a specific feature or functionality.
+//! of `LibMake`. Each module focuses on a specific feature or functionality.
 //!
-//! Copyright © 2024 LibMake. All rights reserved.
+//! Copyright © 2024 `LibMake`. All rights reserved.
 //!
 //! Dual-licensed under the terms of the Apache License, Version 2.0, or the MIT License,
 //! at your option. See the 'LICENSE' file for details.

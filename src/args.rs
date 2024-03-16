@@ -10,6 +10,8 @@ use crate::generator::{
     generate_from_json, generate_from_toml, generate_from_yaml,
 };
 use clap::ArgMatches;
+use dtt::DateTime;
+use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
 use std::error::Error;
 
 /// Processes the command line arguments provided to the program.
@@ -36,6 +38,11 @@ use std::error::Error;
 pub fn process_arguments(
     matches: &ArgMatches,
 ) -> Result<(), Box<dyn Error>> {
+    // Generating a new date and time and a new UUID.
+    let date = DateTime::new();
+    let iso = date.iso_8601;
+    let uuid = uuid::Uuid::new_v4().to_string();
+
     // Extracting optional argument values from the parsed matches.
     let author = matches.get_one::<String>("author").cloned();
     let build = matches.get_one::<String>("build").cloned();
@@ -57,8 +64,7 @@ pub fn process_arguments(
     let website = matches.get_one::<String>("website").cloned();
 
     // Check which subcommand was used and perform the corresponding action.
-    if matches.contains_id("csv") {
-        let csv_file_path = matches.get_one::<String>("csv").unwrap();
+    if let Some(csv_file_path) = matches.get_one::<String>("csv") {
         generate_from_csv(csv_file_path)?;
     } else if let Some(yaml_file_path) =
         matches.get_one::<String>("yml")
@@ -95,9 +101,23 @@ pub fn process_arguments(
             website,
         };
         generate_files(params)?;
-        println!("\n\nTemplate files generated successfully!");
+        macro_log!(
+            &uuid,
+            &iso,
+            &LogLevel::INFO,
+            "args",
+            "Template files generated successfully!",
+            &LogFormat::CLF
+        );
     } else {
-        println!("❌ No arguments provided. Please provide the required arguments to generate the template files.");
+        macro_log!(
+            &uuid,
+            &iso,
+            &LogLevel::ERROR,
+            "args",
+            "No arguments provided. Please provide the required arguments to generate the template files.",
+            &LogFormat::CLF
+        );
     }
 
     Ok(())

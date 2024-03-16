@@ -36,16 +36,30 @@
 //! Running this benchmark will provide performance metrics for the `run` function
 //! from the `libmake` crate, helping you evaluate and optimize its performance.
 
+//! This crate is responsible for benchmarking various components of the application.
 #![allow(missing_docs)]
-extern crate criterion;
-extern crate libmake;
-
 use criterion::{criterion_group, criterion_main, Criterion};
 use libmake::run;
 
+/// Benchmark function for the `run` function from the libmake library.
+///
+/// This function measures the performance of the `run` function.
+///
+/// # Arguments
+///
+/// * `c` - A mutable reference to a `Criterion` struct.
 fn libmake_benchmark(c: &mut Criterion) {
     c.bench_function("libmake", |b| b.iter(run));
 }
 
-criterion_group!(benches, libmake_benchmark);
+// Entry point for all benchmarks.
+criterion_group! {
+    // Name of the group.
+    name = benches;
+    // Description of the group.
+    config = Criterion::default();
+    // Targets of the group.
+    targets =  libmake_benchmark,
+}
+// Run benchmarks
 criterion_main!(benches);

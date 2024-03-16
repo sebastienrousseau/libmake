@@ -62,7 +62,12 @@ pub(crate) fn main() {
     let csv_file_path = "./tests/data/mylibrary.csv";
 
     // Attempt to generate template files from the specified CSV file.
-    // If successful, it indicates that the generation process worked as expected.
-    generate_from_csv(csv_file_path)
-        .expect("Failed to generate the template files");
+    match generate_from_csv(csv_file_path) {
+        Ok(()) => {
+            println!("Template files generated successfully!");
+        }
+        Err(err) => {
+            eprintln!("Failed to generate the template files: {err}");
+        }
+    }
 }

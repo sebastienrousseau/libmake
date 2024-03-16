@@ -47,6 +47,7 @@ pub(crate) fn main() {
     let yaml_file_path = "./tests/data/mylibrary.yaml";
 
     // Generate template files from the specified YAML file.
-    generate_from_yaml(yaml_file_path)
-        .expect("Failed to generate the template files");
+    if let Err(err) = generate_from_yaml(yaml_file_path) {
+        eprintln!("Failed to generate the template files: {err}");
+    }
 }

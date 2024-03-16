@@ -76,7 +76,11 @@ use crate::args::process_arguments;
 use crate::{ascii::generate_ascii_art, cli::build};
 use dtt::DateTime;
 use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
+#[allow(unused_imports)]
+use vrd::random::Random;
+// use rlg::macro_info_log;
 use std::{error::Error, fs::File, io::Write};
+
 /// The `args` module contains functions for processing command-line
 /// arguments.
 pub mod args;
@@ -121,13 +125,14 @@ pub mod utils;
 pub fn run() -> Result<(), Box<dyn Error>> {
     let date = DateTime::new();
     let iso = date.iso_8601;
+    let uuid = uuid::Uuid::new_v4().to_string();
 
     // Open the log file for appending
     let mut log_file = File::create("./ssg.log")?;
 
     // Generate ASCII art for the tool's CLI
     let log = macro_log!(
-        "id",
+        &uuid,
         &iso,
         &LogLevel::INFO,
         "deps",
@@ -135,14 +140,14 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         &LogFormat::CLF
     );
     // Write the log to both the console and the file
-    writeln!(log_file, "{}", log)?;
+    writeln!(log_file, "{log}")?;
 
     match generate_ascii_art("LibMake") {
-        Ok(ascii_art) => println!("{}", ascii_art),
-        Err(e) => eprintln!("Error generating ASCII art: {:?}", e),
+        Ok(ascii_art) => println!("{ascii_art}"),
+        Err(e) => eprintln!("Error generating ASCII art: {e:?}"),
     }
     let log = macro_log!(
-        "id",
+        &uuid,
         &iso,
         &LogLevel::INFO,
         "deps",
@@ -150,7 +155,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         &LogFormat::CLF
     );
     // Write the log to both the console and the file
-    writeln!(log_file, "{}", log)?;
+    writeln!(log_file, "{log}")?;
 
     // Build the command-line interface and process the arguments
     let matches = build()?;
@@ -158,8 +163,13 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
     if std::env::args().len() == 1 {
-        eprintln!(
-            "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
+        macro_log!(
+            &uuid,
+            &iso,
+            &LogLevel::INFO,
+            "cli",
+            "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.",
+            &LogFormat::CLF
         );
     }
 

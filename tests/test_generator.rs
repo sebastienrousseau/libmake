@@ -29,12 +29,11 @@ fn test_get_csv_field() {
 fn test_get_json_field() {
     let file_path = "./tests/data/mylibrary.json";
     let field_name = "mylibrary";
-    let value =
-        if Path::new(file_path).exists() {
-            get_json_field(Some(file_path), field_name)
-        } else {
-            String::new()
-        };
+    let value = if Path::new(file_path).exists() {
+        get_json_field(Some(file_path), field_name)
+    } else {
+        String::new()
+    };
     assert_eq!(value, "null");
 }
 
@@ -44,59 +43,61 @@ fn test_get_json_field() {
 fn test_get_yaml_field() {
     let file_path = "./tests/data/mylibrary.yaml";
     let field_name = "mylibrary";
-    let value =
-        if Path::new(file_path).exists() {
-            get_yaml_field(Some(file_path), field_name)
-        } else {
-            String::new()
-        };
+    let value = if Path::new(file_path).exists() {
+        get_yaml_field(Some(file_path), field_name)
+    } else {
+        String::new()
+    };
     assert_eq!(value, "null");
 }
 
-/// Tests the `generate_from_config` function by passing a YAML file
-/// path and a file type, and checking if the function runs without errors.
+/// Tests the `generate_from_config` function by passing a YAML file path
+/// and a file type, and checking if the function runs without errors.
 #[test]
-fn test_generate_from_config() {
+fn test_generate_from_config_yaml() -> Result<(), io::Error> {
     let file_path = "./tests/data/mylibrary.yaml";
     let file_type = "yaml";
-    generate_from_config(file_path, file_type).unwrap();
-    assert_eq!(true, true); // If we get here without panicking, the test has passed
+    generate_from_config(file_path, file_type)?;
+    Ok(())
 }
 
 /// Tests the `generate_from_config` function by passing a CSV file path
 /// and a file type, and checking if the function runs without errors.
 #[test]
-fn test_generate_from_csv() {
+fn test_generate_from_config_csv() -> Result<(), io::Error> {
     let file_path = "./tests/data/mylibrary.csv";
-    generate_from_config(file_path, "csv").unwrap();
-    assert_eq!(true, true); // If we get here without panicking, the test has passed
+    let file_type = "csv";
+    generate_from_config(file_path, file_type)?;
+    Ok(())
 }
 
-/// Tests the `generate_from_config` function by passing a JSON file
-/// path and a file type, and checking if the function runs without errors.
+/// Tests the `generate_from_config` function by passing a JSON file path
+/// and a file type, and checking if the function runs without errors.
 #[test]
-fn test_generate_from_json() {
+fn test_generate_from_config_json() -> Result<(), io::Error> {
     let file_path = "./tests/data/mylibrary.json";
-    generate_from_config(file_path, "json").unwrap();
-    assert_eq!(true, true); // If we get here without panicking, the test has passed
+    let file_type = "json";
+    generate_from_config(file_path, file_type)?;
+    Ok(())
 }
 
 /// Tests the `generate_from_yaml` function by passing a YAML file path
 /// and checking if the function runs without errors.
 #[test]
-fn test_generate_from_yaml() {
+fn test_generate_from_yaml() -> Result<(), io::Error> {
     let file_path = "./tests/data/mylibrary.yaml";
-    generate_from_yaml(file_path).unwrap();
-    assert_eq!(true, true); // If we get here without panicking, the test has passed
+    generate_from_yaml(file_path)?;
+    Ok(())
 }
 
 /// Tests the `generate_from_toml` function by passing a TOML file path
 /// and checking if the function runs without errors.
 #[test]
-fn generate_from_toml() {
+fn test_generate_from_toml() -> Result<(), io::Error> {
     let file_path = "./tests/data/mylibrary.toml";
-    generate_from_config(file_path, "toml").unwrap();
-    assert_eq!(true, true); // If we get here without panicking, the test has passed
+    let file_type = "toml";
+    generate_from_config(file_path, file_type)?;
+    Ok(())
 }
 
 /// Tests the `generate_from_args` function by passing a string of
@@ -151,20 +152,29 @@ fn test_from_args() {
 fn test_assert_generate_files() {
     let temp_dir = std::env::temp_dir().join("my_library");
     let mut params = FileGenerationParams::new();
-    params.output =
-        Some(temp_dir.as_path().to_str().unwrap().to_owned());
+
+    params.output = temp_dir.as_path().to_str().map_or_else(
+        || {
+            // Handle the case when the conversion to string fails
+            eprintln!("Failed to convert path to string");
+            None
+        },
+        |path_str| Some(path_str.to_owned()),
+    );
 }
 
 #[test]
 #[allow(clippy::redundant_clone)]
-fn test_generate_files() {
+fn test_generate_files() -> std::io::Result<()> {
     // Create a temporary directory
-    let temp_directory = tempdir();
-    let temp_path = temp_directory.unwrap().path().to_owned();
+    let temp_directory = tempdir()?;
+
+    // Get the path of the temporary directory
+    let temp_path = temp_directory.path().to_owned();
 
     // Set up the parameters for file generation
     let mut params = FileGenerationParams::new();
-    params.output = Some(temp_path.to_str().unwrap().to_owned());
+    params.output = Some(temp_path.to_str().ok_or_else(|| std::io::Error::new(std::io::ErrorKind::Other, "Failed to convert temporary directory path to string"))?.to_owned());
 
     // Call the function you want to test
     assert_generate_files!(params.clone());
@@ -173,7 +183,8 @@ fn test_generate_files() {
     assert!(temp_path.exists());
 
     // Clean up: Remove the temporary directory and its contents
-    std::fs::remove_dir_all(temp_path).unwrap();
+    std::fs::remove_dir_all(temp_path)?;
+    Ok(())
 }
 
 /// Tests the `create_directory` function by passing an invalid path and
@@ -182,7 +193,7 @@ fn test_generate_files() {
 fn test_create_directory_error() -> io::Result<()> {
     // Create a temporary directory for testing
     let temp_dir = env::current_dir()?.join("valid_path");
-    std::fs::create_dir(&temp_dir)?;
+    std::fs::create_dir_all(&temp_dir)?;
 
     // Attempt to create the directory again using create_directory with an invalid path
     let result = create_directory(&temp_dir.join("invalid_path/test"));

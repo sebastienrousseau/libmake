@@ -200,7 +200,7 @@ impl FileGenerationParams {
 /// or other I/O-related errors.
 ///
 pub fn create_directory(path: &Path) -> io::Result<()> {
-    fs::create_dir(path).or_else(|e| match e.kind() {
+    fs::create_dir_all(path).or_else(|e| match e.kind() {
         io::ErrorKind::AlreadyExists => Ok(()),
         _ => Err(e),
     })
@@ -223,28 +223,27 @@ pub fn create_template_folder() -> io::Result<()> {
     // println!("Creating template directory: {:?}", template_dir_path);
     create_directory(&template_dir_path)?;
     let url = "https://raw.githubusercontent.com/sebastienrousseau/libmake/main/template/";
-    let files =
-        [
-            "AUTHORS.tpl",
-            "build.tpl",
-            "Cargo.tpl",
-            "ci.tpl",
-            "CONTRIBUTING.tpl",
-            "criterion.tpl",
-            "deepsource.tpl",
-            "deny.tpl",
-            "example.tpl",
-            "gitignore.tpl",
-            "lib.tpl",
-            "loggers.tpl",
-            "macros.tpl",
-            "main.tpl",
-            "README.tpl",
-            "rustfmt.tpl",
-            "TEMPLATE.tpl",
-            "test.tpl",
-            "test_loggers.tpl",
-        ];
+    let files = [
+        "AUTHORS.tpl",
+        "build.tpl",
+        "Cargo.tpl",
+        "ci.tpl",
+        "CONTRIBUTING.tpl",
+        "criterion.tpl",
+        "deepsource.tpl",
+        "deny.tpl",
+        "example.tpl",
+        "gitignore.tpl",
+        "lib.tpl",
+        "loggers.tpl",
+        "macros.tpl",
+        "main.tpl",
+        "README.tpl",
+        "rustfmt.tpl",
+        "TEMPLATE.tpl",
+        "test.tpl",
+        "test_loggers.tpl",
+    ];
     for file in &files {
         let file_path = template_dir_path.join(file);
         // Check if the file already exists
@@ -351,15 +350,14 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     create_template_folder()?;
 
     // Define the subdirectories to be created within the project directory
-    let subdirectories =
-        [
-            "src",
-            "benches",
-            "examples",
-            "tests",
-            ".github/",
-            ".github/workflows",
-        ];
+    let subdirectories = [
+        "src",
+        "benches",
+        "examples",
+        "tests",
+        ".github/",
+        ".github/workflows",
+    ];
 
     // Iterate over the subdirectories and create them
     for subdir in &subdirectories {
@@ -643,9 +641,9 @@ pub fn generate_from_json(path: &str) -> std::io::Result<()> {
 pub fn generate_from_yaml(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_yaml::from_str(&contents)
-        .map_err(
-            |e| std::io::Error::new(std::io::ErrorKind::Other, e)
-        )?;
+        .map_err(|e| {
+            std::io::Error::new(std::io::ErrorKind::Other, e)
+        })?;
     generate_files(params)?;
     Ok(())
 }
@@ -684,9 +682,9 @@ pub fn generate_from_yaml(path: &str) -> std::io::Result<()> {
 pub fn generate_from_toml(path: &str) -> std::io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = toml::from_str(&contents)
-        .map_err(
-            |e| std::io::Error::new(std::io::ErrorKind::Other, e)
-        )?;
+        .map_err(|e| {
+            std::io::Error::new(std::io::ErrorKind::Other, e)
+        })?;
     generate_files(params)?;
     Ok(())
 }

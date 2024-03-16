@@ -55,9 +55,16 @@ mod tests {
     // Unit test for the `assert_create_directory!()` macro.
     #[test]
     fn test_assert_create_directory() {
-        assert_create_directory!("./target/tmp");
-        let _ = std::fs::remove_dir_all("./target/tmp");
+        // Create directory
+        let dir_path = "./target/tmp";
+        assert_create_directory!(dir_path);
+
+        // Remove directory
+        if let Err(err) = std::fs::remove_dir_all(dir_path) {
+            eprintln!("Failed to remove directory: {err}");
+        }
     }
+
     // Unit test for the `assert_generate_from_csv!()` macro.
     #[test]
     fn test_assert_generate_from_csv() {

@@ -46,7 +46,8 @@ pub(crate) fn main() {
     let toml_file_path = "./tests/data/mylibrary.toml";
 
     // Generate template files based on the configuration in the TOML file.
-    // If generation fails, it will print an error message.
-    generate_from_toml(toml_file_path)
-        .expect("Failed to generate the template files");
+    // If generation fails, print an error message.
+    if let Err(err) = generate_from_toml(toml_file_path) {
+        eprintln!("Failed to generate the template files: {err}");
+    }
 }

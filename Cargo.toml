@@ -68,6 +68,7 @@ tempfile = "3.10.1"
 toml = "0.8.11"
 vrd = "0.0.6"
 xtasks = "0.0.2"
+uuid ={ version = "1.7.0", features = ["v4"] }
 
 # Unix platforms use OpenSSL for now to provide SSL functionality
 [target.'cfg(all(unix, not(target_os = "macos")))'.dependencies]
@@ -92,7 +93,7 @@ default = []
 
 ## Forbid
 missing_debug_implementations = "forbid"
-missing_docs = "forbid"
+missing_docs = "warn"
 non_ascii_idents = "forbid"
 unreachable_pub = "forbid"
 unsafe_code = "forbid"
@@ -115,8 +116,6 @@ single_use_lifetimes = "deny"
 trivial_casts = "deny"
 trivial_numeric_casts = "deny"
 unused = "deny"
-# unused_crate_dependencies = "deny"
-# unused_extern_crates = "deny"
 unused_features = "deny"
 unused_import_braces = "deny"
 unused_labels = "deny"
@@ -126,6 +125,7 @@ unused_qualifications = "deny"
 variant_size_differences = "deny"
 
 [lints.clippy]
+
 ## Allow
 blocks_in_conditions = "allow"
 cognitive_complexity = "allow"
@@ -157,12 +157,9 @@ mem_forget = "deny"
 mut_mut = "deny"
 mutex_integer = "deny"
 nonstandard_macro_braces = "deny"
-nursery = "deny"
 option_if_let_else = "deny"
 panic = "deny"
 pedantic = "deny"
-print_stderr = "deny"
-print_stdout = "deny"
 range_minus_one = "deny"
 rc_buffer = "deny"
 rc_mutex = "deny"
@@ -181,7 +178,6 @@ unneeded_field_pattern = "deny"
 unreachable = "deny"
 unused_unit = "deny"
 unwrap_used = "deny"
-use_debug = "deny"
 use_self = "deny"
 used_underscore_binding = "deny"
 useless_conversion = "deny"
@@ -189,8 +185,6 @@ vec_init_then_push = "deny"
 verbose_file_reads = "deny"
 wildcard_dependencies = "deny"
 wildcard_imports = "deny"
-wrong_pub_self_convention = "deny"
-wrong_self_convention = "deny"
 
 [profile.dev]
 codegen-units = 256

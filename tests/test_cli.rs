@@ -1,10 +1,13 @@
+// Import the necessary function for building CLI arguments
+use libmake::cli::build;
+
 #[cfg(test)]
 mod tests {
-    use libmake::cli::build;
+    use super::*;
 
     #[test]
     // Test that the arguments for the build CLI are correctly set
-    fn test_build_cli_args() {
+    fn test_build_cli_args() -> Result<(), String> {
         // Define the expected argument values
         let arg_specs = [
             ("author", "Me"),
@@ -27,12 +30,15 @@ mod tests {
         ];
 
         // Call the build_cli function to get the command-line arguments
-        let args = build().unwrap();
+        let args_result = build().map_err(|err| {
+            format!("Failed to get command-line arguments: {err}")
+        })?;
 
         // Iterate through the expected argument values
         for (arg_name, expected_value) in &arg_specs {
             // Get the actual value for the argument
-            let arg_value: Option<&String> = args.get_one(arg_name);
+            let arg_value: Option<&String> =
+                args_result.get_one(arg_name);
 
             // Compare the actual and expected values
             assert_eq!(
@@ -41,5 +47,7 @@ mod tests {
                 "Incorrect value for argument {arg_name}",
             );
         }
+
+        Ok(()) // Return Ok if all assertions pass
     }
 }
