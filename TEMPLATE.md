@@ -4,7 +4,8 @@
 alt="LibMake logo" width="261" align="right" />
 
 <!-- markdownlint-enable MD033 MD041 -->
-# LibMake v0.2.2 🦀
+
+## LibMake v0.2.2 🦀
 
 A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 
