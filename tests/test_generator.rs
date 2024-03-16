@@ -103,7 +103,7 @@ fn generate_from_toml() {
 fn test_generate_from_args() {
     let args = "--author=Me --output=my_library"
         .split(' ')
-        .map(std::string::ToString::to_string)
+        .map(ToString::to_string)
         .collect::<Vec<String>>();
 
     let args_str = args[1..].join(" ");
@@ -133,7 +133,7 @@ fn test_from_args() {
                                 --version= \
                                 --website="
         .split(' ')
-        .map(std::string::ToString::to_string) // Replaced the closure with the method directly
+        .map(ToString::to_string) // Replaced the closure with the method directly
         .collect::<Vec<String>>();
 
     let args_str = args[1..].join(" ");
@@ -147,7 +147,7 @@ fn test_from_args() {
 /// without errors.
 #[test]
 fn test_assert_generate_files() {
-    let temp_dir = std::env::temp_dir().join("my_library");
+    let temp_dir = env::temp_dir().join("my_library");
     let mut params = FileGenerationParams::new();
     params.output =
         Some(temp_dir.as_path().to_str().unwrap().to_owned());
