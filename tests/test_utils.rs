@@ -88,7 +88,7 @@ mod tests {
         );
         assert_eq!(
             get_csv_field(Some(file_path), 15),
-            Some(vec!["0.2.1".to_string()])
+            Some(vec!["0.2.2".to_string()])
         );
         assert_eq!(
             get_csv_field(Some(file_path), 16),

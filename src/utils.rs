@@ -87,14 +87,13 @@ pub fn get_yaml_field(
     field_name: &str,
 ) -> String {
     file_path.map_or_else(String::new, |file_path| {
-        let file =
-            match File::open(Path::new(file_path)) {
-                Ok(file) => file,
-                Err(e) => {
-                    eprintln!("Error opening file: {e}");
-                    return String::new(); // Return a default value on error
-                }
-            };
+        let file = match File::open(Path::new(file_path)) {
+            Ok(file) => file,
+            Err(e) => {
+                eprintln!("Error opening file: {e}");
+                return String::new(); // Return a default value on error
+            }
+        };
 
         let yaml: serde_yaml::Value =
             match serde_yaml::from_reader(file) {
