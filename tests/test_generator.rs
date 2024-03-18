@@ -32,9 +32,9 @@ fn test_get_json_field() {
     let value = if Path::new(file_path).exists() {
         get_json_field(Some(file_path), field_name)
     } else {
-        String::new()
+        Ok(String::new()) // Wrap the String in Ok
     };
-    assert_eq!(value, "null");
+    assert_eq!(value.unwrap(), "null".to_string()); // Unwrap the value and compare with "null"
 }
 
 /// Tests the `get_yaml_field` function by passing a YAML file path and
@@ -46,9 +46,9 @@ fn test_get_yaml_field() {
     let value = if Path::new(file_path).exists() {
         get_yaml_field(Some(file_path), field_name)
     } else {
-        String::new()
+        Ok(String::new()) // Wrapping the String in Ok to match the expected type
     };
-    assert_eq!(value, "null");
+    assert_eq!(value.unwrap(), "null".to_string()); // Unwrap the value and compare with "null"
 }
 
 /// Tests the `generate_from_config` function by passing a YAML file

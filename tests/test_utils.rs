@@ -8,6 +8,8 @@ mod tests {
     #[test]
     fn test_get_csv_field() {
         let file_path = "./tests/data/mylibrary.csv";
+
+        // Test with valid field index
         let field_index = 0;
         let expected_value = Some(vec!["Me".to_string()]);
         let actual_value = get_csv_field(Some(file_path), field_index);
@@ -15,21 +17,22 @@ mod tests {
 
         // Test with invalid field index
         let field_index = 100;
-        let expected_value = Some(vec![String::new()]);
+        let expected_value = None;
         let actual_value = get_csv_field(Some(file_path), field_index);
         assert_eq!(expected_value, actual_value);
     }
+
     // Unit test for the `get_csv_fields()` function.
     #[test]
     fn test_get_csv_fields() {
         let file_path = "./tests/data/mylibrary.csv";
 
         // Test the function with various input values
-        assert_eq!(file_path, "./tests/data/mylibrary.csv");
         assert_eq!(
             get_csv_field(Some(file_path), 0),
             Some(vec!["Me".to_string()])
         );
+        print!("{:?}", get_csv_field(Some(file_path), 0));
         assert_eq!(
             get_csv_field(Some(file_path), 1),
             Some(vec!["build.rs".to_string()])
@@ -95,45 +98,67 @@ mod tests {
             Some(vec!["https://test.com".to_string()])
         );
     }
+
     // Unit test for the `get_json_field()` function.
     #[test]
     fn test_get_json_field_existing() {
-        let file_path = None;
-        let field_name = "null";
-        let expected_value = "";
-        let actual_value = get_json_field(file_path, field_name);
+        let file_path = Some("./tests/data/mylibrary.json");
+        let field_name = "name";
+        let expected_value = Ok("my_library".to_string());
+        let actual_value = get_json_field(file_path, field_name)
+            .map_err(|err| err.to_string());
         assert_eq!(expected_value, actual_value);
     }
+
     // Unit test for the `get_yaml_field()` function.
     #[test]
     fn test_get_yaml_field_existing() {
-        let file_path = None;
-        let field_name = "null";
-        let expected_value = "";
-        let actual_value = get_yaml_field(file_path, field_name);
+        let file_path = Some("./tests/data/mylibrary.yaml");
+        let field_name = "description";
+        let expected_value =
+            Ok("A library for doing things".to_string());
+        let actual_value = get_yaml_field(file_path, field_name)
+            .map_err(|err| err.to_string());
         assert_eq!(expected_value, actual_value);
     }
+
+    // Unit test for the `get_config_field()` function.
     // Unit test for the `get_config_field()` function.
     #[test]
     fn test_get_config_field_existing() {
-        let file_path = None;
-        let field_name = "nonexistent";
-        let expected_value = "";
-
+        let file_path = Some("./tests/data/mylibrary.yaml");
+        let field_name = "license";
+        let expected_value = "MIT OR Apache-2.0";
         let actual_yaml_value =
-            get_config_field(file_path, Some("yaml"), field_name);
+            get_config_field(file_path, Some("yaml"), field_name)
+                .unwrap_or_else(|_| {
+                    panic!("Failed to get config field: {}", field_name)
+                });
+
         assert_eq!(expected_value, actual_yaml_value);
 
+        let json_file_path = Some("./tests/data/mylibrary.json");
         let actual_json_value =
-            get_config_field(file_path, Some("json"), field_name);
+            get_config_field(json_file_path, Some("json"), field_name)
+                .map_err(|err| err.to_string())
+                .unwrap();
         assert_eq!(expected_value, actual_json_value);
 
-        let actual_empty_value =
-            get_config_field(None, None, field_name);
-        assert_eq!(expected_value, actual_empty_value);
+        // Test with an empty file format
+        let actual_empty_format_value =
+            get_config_field(file_path, None, field_name)
+                .map_err(|err| err.to_string())
+                .unwrap_err();
+        assert_eq!(
+            actual_empty_format_value,
+            "File format is not provided"
+        );
 
-        let actual_unknown_value =
-            get_config_field(file_path, Some("unknown"), field_name);
-        assert_eq!(expected_value, actual_unknown_value);
+        // Test with an unknown file format
+        let actual_unknown_format_value =
+            get_config_field(file_path, Some("unknown"), field_name)
+                .map_err(|err| err.to_string())
+                .unwrap_err();
+        assert_eq!(actual_unknown_format_value, "Unsupported file format: unknown. Supported formats are 'json' and 'yaml'.");
     }
 }

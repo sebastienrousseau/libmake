@@ -7,7 +7,7 @@ edition: '2021'
 email: test@test.com
 homepage: https://test.com
 keywords: "'keyword 1','keyword 2','keyword 3'"
-license: MIT OR Apache-2.0
+license: 'MIT OR Apache-2.0'
 name: my_library
 output: my_library
 readme: README.md
