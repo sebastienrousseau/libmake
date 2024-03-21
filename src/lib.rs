@@ -110,16 +110,6 @@ pub mod utils;
 /// Initializes the logger with a file logger and a terminal logger and processes
 /// command-line arguments to generate the new library.
 ///
-/// # Examples
-///
-/// ```
-/// use libmake::run;
-///
-/// if let Err(e) = run() {
-///     eprintln!("Application error: {}", e);
-/// }
-/// ```
-///
 /// # Errors
 ///
 /// This function will return an error in the following situations:

@@ -13,7 +13,7 @@
     "output": "my_library",
     "readme": "README.md",
     "repository": "https://github.com/test/test",
-    "rustversion": "1.71.1",
+    "rustversion": "1.75.0",
     "version": "0.2.2",
     "website": "https://test.com"
 }

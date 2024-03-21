@@ -51,10 +51,12 @@ The library is designed to be used as a command-line tool. It is available on [C
     - [Documentation](#documentation)
   - [Usage](#usage)
     - [Command-line interface](#command-line-interface)
-      - [Generate a new library using a CSV file](#generate-a-new-library-using-a-csv-file)
-      - [Generate a new library using a JSON file](#generate-a-new-library-using-a-json-file)
-      - [Generate a new library using a TOML file](#generate-a-new-library-using-a-toml-file)
-      - [Generate a new library using a YAML file](#generate-a-new-library-using-a-yaml-file)
+      - [Passing a configuration file](#passing-a-configuration-file)
+        - [Generate a new library using a CSV file](#generate-a-new-library-using-a-csv-file)
+        - [Generate a new library using an INI file](#generate-a-new-library-using-an-ini-file)
+        - [Generate a new library using a JSON file](#generate-a-new-library-using-a-json-file)
+        - [Generate a new library using a TOML file](#generate-a-new-library-using-a-toml-file)
+        - [Generate a new library using a YAML file](#generate-a-new-library-using-a-yaml-file)
       - [Generate a new library using the command-line interface (CLI) directly](#generate-a-new-library-using-the-command-line-interface-cli-directly)
     - [Examples](#examples)
   - [Semantic Versioning Policy](#semantic-versioning-policy)
@@ -99,7 +101,7 @@ libmake --help
 
 ### Requirements
 
-The minimum supported Rust toolchain version is currently Rust `1.71.1` or later (stable).
+The minimum supported Rust toolchain version is currently Rust `1.75.0` or later (stable).
 
 `LibMake` is supported and has been tested on the following platforms:
 
@@ -149,7 +151,9 @@ support additional platforms, please submit a pull request.
 
 `LibMake` provides a command-line interface to generate a new library project. There are a few options available to help you get started.
 
-#### Generate a new library using a CSV file
+#### Passing a configuration file
+
+##### Generate a new library using a CSV file
 
 The following command generates a library template from a CSV file.
 
@@ -157,16 +161,33 @@ Have a look at the `tests/data/mylibrary.csv` file for an example and
 feel free to use it for your own library as a template.
 
 ```shell
-libmake --csv tests/data/mylibrary.csv
+libmake file --csv tests/data/mylibrary.csv
 ```
 
 or locally if you have cloned the repository:
 
 ```shell
-cargo run -- --csv tests/data/mylibrary.csv
+cargo run -- file --csv tests/data/mylibrary.csv
 ```
 
-#### Generate a new library using a JSON file
+##### Generate a new library using an INI file
+
+The following command generates a library template from an INI file.
+
+Have a look at the `tests/data/mylibrary.ini` file for an example and
+feel free to use it for your own library as a template.
+
+```shell
+libmake file --ini tests/data/mylibrary.ini
+```
+
+or locally if you have cloned the repository:
+
+```shell
+cargo run -- file --ini tests/data/mylibrary.ini
+```
+
+##### Generate a new library using a JSON file
 
 The following command generates a library template from a JSON file.
 
@@ -174,16 +195,16 @@ Have a look at the `tests/data/mylibrary.json` file for an example and
 feel free to use it for your own library as a template.
 
 ```shell
-libmake --json tests/data/mylibrary.json
+libmake file --json tests/data/mylibrary.json
 ```
 
 or locally if you have cloned the repository:
 
 ```shell
-cargo run -- --json tests/data/mylibrary.json
+cargo run -- file --json tests/data/mylibrary.json
 ```
 
-#### Generate a new library using a TOML file
+##### Generate a new library using a TOML file
 
 The following command generates a library template from a TOML file.
 
@@ -191,16 +212,16 @@ Have a look at the `tests/data/mylibrary.toml` file for an example and
 feel free to use it for your own library as a template.
 
 ```shell
-libmake --toml tests/data/mylibrary.toml
+libmake file --toml tests/data/mylibrary.toml
 ```
 
 or locally if you have cloned the repository:
 
 ```shell
-cargo run -- --toml tests/data/mylibrary.toml
+cargo run -- file --toml tests/data/mylibrary.toml
 ```
 
-#### Generate a new library using a YAML file
+##### Generate a new library using a YAML file
 
 The following command generates a library template from a YAML file.
 
@@ -208,13 +229,13 @@ Have a look at the `tests/data/mylibrary.yaml` file for an example and
 feel free to use it for your own library as a template.
 
 ```shell
-libmake --yml tests/data/mylibrary.yaml
+libmake file --yaml tests/data/mylibrary.yaml
 ```
 
 or locally if you have cloned the repository:
 
 ```shell
-cargo run -- --yml tests/data/mylibrary.yaml
+cargo run -- file --yaml tests/data/mylibrary.yaml
 ```
 
 #### Generate a new library using the command-line interface (CLI) directly
@@ -223,7 +244,7 @@ The following command generates a library template using the command-line
 interface.
 
 ```shell
-libmake \
+libmake manual\
     --author "John Smith" \
     --build "build.rs" \
     --categories "['category 1', 'category 2', 'category 3']" \
@@ -238,7 +259,7 @@ libmake \
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.71.1" \
+    --rustversion "1.75.0" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
@@ -246,7 +267,7 @@ libmake \
 or locally if you have cloned the repository:
 
 ```shell
-cargo run -- --author "John Smith" \
+cargo run -- manual --author "John Smith" \
     --build "build.rs" \
     --categories "['category 1', 'category 2', 'category 3']" \
     --description "A Rust library for doing cool things" \
@@ -260,7 +281,7 @@ cargo run -- --author "John Smith" \
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.71.1" \
+    --rustversion "1.75.0" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
@@ -276,6 +297,7 @@ To run the examples, clone the repository and run the following command in your 
 | `generate_from_args` | Generates a library template using the command-line interface. | `cargo run --example generate_from_args` |
 | `generate_from_config` | Generates a library template from a configuration file. | `cargo run --example generate_from_config` |
 | `generate_from_csv` | Generates a library template from a CSV file. | `cargo run --example generate_from_csv` |
+| `generate_from_ini` | Generates a library template from an INI file. | `cargo run --example generate_from_ini` |
 | `generate_from_json` | Generates a library template from a JSON file. | `cargo run --example generate_from_json` |
 | `generate_from_toml` | Generates a library template from a TOML file. | `cargo run --example generate_from_toml` |
 | `generate_from_yaml` | Generates a library template from a YAML file. | `cargo run --example generate_from_yaml` |
