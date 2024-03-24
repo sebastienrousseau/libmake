@@ -5,10 +5,18 @@
 
 use super::interface::replace_placeholders;
 use serde::{Deserialize, Serialize};
+use serde_ini::from_str;
 use std::{
     fs, io,
     path::{Path, PathBuf},
 };
+
+use crate::macro_generate_from_csv;
+use crate::macro_generate_from_ini;
+use crate::macro_generate_from_json;
+use crate::macro_generate_from_yaml;
+use crate::macro_generate_from_toml;
+use crate::macro_generate_files;
 
 /// Structure for holding the parameters for generating the project files.
 ///
@@ -294,8 +302,6 @@ pub fn create_template_folder() -> io::Result<()> {
 /// - If the destination file cannot be created or written to.
 /// - If there is an error in replacing placeholders in the destination file.
 ///
-/// The specific error will provide more details about what went wrong.
-///
 pub fn copy_and_replace_template(
     template_file: &str,
     dest_file: &str,
@@ -461,21 +467,21 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 /// - There are issues parsing the configuration file into the `FileGenerationParams` struct.
 /// - Any errors occur during the file generation process based on the configuration.
 ///
-pub fn generate_from_config(
-    path: &str,
-    file_type: &str,
-) -> io::Result<()> {
+pub fn generate_from_config(path: &str, file_type: &str) -> Result<(), String> {
     match file_type {
-        "csv" => generate_from_csv(path),
-        "ini" => generate_from_ini(path),
-        "json" => generate_from_json(path),
-        "yaml" => generate_from_yaml(path),
-        "toml" => generate_from_toml(path),
-        _ => Err(io::Error::new(
-            io::ErrorKind::InvalidInput,
-            "Invalid configuration file format. Supported formats: CSV, INI, JSON, TOML, YAML.",
-        )),
+        "csv" => macro_generate_from_csv!(path)?,
+        "ini" => macro_generate_from_ini!(path)?,
+        "json" => macro_generate_from_json!(path)?,
+        "yaml" => macro_generate_from_yaml!(path)?,
+        "toml" => macro_generate_from_toml!(path)?,
+        _ => {
+            return Err(format!(
+                "Unsupported configuration file type: {}",
+                file_type
+            ))
+        }
     }
+    Ok(())
 }
 
 /// Generates files for a new Rust project based on a CSV file.
@@ -535,7 +541,8 @@ pub fn generate_from_csv(path: &str) -> io::Result<()> {
             website: record.get(16).map(ToString::to_string),
         };
         // println!("Params: {:?}", params);
-        generate_files(params)?;
+        macro_generate_files!(params.clone())
+            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
     }
     Ok(())
 }
@@ -575,8 +582,11 @@ pub fn generate_from_csv(path: &str) -> io::Result<()> {
 ///
 pub fn generate_from_json(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = serde_json::from_str(&contents)?;
-    generate_files(params)?;
+    let params: FileGenerationParams = serde_json::from_str(&contents)
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, e.to_string()))?;
+    macro_generate_files!(params.clone()).map_err(|e| {
+        io::Error::new(io::ErrorKind::Other, e)
+    })?;
     Ok(())
 }
 
@@ -615,7 +625,9 @@ pub fn generate_from_yaml(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_yaml::from_str(&contents)
         .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    generate_files(params)?;
+    macro_generate_files!(params.clone()).map_err(|e| {
+        io::Error::new(io::ErrorKind::Other, e)
+    })?;
     Ok(())
 }
 
@@ -651,9 +663,11 @@ pub fn generate_from_yaml(path: &str) -> io::Result<()> {
 ///
 pub fn generate_from_ini(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = toml::from_str(&contents)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    generate_files(params)?;
+    let params: FileGenerationParams = from_str(&contents)
+        .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e.to_string()))?;
+    macro_generate_files!(params.clone()).map_err(|e| {
+        io::Error::new(io::ErrorKind::Other, e)
+    })?;
     Ok(())
 }
 
@@ -677,22 +691,24 @@ pub fn generate_from_ini(path: &str) -> io::Result<()> {
 /// - `readme` - the name of the readme file (optional).
 /// - `repository` - the url of the project's repository (optional).
 /// - `rustversion` - the minimum Rust version required by the project (optional).
-/// - `version` - the initial version of the project (optional).
-/// - `website` - the website of the project (optional).
+/// - version - the initial version of the project (optional).
+/// - website - the website of the project (optional).
 ///
 /// # Errors
 ///
 /// This function will return an error in the following situations:
 ///
 /// - If the specified TOML file cannot be found, read, or is not valid UTF-8.
-/// - If the TOML data cannot be deserialized into the `FileGenerationParams` struct.
+/// - If the TOML data cannot be deserialized into the FileGenerationParams struct.
 /// - If there is an error in generating files based on the parameters.
 ///
 pub fn generate_from_toml(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = toml::from_str(&contents)
         .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    generate_files(params)?;
+    macro_generate_files!(params.clone()).map_err(|e| {
+        io::Error::new(io::ErrorKind::Other, e)
+    })?;
     Ok(())
 }
 

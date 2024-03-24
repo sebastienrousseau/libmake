@@ -15,7 +15,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.2-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.3-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -85,7 +85,7 @@ use crate::cli::build;
 use dtt::DateTime;
 use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
 use std::{error::Error, fs::File, io::Write};
-use uuid::Uuid;
+use crate::utilities::uuid::generate_unique_string;
 
 /// The `args` module contains functions for processing command-line
 /// arguments.
@@ -107,6 +107,9 @@ pub mod macros;
 /// given file path and returns the value of the given field.
 pub mod utils;
 
+/// The `utilities` module contains utility functions for the library.
+pub mod utilities;
+
 /// Initializes the logger with a file logger and a terminal logger and processes
 /// command-line arguments to generate the new library.
 ///
@@ -121,14 +124,13 @@ pub mod utils;
 pub fn run() -> Result<(), Box<dyn Error>> {
     let date = DateTime::new();
     let iso = date.iso_8601;
-    let uuid = Uuid::new_v4().to_string();
 
     // Open the log file for appending
     let mut log_file = File::create("./libmake.log")?;
 
     // Generate ASCII art for the tool's CLI
     let log = macro_log!(
-        &uuid,
+        &generate_unique_string(),
         &iso,
         &LogLevel::INFO,
         "deps",
@@ -143,7 +145,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         Err(e) => eprintln!("Error generating ASCII art: {:?}", e),
     }
     let log = macro_log!(
-        &uuid,
+        &generate_unique_string(),
         &iso,
         &LogLevel::INFO,
         "deps",
@@ -159,7 +161,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
     macro_log!(
-        &uuid,
+        &generate_unique_string(),
         &iso,
         &LogLevel::INFO,
         "cli",

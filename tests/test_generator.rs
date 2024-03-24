@@ -1,8 +1,8 @@
 use libmake::generator::{
-    create_directory, generate_files, generate_from_args,
+    create_directory, generate_from_args,
 };
 use libmake::{
-    assert_generate_files,
+    macro_generate_files,
     generator::{
         generate_from_config, generate_from_yaml, FileGenerationParams,
     },
@@ -146,7 +146,7 @@ fn test_from_args() {
 /// `FileGenerationParams` struct and checking if the function runs
 /// without errors.
 #[test]
-fn test_assert_generate_files() {
+fn test_macro_generate_files() {
     let temp_dir = env::temp_dir().join("my_library");
     let mut params = FileGenerationParams::new();
     params.output =
@@ -155,7 +155,7 @@ fn test_assert_generate_files() {
 
 #[test]
 #[allow(clippy::redundant_clone)]
-fn test_generate_files() {
+fn test_generate_files() -> Result<(), String> {
     // Create a temporary directory
     let temp_directory = tempdir();
     let temp_path = temp_directory.unwrap().path().to_owned();
@@ -165,13 +165,15 @@ fn test_generate_files() {
     params.output = Some(temp_path.to_str().unwrap().to_owned());
 
     // Call the function you want to test
-    assert_generate_files!(params.clone());
+    macro_generate_files!(params.clone())?;
 
     // Assert that the temporary directory exists
     assert!(temp_path.exists());
 
     // Clean up: Remove the temporary directory and its contents
     std::fs::remove_dir_all(temp_path).unwrap();
+
+    Ok(())
 }
 
 /// Tests the `create_directory` function by passing an invalid path and
