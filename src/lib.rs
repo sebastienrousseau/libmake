@@ -158,19 +158,17 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     process_arguments(&matches)?;
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
-    if std::env::args().len() == 1 {
-        macro_log!(
-            &uuid,
-            &iso,
-            &LogLevel::INFO,
-            "cli",
-            "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.",
-            &LogFormat::CLF
-        );
-        eprintln!(
-            "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
-        );
-    }
+    macro_log!(
+        &uuid,
+        &iso,
+        &LogLevel::INFO,
+        "cli",
+        "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.",
+        &LogFormat::CLF
+    );
+    eprintln!(
+        "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
+    );
 
     Ok(())
 }

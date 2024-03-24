@@ -77,7 +77,7 @@ pub fn process_arguments(
 }
 
 /// Extracts the parameters for manual generation from command line arguments.
-fn extract_manual_params(
+pub fn extract_manual_params(
     matches: &ArgMatches,
 ) -> Result<FileGenerationParams, Box<dyn Error>> {
     let params = FileGenerationParams {
@@ -104,7 +104,7 @@ fn extract_manual_params(
 }
 
 /// Validates the manual generation parameters.
-fn validate_params(
+pub fn validate_params(
     params: &FileGenerationParams,
 ) -> Result<(), Box<dyn Error>> {
     if params.name.is_none() {
