@@ -126,7 +126,7 @@ const fn create_arg_info(
 }
 
 /// Creates an argument based on provided information.
-fn create_arg(
+pub fn create_arg(
     arg_info: (
         &'static str,
         Option<&'static str>,
