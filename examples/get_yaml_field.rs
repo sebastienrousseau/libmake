@@ -26,6 +26,7 @@
 //! ```rust
 //! // Import the necessary function for retrieving a field from a YAML file.
 //! use libmake::utils::get_yaml_field;
+//! use std::error::Error;
 //! use std::path::Path;
 //!
 //! // Specify the path to the YAML file.
@@ -37,25 +38,32 @@
 //! // Check if the YAML file exists before retrieving the field.
 //! let value = if Path::new(file_path).exists() {
 //!     // If the file exists, use the `get_yaml_field` function to retrieve the field.
-//!     let keywords: Vec<String> =
-//!         get_yaml_field(Some(file_path), field_keywords)
-//!             .split('\n')
+//!     let keywords: Result<Vec<String>, Box<dyn Error>> = get_yaml_field(Some(file_path), field_keywords)
+//!         .map(|s| s.split('\n')
 //!             .map(|s| s.trim_start_matches("- "))
 //!             .filter(|s| !s.is_empty())
 //!             .map(|s| format!("\"{}\"", s))
-//!             .collect();
-//!     format!("[{}]", keywords.join(", "))
+//!             .collect());
+//!
+//!     match keywords {
+//!         Ok(keywords) => format!("[{}]", keywords.join(", ")),
+//!         Err(e) => {
+//!             eprintln!("Error retrieving keywords: {}", e);
+//!             String::new()
+//!         }
+//!     }
 //! } else {
 //!     // If the file doesn't exist, set the value to an empty string.
 //!     String::new()
 //! };
-//
+//!
 //! // Print the result.
 //! println!("🦀 get_yaml_field, ✅ {}: {}", field_keywords, value);
 //! ```
 
 // Title: Test: Retrieving a field from a YAML file
 use libmake::utils::get_yaml_field;
+use std::error::Error;
 use std::path::Path;
 
 /// # Test: Retrieving a Field from a YAML File
@@ -81,6 +89,7 @@ use std::path::Path;
 /// ```rust
 /// // Import the necessary function for retrieving a field from a YAML file.
 /// use libmake::utils::get_yaml_field;
+/// use std::error::Error;
 /// use std::path::Path;
 ///
 /// // Specify the path to the YAML file.
@@ -92,14 +101,20 @@ use std::path::Path;
 /// // Check if the YAML file exists before retrieving the field.
 /// let value = if Path::new(file_path).exists() {
 ///     // If the file exists, use the `get_yaml_field` function to retrieve the field.
-///     let keywords: Vec<String> =
-///         get_yaml_field(Some(file_path), field_keywords)
-///             .split('\n')
+///     let keywords: Result<Vec<String>, Box<dyn Error>> = get_yaml_field(Some(file_path), field_keywords)
+///         .map(|s| s.split('\n')
 ///             .map(|s| s.trim_start_matches("- "))
 ///             .filter(|s| !s.is_empty())
 ///             .map(|s| format!("\"{}\"", s))
-///             .collect();
-///     format!("[{}]", keywords.join(", "))
+///             .collect());
+///
+///     match keywords {
+///         Ok(keywords) => format!("[{}]", keywords.join(", ")),
+///         Err(e) => {
+///             eprintln!("Error retrieving keywords: {}", e);
+///             String::new()
+///         }
+///     }
 /// } else {
 ///     // If the file doesn't exist, set the value to an empty string.
 ///     String::new()
@@ -109,19 +124,27 @@ use std::path::Path;
 /// println!("🦀 get_yaml_field, ✅ {}: {}", field_keywords, value);
 /// ```
 ///
-pub fn main() {
+pub(crate) fn main() {
     let file_path = "../tests/data/mylibrary.yaml";
     let field_keywords = "keywords";
 
     let value = if Path::new(file_path).exists() {
-        let keywords: Vec<String> =
-            get_yaml_field(Some(file_path), field_keywords)
-                .split('\n')
-                .map(|s| s.trim_start_matches("- "))
-                .filter(|s| !s.is_empty())
-                .map(|s| format!("\"{s}\""))
-                .collect();
-        format!("[{}]", keywords.join(", "))
+        let keywords: Result<Vec<String>, Box<dyn Error>> =
+            get_yaml_field(Some(file_path), field_keywords).map(|s| {
+                s.split('\n')
+                    .map(|s| s.trim_start_matches("- "))
+                    .filter(|s| !s.is_empty())
+                    .map(|s| format!("\"{s}\""))
+                    .collect()
+            });
+
+        match keywords {
+            Ok(keywords) => format!("[{}]", keywords.join(", ")),
+            Err(e) => {
+                eprintln!("Error retrieving keywords: {e}");
+                String::new()
+            }
+        }
     } else {
         String::new()
     };

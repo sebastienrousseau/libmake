@@ -122,7 +122,7 @@ macro_rules! assert_generate_from_yaml {
 /// # Arguments
 ///
 /// * `$path` - The path to the configuration file.
-/// * `$file_type` - The type of the configuration file: `json`, `yaml`, `yml`, or `csv`.
+/// * `$file_type` - The type of the configuration file: `json`, `yaml` or `csv`.
 ///
 /// # Panics
 ///
@@ -235,4 +235,26 @@ macro_rules! macro_execute_and_log {
         );
         Ok(())
     }};
+}
+
+/// Extracts a parameter from a `Matches` object.
+///
+/// This macro takes two arguments: `$matches` and `$name`. It attempts to retrieve the value
+/// associated with `$name` from the `$matches` object. If the value is found and is of type `String`,
+/// it returns a `Some` variant containing a cloned copy of the value. Otherwise, it returns `None`.
+///
+/// # Arguments
+///
+/// * `$matches` - A `Matches` object that contains the parameter values.
+/// * `$name` - The name of the parameter to extract.
+///
+/// # Returns
+///
+/// A `Option<String>` containing the extracted parameter value, or `None` if the parameter is not found
+/// or is not of type `String`.
+#[macro_export]
+macro_rules! extract_param {
+    ($matches:expr, $name:expr) => {
+        $matches.get_one::<String>($name).map(|s| s.to_owned())
+    };
 }

@@ -46,7 +46,7 @@ use libmake::generator::generate_from_json;
 ///
 /// * `Result<(), String>` - Returns `Ok(())` if the template files are generated successfully, or returns an error message if there is an error during generation.
 ///
-pub fn main() {
+pub(crate) fn main() {
     // Define the path to the JSON file that contains configuration data.
     let json_file_path = "./tests/data/mylibrary.json";
 

@@ -44,11 +44,10 @@ fn main() {
             std::process::exit(1);
         }
     }
-
-    // Handle errors from `run()`
-    if let Err(ref err) = run() {
-        // Renamed error variable for clarity
-        eprintln!("Error running libmake: {err}");
-        std::process::exit(1);
+    else {
+        match run() {
+            Ok(_) => println!("Program completed successfully."),
+            Err(e) => eprintln!("Program encountered an error: {}", e),
+        }
     }
 }

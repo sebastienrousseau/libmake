@@ -29,13 +29,12 @@ fn test_get_csv_field() {
 fn test_get_json_field() {
     let file_path = "./tests/data/mylibrary.json";
     let field_name = "mylibrary";
-    let value =
-        if Path::new(file_path).exists() {
-            get_json_field(Some(file_path), field_name)
-        } else {
-            String::new()
-        };
-    assert_eq!(value, "null");
+    let value = if Path::new(file_path).exists() {
+        get_json_field(Some(file_path), field_name)
+    } else {
+        Ok(String::new()) // Wrap the String in Ok
+    };
+    assert_eq!(value.unwrap(), "null".to_string()); // Unwrap the value and compare with "null"
 }
 
 /// Tests the `get_yaml_field` function by passing a YAML file path and
@@ -44,13 +43,12 @@ fn test_get_json_field() {
 fn test_get_yaml_field() {
     let file_path = "./tests/data/mylibrary.yaml";
     let field_name = "mylibrary";
-    let value =
-        if Path::new(file_path).exists() {
-            get_yaml_field(Some(file_path), field_name)
-        } else {
-            String::new()
-        };
-    assert_eq!(value, "null");
+    let value = if Path::new(file_path).exists() {
+        get_yaml_field(Some(file_path), field_name)
+    } else {
+        Ok(String::new()) // Wrapping the String in Ok to match the expected type
+    };
+    assert_eq!(value.unwrap(), "null".to_string()); // Unwrap the value and compare with "null"
 }
 
 /// Tests the `generate_from_config` function by passing a YAML file
@@ -105,7 +103,7 @@ fn generate_from_toml() {
 fn test_generate_from_args() {
     let args = "--author=Me --output=my_library"
         .split(' ')
-        .map(std::string::ToString::to_string)
+        .map(ToString::to_string)
         .collect::<Vec<String>>();
 
     let args_str = args[1..].join(" ");
@@ -135,7 +133,7 @@ fn test_from_args() {
                                 --version= \
                                 --website="
         .split(' ')
-        .map(std::string::ToString::to_string) // Replaced the closure with the method directly
+        .map(ToString::to_string) // Replaced the closure with the method directly
         .collect::<Vec<String>>();
 
     let args_str = args[1..].join(" ");
@@ -149,7 +147,7 @@ fn test_from_args() {
 /// without errors.
 #[test]
 fn test_assert_generate_files() {
-    let temp_dir = std::env::temp_dir().join("my_library");
+    let temp_dir = env::temp_dir().join("my_library");
     let mut params = FileGenerationParams::new();
     params.output =
         Some(temp_dir.as_path().to_str().unwrap().to_owned());

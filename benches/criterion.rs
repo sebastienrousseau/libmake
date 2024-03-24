@@ -37,8 +37,6 @@
 //! from the `libmake` crate, helping you evaluate and optimize its performance.
 
 #![allow(missing_docs)]
-extern crate criterion;
-extern crate libmake;
 
 use criterion::{criterion_group, criterion_main, Criterion};
 use libmake::run;

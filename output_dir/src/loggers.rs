@@ -1,7 +1,7 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
-// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2024 test_lib. All rights reserved.
+// SPDX-License-Identifier: MIT
 
 //! Application logging functionality
 //!
@@ -19,7 +19,7 @@ use std::io::Write;
 ///
 /// ```
 /// use rlg::LogLevel;
-/// use libmake::loggers::init_logger;
+/// use test_lib::loggers::init_logger;
 ///
 /// // Initialize the logging system with a default log level of `info`
 /// init_logger(Some(LogLevel::INFO)).unwrap();

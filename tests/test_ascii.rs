@@ -1,18 +1,35 @@
 #[cfg(test)]
 mod tests {
-    // Import the generate_ascii_art function from the libmake::ascii module
-    use libmake::ascii::generate_ascii_art;
+    use libmake::ascii::{generate_ascii_art, load_standard_font, ArtError};
 
-    // Define a unit test named test_generate_ascii_art
     #[test]
-    fn test_generate_ascii_art() {
-        // Create a test string
+    fn test_generate_ascii_art_success() {
         let text = "Hello, world!";
+        let result = generate_ascii_art(text);
+        assert!(result.is_ok());
+        let ascii_art = result.unwrap();
+        assert!(!ascii_art.is_empty());
+    }
 
-        // Call the generate_ascii_art function with the test string and assert that no panic occurs
-        assert!(std::panic::catch_unwind(|| {
-            generate_ascii_art(text).unwrap();
-        })
-        .is_ok());
+    #[test]
+    fn test_generate_ascii_art_empty_text() {
+        let text = "";
+        let result = generate_ascii_art(text);
+        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), ArtError::ConversionError));
+    }
+
+    #[test]
+    fn test_load_standard_font_success() {
+        let result = load_standard_font();
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_generate_ascii_art_conversion_error() {
+        let text = "\u{1F600}"; // Emoji character
+        let result = generate_ascii_art(text);
+        assert!(result.is_err());
+        assert!(matches!(result.unwrap_err(), ArtError::ConversionError));
     }
 }

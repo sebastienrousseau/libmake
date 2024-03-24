@@ -1,24 +1,26 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
-// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2024 test_lib. All rights reserved.
+// SPDX-License-Identifier: MIT
 
 #[cfg(test)]
 mod tests {
 
-    use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
+    use rlg::macro_log;
+    use rlg::{LogFormat, LogLevel};
 
     #[test]
     fn test_logging() {
         // Create a log entry
-        let log_entry = macro_log!(
-            "session_id",
-            "time",
-            &LogLevel::INFO,
-            "component",
-            "Log message",
-            &LogFormat::CLF
-        );
+        let log_entry =
+            macro_log!(
+                "session_id",
+                "time",
+                &LogLevel::INFO,
+                "component",
+                "Log message",
+                &LogFormat::CLF
+            );
 
         // Define expected values
         let expected_session_id = "session_id";

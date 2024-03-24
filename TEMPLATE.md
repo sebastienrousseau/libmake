@@ -4,7 +4,8 @@
 alt="LibMake logo" width="261" align="right" />
 
 <!-- markdownlint-enable MD033 MD041 -->
-# LibMake v0.2.1 🦀
+
+# LibMake v0.2.2 🦀
 
 A code generator to reduce repetitive tasks and build high-quality Rust libraries.
 
@@ -63,6 +64,6 @@ The library is designed to be used as a command-line tool. It is available on [C
 [codecov-badge]: https://img.shields.io/codecov/c/github/sebastienrousseau/libmake?style=for-the-badge&token=Q9KJ6XXL67 "Codecov Badge"
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge "Crates.io Badge"
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge "Docs.rs Badge"
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.2.1-orange.svg?style=for-the-badge "Lib.rs Badge"
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.2.2-orange.svg?style=for-the-badge "Lib.rs Badge"
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge "License Badge"
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust "Made With Rust Badge"

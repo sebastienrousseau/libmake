@@ -15,7 +15,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&color=success&labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.1-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.2-success.svg?style=for-the-badge&color=8A48FF&labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&labelColor=000000&logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&color=007EC6&labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -82,12 +82,10 @@
 use crate::args::process_arguments;
 use crate::ascii::generate_ascii_art;
 use crate::cli::build;
-use crate::loggers::init_logger;
 use dtt::DateTime;
-use rlg::{macro_log, LogFormat, LogLevel};
-use std::error::Error;
-use std::fs::File;
-use std::io::Write;
+use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
+use std::{error::Error, fs::File, io::Write};
+use uuid::Uuid;
 
 /// The `args` module contains functions for processing command-line
 /// arguments.
@@ -103,8 +101,6 @@ pub mod generator;
 /// The `interface` module contains functions for displaying the
 /// interface.
 pub mod interface;
-/// The `loggers` module contains the loggers for the library.
-pub mod loggers;
 /// The `macros` module contains functions for generating macros.
 pub mod macros;
 /// The `utils` module contains a function for reading a CSV file at the
@@ -113,16 +109,6 @@ pub mod utils;
 
 /// Initializes the logger with a file logger and a terminal logger and processes
 /// command-line arguments to generate the new library.
-///
-/// # Examples
-///
-/// ```
-/// use libmake::run;
-///
-/// if let Err(e) = run() {
-///     eprintln!("Application error: {}", e);
-/// }
-/// ```
 ///
 /// # Errors
 ///
@@ -135,16 +121,14 @@ pub mod utils;
 pub fn run() -> Result<(), Box<dyn Error>> {
     let date = DateTime::new();
     let iso = date.iso_8601;
-
-    // Initialize the logger using the `env_logger` crate
-    init_logger(None)?;
+    let uuid = Uuid::new_v4().to_string();
 
     // Open the log file for appending
-    let mut log_file = File::create("./ssg.log")?;
+    let mut log_file = File::create("./libmake.log")?;
 
     // Generate ASCII art for the tool's CLI
     let log = macro_log!(
-        "id",
+        &uuid,
         &iso,
         &LogLevel::INFO,
         "deps",
@@ -159,7 +143,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
         Err(e) => eprintln!("Error generating ASCII art: {:?}", e),
     }
     let log = macro_log!(
-        "id",
+        &uuid,
         &iso,
         &LogLevel::INFO,
         "deps",
@@ -174,11 +158,17 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     process_arguments(&matches)?;
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
-    if std::env::args().len() == 1 {
-        eprintln!(
-            "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
-        );
-    }
+    macro_log!(
+        &uuid,
+        &iso,
+        &LogLevel::INFO,
+        "cli",
+        "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.",
+        &LogFormat::CLF
+    );
+    eprintln!(
+        "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
+    );
 
     Ok(())
 }

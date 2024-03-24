@@ -57,7 +57,7 @@ use libmake::generator::generate_from_csv;
 /// generate_from_csv(csv_file_path)
 ///     .expect("Failed to generate the template files");
 /// ```
-pub fn main() {
+pub(crate) fn main() {
     // Define the path to the CSV file to be used for testing.
     let csv_file_path = "./tests/data/mylibrary.csv";
 

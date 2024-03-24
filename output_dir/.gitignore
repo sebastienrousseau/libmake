@@ -1,10 +1,10 @@
 *.DS_Store
 *.profraw
-*.log
 /.vscode/
+/output/
+/public/
 /target/
 build
-Cargo.lock
 Icon?
 src/.DS_Store
-/my_library/
+tarpaulin-report.html
