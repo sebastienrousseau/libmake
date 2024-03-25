@@ -159,6 +159,6 @@ mod tests {
             get_config_field(file_path, Some("unknown"), field_name)
                 .map_err(|err| err.to_string())
                 .unwrap_err();
-        assert_eq!(actual_unknown_format_value, "Unsupported file format: unknown. Supported formats are 'json' and 'yaml'.");
+        assert_eq!(actual_unknown_format_value, "Unsupported file format: unknown. Supported formats are 'json', 'yaml', and 'ini'.");
     }
 }

@@ -345,7 +345,9 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         ));
     };
 
-    let project_directory = PathBuf::from(output.clone());
+    // Get the project directory path from the output parameter,
+    // create a PathBuf from it, and assign it to the project_directory variable
+    let project_directory = PathBuf::from(output.clone().trim_matches('\"'));
 
     // Creating the project directory
     create_directory(&project_directory)?;
