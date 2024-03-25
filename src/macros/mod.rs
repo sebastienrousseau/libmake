@@ -8,3 +8,7 @@ pub mod generator_macros;
 
 /// The `log_macros` module contains macros related to logging messages at various log levels and formats.
 pub mod log_macros;
+
+/// The `utility_macros` module contains utility macros for common tasks such as
+/// replacing placeholders in a line with values from parameters.
+pub mod utility_macros;
