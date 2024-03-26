@@ -5,6 +5,15 @@
 
 use serde::{Deserialize, Serialize};
 
+fn deserialize_name<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+{
+    let name = String::deserialize(deserializer)?;
+    Ok(Some(name.trim_matches('"').to_string()))
+}
+
+
 /// Structure for holding the parameters for generating the project files.
 ///
 /// # Description
@@ -47,12 +56,14 @@ pub struct FileGenerationParams {
     pub keywords: Option<String>,
     /// The license under which the project is released (optional).
     pub license: Option<String>,
+    #[serde(deserialize_with = "deserialize_name")]
     /// The name of the project (optional).
     pub name: Option<String>,
     /// The output directory where the project files will be created (optional).
     pub output: Option<String>,
     /// The name of the readme file (optional).
     pub readme: Option<String>,
+    #[serde(deserialize_with = "deserialize_name")]
     /// The URL of the project's repository (optional).
     pub repository: Option<String>,
     /// The minimum Rust version required by the project (optional).

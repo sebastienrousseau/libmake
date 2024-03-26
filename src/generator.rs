@@ -42,14 +42,12 @@ pub fn create_template_folder() -> io::Result<()> {
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
-        "loggers.tpl",
         "macros.tpl",
         "main.tpl",
         "README.tpl",
         "rustfmt.tpl",
         "TEMPLATE.tpl",
         "test.tpl",
-        "test_loggers.tpl",
     ];
     for file in &files {
         let file_path = template_dir_path.join(file);
@@ -186,13 +184,11 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         ("example.tpl", "examples/example.rs"),
         ("gitignore.tpl", ".gitignore"),
         ("lib.tpl", "src/lib.rs"),
-        ("loggers.tpl", "src/loggers.rs"),
         ("macros.tpl", "src/macros.rs"),
         ("main.tpl", "src/main.rs"),
         ("README.tpl", "README.md"),
         ("rustfmt.tpl", "rustfmt.toml"),
         ("TEMPLATE.tpl", "TEMPLATE.md"),
-        ("test_loggers.tpl", "tests/test_loggers.rs"),
         ("test.tpl", "tests/test.rs"),
     ];
 
@@ -261,7 +257,7 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 /// # Arguments
 ///
 /// - `path` - The path to the configuration file.
-/// - `file_type` - The type of the configuration file (e.g., JSON, YAML, CSV).
+/// - `file_type` - The type of the configuration file (e.g., JSON, YAML, CSV, TOML and INI).
 ///
 /// # Errors
 ///

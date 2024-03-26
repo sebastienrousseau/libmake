@@ -30,9 +30,9 @@
 //!
 //! ```toml
 //! [dependencies]
-//! {name} = "{version}"
-//! serde = { version = "1.0", features = ["derive"] }
-//! serde_json = "1.0"
+//! {name} = {version}
+//! serde = { version = "1.0.197", features = ["derive"] }
+//! serde_json = "1.0.115"
 //! ```
 //!
 //! ## Examples
@@ -51,12 +51,6 @@
 //!
 //! The project is licensed under the terms of the {license} license.
 //!
-#![cfg_attr(feature = "bench", feature(test))]
-#![deny(dead_code)]
-#![deny(missing_debug_implementations)]
-#![deny(missing_docs)]
-#![forbid(unsafe_code)]
-#![warn(unreachable_pub)]
 #![doc(
     html_favicon_url = "",
     html_logo_url = "",
@@ -64,9 +58,6 @@
 )]
 #![crate_name = "{name}"]
 #![crate_type = "lib"]
-
-/// The `loggers` module contains the loggers for the library.
-pub mod loggers;
 
 /// The `macros` module contains functions for generating macros.
 pub mod macros;
@@ -88,12 +79,12 @@ use std::error::Error;
 )]
 
 #[allow(non_camel_case_types)]
-/// {name} is a data structure that ...
+/// `{name}` is a data structure that ...
 pub struct {name} {
     // Add any data fields needed here
 }
 
-/// This is the main entry point for the {name} library.
+/// This is the main entry point for the `{name}` library.
 pub fn run() -> Result<(), Box<dyn Error>> {
     // Add your code here
     let name = "{name}";
@@ -103,7 +94,7 @@ pub fn run() -> Result<(), Box<dyn Error>> {
 
 
 impl {name} {
-    /// Creates a new instance of {name}
+    /// Creates a new instance of `{name}`
     pub fn new() -> Self {
         Self {
             // Initialize any data fields here
@@ -112,7 +103,7 @@ impl {name} {
 }
 
 impl Default for {name} {
-    /// Creates a new instance of {name} with default values
+    /// Creates a new instance of `{name}` with default values
     fn default() -> Self {
         Self::new()
     }

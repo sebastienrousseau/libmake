@@ -78,4 +78,4 @@ contribute to {name}. Thank you for your interest and involvement in our
 project!
 
 [1]: {repository}
-[2]: {repository}/issues/newHTTP/2 416
+[2]: {repository}/issues/new

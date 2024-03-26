@@ -1,52 +1,49 @@
-// Copyright notice and licensing information.
-// These lines indicate the copyright of the software and its licensing terms.
-// Copyright © 2024 {name}. All rights reserved.
-// SPDX-License-Identifier: {license}
+//! # Benchmark: libmake
+//!
+//! This benchmark tests the performance of the `libmake` crate using the Criterion library.
+//! It measures the execution time of the `run` function from the `libmake` crate.
+//!
+//! ## Purpose
+//!
+//! The purpose of this benchmark is to assess the execution time of the `run` function
+//! from the `{name}` crate under controlled conditions. It helps identify any potential
+//! performance bottlenecks and allows for optimization if needed.
+//!
+//! ## Usage
+//!
+//! To run this benchmark, ensure that you have the `criterion` and `{name}` crates
+//! included as dependencies in your project's `Cargo.toml` file.
+//!
+//! In your project's code, you can use the `criterion_group` and `criterion_main` macros
+//! to define and run benchmarks. In this specific benchmark, the `{name}_benchmark` function
+//! is defined to measure the execution time of the `run` function.
+//!
+//! ```rust
+//! extern crate criterion;
+//! extern crate {name};
+//!
+//! use criterion::{criterion_group, criterion_main, Criterion};
+//! use {name}::run;
+//!
+//! fn {name}_benchmark(c: &mut Criterion) {
+//!     c.bench_function("{name}", |b| b.iter(run));
+//! }
+//!
+//! criterion_group!(benches, {name}_benchmark);
+//! criterion_main!(benches);
+//! ```
+//!
+//! Running this benchmark will provide performance metrics for the `run` function
+//! from the `{name}` crate, helping you evaluate and optimize its performance.
 
-extern crate criterion;
+#![allow(missing_docs)]
 
 use criterion::{criterion_group, criterion_main, Criterion};
-use {name}::{run, {name}_vec, {name}_map, {name}_join};
-
-fn {name}_vec_benchmark(c: &mut Criterion) {
-    c.bench_function("{name}_vec_macro", |b| {
-        b.iter(|| {
-            {name}_vec![1, 2, 3, 4, 5]
-        })
-    });
-}
-
-fn {name}_map_benchmark(c: &mut Criterion) {
-    c.bench_function("{name}_map_macro", |b| {
-        b.iter(|| {
-            {name}_map!["a" => 1, "b" => 2, "c" => 3, "d" => 4, "e" => 5]
-        })
-    });
-}
-
-fn {name}_join_benchmark(c: &mut Criterion) {
-    c.bench_function("{name}_join_macro", |b| {
-        b.iter(|| {
-            {name}_join!["a", "b", "c", "d", "e"]
-        })
-    });
-}
+use {name}::run;
 
 fn {name}_benchmark(c: &mut Criterion) {
-    c.bench_function("{name}", |b| {
-        b.iter(|| {
-            for _ in 0..1000 {
-                run().unwrap();
-            }
-        })
-    });
+    c.bench_function("{name}", |b| b.iter(run));
 }
 
-criterion_group!(
-    {name}_macros_benchmark,
-    {name}_vec_benchmark,
-    {name}_map_benchmark,
-    {name}_join_benchmark,
-    {name}_benchmark
-);
-criterion_main!({name}_macros_benchmark);
+criterion_group!(benches, {name}_benchmark);
+criterion_main!(benches);
