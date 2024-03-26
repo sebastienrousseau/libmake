@@ -1,7 +1,7 @@
 use clap::{Arg, Command};
 use libmake::{
     args::{extract_manual_params, process_arguments, validate_params},
-    models::model_params::FileGenerationParams
+    models::model_params::FileGenerationParams,
 };
 
 // Tests the process_arguments function with valid arguments
@@ -88,7 +88,7 @@ fn test_validate_params_invalid_edition() {
     assert!(result.is_err());
     assert_eq!(
        result.unwrap_err().to_string(),
-       "Invalid edition: 2023. Supported editions are 2015, 2018, and 2021.".to_string()
+       "Invalid edition: 2023. Supported editions are: 2015, 2018, 2021.".to_string()
     );
 }
 
@@ -148,7 +148,7 @@ fn test_validate_params_invalid_email() {
     assert!(result.is_err());
     assert_eq!(
         result.unwrap_err().to_string(),
-        "Invalid email address: <EMAIL>. Email address should contain '@'.".to_string()
+        "Invalid email address: <EMAIL>.".to_string()
     );
 }
 
@@ -208,7 +208,7 @@ fn test_validate_params_invalid_repository() {
     assert!(result.is_err());
     assert_eq!(
         result.unwrap_err().to_string(),
-        "Invalid repository URL: 123. Repository URL should start with 'https://' or 'git://'.".to_string()
+        "Invalid repository URL: 123. Repository URL should be a valid Git URL.".to_string()
     );
 }
 
@@ -240,7 +240,7 @@ fn test_validate_params_invalid_rustversion() {
     assert!(result.is_err());
     assert_eq!(
         result.unwrap_err().to_string(),
-        "Invalid Rust version: 2.0. Rust version should start with '1.'.".to_string()
+        "Invalid Rust version: 2.0. Rust version should be in the format '1.x.y'.".to_string()
     );
 }
 
@@ -427,7 +427,7 @@ fn test_extract_manual_params_all_fields() {
                         .long("repository")
                         .value_name("REPOSITORY")
                         .default_value(
-                            "https://github.com/test/test_lib",
+                            "https://github.com/test/test_lib.git",
                         ),
                 )
                 .arg(
@@ -479,7 +479,7 @@ fn test_extract_manual_params_all_fields() {
             "--readme",
             "README.md",
             "--repository",
-            "https://github.com/test/test_lib",
+            "https://github.com/test/test_lib.git",
             "--rustversion",
             "1.60.0",
             "--version",
@@ -489,7 +489,7 @@ fn test_extract_manual_params_all_fields() {
         ]);
 
     let result = extract_manual_params(
-        matches.subcommand_matches("manual").unwrap()
+        matches.subcommand_matches("manual").unwrap(),
     );
     assert!(result.is_ok());
 
@@ -518,7 +518,7 @@ fn test_extract_manual_params_all_fields() {
     assert_eq!(params.readme, Some("README.md".to_string()));
     assert_eq!(
         params.repository,
-        Some("https://github.com/test/test_lib".to_string())
+        Some("https://github.com/test/test_lib.git".to_string())
     );
     assert_eq!(params.rustversion, Some("1.60.0".to_string()));
     assert_eq!(params.version, Some("0.1.0".to_string()));

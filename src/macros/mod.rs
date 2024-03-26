@@ -5,6 +5,9 @@ pub mod ascii_macros;
 /// operations.
 pub mod directory_macros;
 
+/// The `file_macros` module contains macros related to file operations.
+pub mod file_macros;
+
 /// The `generator_macros` module contains macros related to generating
 /// templates from JSON, YAML, and CSV files, and custom logging functionality.
 pub mod generator_macros;

@@ -4,7 +4,9 @@
 // Copyright © 2024 LibMake. All rights reserved.
 
 use super::{
-    extract_param, generator::generate_files,
+    generate_file,
+    extract_param,
+    generator::generate_files,
     generators::csv::generate_from_csv,
     generators::ini::generate_from_ini,
     generators::json::generate_from_json,
@@ -13,6 +15,7 @@ use super::{
     models::model_params::FileGenerationParams,
 };
 use clap::ArgMatches;
+use regex::Regex;
 use std::error::Error;
 
 /// Processes the command line arguments provided to the program.
@@ -21,56 +24,40 @@ use std::error::Error;
 ///
 /// # Arguments
 ///
-/// * `matches` - An instance of `clap::ArgMatches` containing the
-/// parsed command line arguments.
+/// * `matches` - An instance of `clap::ArgMatches` containing the parsed command line arguments.
 ///
 /// # Errors
 ///
 /// This function will return an error if there is an issue with processing the command line arguments or generating files.
-///
-/// # Panics
-///
-/// This function may panic if a required command line argument is not provided.
-pub fn process_arguments(
-    matches: &ArgMatches,
-) -> Result<(), Box<dyn Error>> {
+pub fn process_arguments(matches: &ArgMatches) -> Result<(), Box<dyn Error>> {
     match matches.subcommand() {
         Some(("file", file_matches)) => {
-            let file_types = ["csv", "ini", "json", "yaml", "toml"];
-
-            for file_type in file_types.iter() {
-                if let Some(value) =
-                    file_matches.get_one::<String>(file_type)
-                {
-                    match *file_type {
-                        "csv" if !value.trim().is_empty() => {
-                            generate_from_csv(value)?
-                        }
-                        "ini" if !value.trim().is_empty() => {
-                            generate_from_ini(value)?
-                        }
-                        "json" if !value.trim().is_empty() => {
-                            generate_from_json(value)?
-                        }
-                        "yaml" if !value.trim().is_empty() => {
-                            generate_from_yaml(value)?
-                        }
-                        "toml" if !value.trim().is_empty() => {
-                            generate_from_toml(value)?
-                        }
-                        _ => {}
-                    }
-                }
+            if let Some(value) = file_matches.get_one::<String>("csv") {
+                generate_file!("csv", value, generate_from_csv);
+            }
+            if let Some(value) = file_matches.get_one::<String>("ini") {
+                generate_file!("ini", value, generate_from_ini);
+            }
+            if let Some(value) = file_matches.get_one::<String>("json") {
+                generate_file!("json", value, generate_from_json);
+            }
+            if let Some(value) = file_matches.get_one::<String>("yaml") {
+                generate_file!("yaml", value, generate_from_yaml);
+            }
+            if let Some(value) = file_matches.get_one::<String>("toml") {
+                generate_file!("toml", value, generate_from_toml);
             }
         }
         Some(("manual", manual_matches)) => {
             let params = extract_manual_params(manual_matches)?;
-            generate_files(params)?;
-            println!("Template files generated successfully!");
+            if let Err(err) = generate_files(params) {
+                eprintln!("Error generating template files: {}", err);
+            } else {
+                println!("Template files generated successfully!");
+            }
         }
         _ => {
             eprintln!("No valid subcommand was used. Please use '--help' for usage information.");
-            std::process::exit(1);
         }
     }
 
@@ -105,59 +92,76 @@ pub fn extract_manual_params(
 }
 
 /// Validates the manual generation parameters.
-pub fn validate_params(
-    params: &FileGenerationParams,
-) -> Result<(), Box<dyn Error>> {
+pub fn validate_params(params: &FileGenerationParams) -> Result<(), Box<dyn Error>> {
     if params.name.is_none() {
         return Err("The name of the library is required for manual generation.".into());
     }
 
     if params.output.is_none() {
-        return Err(
-            "The output directory is required for manual generation."
-                .into(),
-        );
+        return Err("The output directory is required for manual generation.".into());
     }
 
     if let Some(edition) = &params.edition {
-        if edition != "2015" && edition != "2018" && edition != "2021" {
-            return Err(format!("Invalid edition: {}. Supported editions are 2015, 2018, and 2021.", edition).into());
+        let valid_editions = ["2015", "2018", "2021"];
+        if !valid_editions.contains(&edition.as_str()) {
+            return Err(format!(
+                "Invalid edition: {}. Supported editions are: {}.",
+                edition,
+                valid_editions.join(", ")
+            )
+            .into());
         }
     }
 
     if let Some(rustversion) = &params.rustversion {
-        if !rustversion.starts_with("1.") {
-            return Err(format!("Invalid Rust version: {}. Rust version should start with '1.'.", rustversion).into());
+        let version_regex = Regex::new(r"^1\.\d+\.\d+$").unwrap();
+        if !version_regex.is_match(rustversion) {
+            return Err(format!(
+                "Invalid Rust version: {}. Rust version should be in the format '1.x.y'.",
+                rustversion
+            )
+            .into());
         }
     }
 
     if let Some(email) = &params.email {
-        if !email.contains('@') {
-            return Err(format!("Invalid email address: {}. Email address should contain '@'.", email).into());
+        let email_regex = Regex::new(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$").unwrap();
+        if !email_regex.is_match(email) {
+            return Err(format!("Invalid email address: {}.", email).into());
         }
     }
 
     if let Some(repository) = &params.repository {
-        if !repository.starts_with("https://")
-            && !repository.starts_with("git://")
-        {
-            return Err(format!("Invalid repository URL: {}. Repository URL should start with 'https://' or 'git://'.", repository).into());
+        let repo_regex =
+            Regex::new(r"^(https://|git://|ssh://|git@).+\.git$").unwrap();
+        if !repo_regex.is_match(repository) {
+            return Err(format!(
+                "Invalid repository URL: {}. Repository URL should be a valid Git URL.",
+                repository
+            )
+            .into());
         }
     }
 
     if let Some(homepage) = &params.homepage {
-        if !homepage.starts_with("http://")
-            && !homepage.starts_with("https://")
-        {
-            return Err(format!("Invalid homepage URL: {}. Homepage URL should start with 'http://' or 'https://'.", homepage).into());
+        let url_regex = Regex::new(r"^(http://|https://).+$").unwrap();
+        if !url_regex.is_match(homepage) {
+            return Err(format!(
+                "Invalid homepage URL: {}. Homepage URL should start with 'http://' or 'https://'.",
+                homepage
+            )
+            .into());
         }
     }
 
     if let Some(documentation) = &params.documentation {
-        if !documentation.starts_with("http://")
-            && !documentation.starts_with("https://")
-        {
-            return Err(format!("Invalid documentation URL: {}. Documentation URL should start with 'http://' or 'https://'.", documentation).into());
+        let url_regex = Regex::new(r"^(http://|https://).+$").unwrap();
+        if !url_regex.is_match(documentation) {
+            return Err(format!(
+                "Invalid documentation URL: {}. Documentation URL should start with 'http://' or 'https://'.",
+                documentation
+            )
+            .into());
         }
     }
 
