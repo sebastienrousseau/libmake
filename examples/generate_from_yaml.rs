@@ -30,7 +30,7 @@
 //! ```
 
 // Import the necessary function for generating templates from a YAML file.
-use libmake::generator::generate_from_yaml;
+use libmake::generators::yaml::generate_from_yaml;
 
 /// Generate template files from the specified YAML file.
 ///

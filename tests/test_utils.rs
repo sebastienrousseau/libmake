@@ -91,7 +91,7 @@ mod tests {
         );
         assert_eq!(
             get_csv_field(Some(file_path), 15),
-            Some(vec!["0.2.2".to_string()])
+            Some(vec!["0.2.3".to_string()])
         );
         assert_eq!(
             get_csv_field(Some(file_path), 16),
@@ -159,6 +159,6 @@ mod tests {
             get_config_field(file_path, Some("unknown"), field_name)
                 .map_err(|err| err.to_string())
                 .unwrap_err();
-        assert_eq!(actual_unknown_format_value, "Unsupported file format: unknown. Supported formats are 'json' and 'yaml'.");
+        assert_eq!(actual_unknown_format_value, "Unsupported file format: unknown. Supported formats are 'json', 'yaml', and 'ini'.");
     }
 }

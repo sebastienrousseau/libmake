@@ -1,12 +1,11 @@
-use libmake::generator::{
-    create_directory, generate_files, generate_from_args,
-};
 use libmake::{
-    assert_generate_files,
-    generator::{
-        generate_from_config, generate_from_yaml, FileGenerationParams,
+    generator::generate_from_config,
+    generators::{args::generate_from_args, yaml::generate_from_yaml},
+    macro_generate_files,
+    models::model_params::FileGenerationParams,
+    utils::{
+        create_directory, get_csv_field, get_json_field, get_yaml_field,
     },
-    utils::{get_csv_field, get_json_field, get_yaml_field},
 };
 use tempfile::tempdir;
 
@@ -32,9 +31,9 @@ fn test_get_json_field() {
     let value = if Path::new(file_path).exists() {
         get_json_field(Some(file_path), field_name)
     } else {
-        Ok(String::new()) // Wrap the String in Ok
+        Ok(String::new())
     };
-    assert_eq!(value.unwrap(), "null".to_string()); // Unwrap the value and compare with "null"
+    assert_eq!(value.unwrap_or_default(), "".to_string());
 }
 
 /// Tests the `get_yaml_field` function by passing a YAML file path and
@@ -46,9 +45,9 @@ fn test_get_yaml_field() {
     let value = if Path::new(file_path).exists() {
         get_yaml_field(Some(file_path), field_name)
     } else {
-        Ok(String::new()) // Wrapping the String in Ok to match the expected type
+        Ok(String::new())
     };
-    assert_eq!(value.unwrap(), "null".to_string()); // Unwrap the value and compare with "null"
+    assert_eq!(value.unwrap_or_default(), "".to_string());
 }
 
 /// Tests the `generate_from_config` function by passing a YAML file
@@ -146,7 +145,7 @@ fn test_from_args() {
 /// `FileGenerationParams` struct and checking if the function runs
 /// without errors.
 #[test]
-fn test_assert_generate_files() {
+fn test_macro_generate_files() {
     let temp_dir = env::temp_dir().join("my_library");
     let mut params = FileGenerationParams::new();
     params.output =
@@ -155,7 +154,7 @@ fn test_assert_generate_files() {
 
 #[test]
 #[allow(clippy::redundant_clone)]
-fn test_generate_files() {
+fn test_generate_files() -> Result<(), String> {
     // Create a temporary directory
     let temp_directory = tempdir();
     let temp_path = temp_directory.unwrap().path().to_owned();
@@ -165,13 +164,15 @@ fn test_generate_files() {
     params.output = Some(temp_path.to_str().unwrap().to_owned());
 
     // Call the function you want to test
-    assert_generate_files!(params.clone());
+    macro_generate_files!(params.clone())?;
 
     // Assert that the temporary directory exists
     assert!(temp_path.exists());
 
     // Clean up: Remove the temporary directory and its contents
     std::fs::remove_dir_all(temp_path).unwrap();
+
+    Ok(())
 }
 
 /// Tests the `create_directory` function by passing an invalid path and

@@ -132,7 +132,7 @@ jobs:
       - name: Install grcov
         run: |
           mkdir -p "${HOME}/.local/bin"
-          curl -sL https://github.com/mozilla/grcov/releases/download/v0.8.18/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf - -C "${HOME}/.local/bin"
+          curl -sL https://github.com/mozilla/grcov/releases/download/v0.8.19/grcov-x86_64-unknown-linux-gnu.tar.bz2 | tar jxf - -C "${HOME}/.local/bin"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       # Use grcov to generate a coverage report
@@ -396,7 +396,7 @@ jobs:
             name="${target}.tar.gz"
             echo "Artifact name: $name"
             mkdir -p target/package
-            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts/${name}" -o "target/package/${name}"
+            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts/{name}" -o "target/package/{name}"
           done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -432,7 +432,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ env.VERSION }}
-          release_name: {name} 🦀 v${{ env.VERSION }}
+          release_name: {name}} 🦀 v${{ env.VERSION }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
           draft: true
           prerelease: false

@@ -18,17 +18,9 @@ align="right"
 <center>
 <!-- markdownlint-enable MD033 MD041 -->
 
-[![Made With Rust][made-with-rust-badge]][5]
-[![Crates.io][crates-badge]][7]
-[![Lib.rs][libs-badge]][9]
-[![Docs.rs][docs-badge]][8]
-[![License][license-badge]][2]
+[![Made With Rust][made-with-rust-badge]][04] [![Crates.io][crates-badge]][06] [![Lib.rs][libs-badge]][08] [![Docs.rs][docs-badge]][07] [![License][license-badge]][01]
 
-• [Website][0]
-• [Documentation][8]
-• [Report Bug][3]
-• [Request Feature][3]
-• [Contributing Guidelines][4]
+• [Website][00] • [Documentation][07] • [Report Bug][02] • [Request Feature][02] • [Contributing Guidelines][03]
 
 <!-- markdownlint-disable MD033 MD041 -->
 </center>
@@ -54,19 +46,13 @@ It takes just a few minutes to get up and running with `{name}`.
 
 To install `{name}`, you need to have the Rust toolchain installed on
 your machine. You can install the Rust toolchain by following the
-instructions on the [Rust website][13].
+instructions on the [Rust website][12].
 
 Once you have the Rust toolchain installed, you can install `{name}`
 using the following command:
 
 ```shell
 cargo install {name}
-```
-
-You can then run the help command to see the available options:
-
-```shell
-{name} --help
 ```
 
 ### Requirements
@@ -106,13 +92,13 @@ The minimum supported Rust toolchain version is currently Rust
 | ✅ | macOS   | aarch64-apple-darwin | 64-bit macOS (10.7 Lion or later) |
 | ✅ | Windows | aarch64-pc-windows-msvc | 64-bit Windows (7 or later) |
 
-The [GitHub Actions][10] shows the platforms in which the `{name}`
+The [GitHub Actions][09] shows the platforms in which the `{name}`
 library tests are run.
 
 ### Documentation
 
-**Info:** Please check out our [website][0] for more information. You can find our documentation on [docs.rs][8], [lib.rs][9] and
-[crates.io][7].
+**Info:** Please check out our [website][00] for more information. You can find our documentation on [docs.rs][07], [lib.rs][08] and
+[crates.io][06].
 
 ## Usage 📖
 
@@ -121,7 +107,7 @@ To use the `{name}` library in your project, add the following to your
 
 ```toml
 [dependencies]
-{name} = "{version}"
+{name} = {version}
 ```
 
 Add the following to your `main.rs` file:
@@ -142,13 +128,13 @@ To run the examples, clone the repository and run the following command
 in your terminal from the project root directory.
 
 ```shell
-cargo run --example {name}
+cargo run --example example
 ```
 
 ## Semantic Versioning Policy 🚥
 
 For transparency into our release cycle and in striving to maintain
-backward compatibility, `{name}` follows [semantic versioning][6].
+backward compatibility, `{name}` follows [semantic versioning][05].
 
 ## License 📝
 
@@ -157,10 +143,10 @@ The project is licensed under the terms of {license}.
 ## Contribution 🤝
 
 We welcome all people who want to contribute. Please see the
-[contributing instructions][4] for more information.
+[contributing instructions][03] for more information.
 
 Contributions in any form (issues, pull requests, etc.) to this project
-must adhere to the [Rust's Code of Conduct][11].
+must adhere to the [Rust's Code of Conduct][10].
 
 Unless you explicitly state otherwise, any contribution intentionally
 submitted for inclusion in the work by you, as defined in the
@@ -169,25 +155,25 @@ additional terms or conditions.
 
 ## Acknowledgements 💙
 
-A big thank you to all the awesome contributors of [{name}][5] for their
+A big thank you to all the awesome contributors of [{name}][04] for their
 help and support.
 
-A special thank you goes to the [Rust Reddit][12] community for
+A special thank you goes to the [Rust Reddit][11] community for
 providing a lot of useful suggestions on how to improve this project.
 
-[0]: {website}
-[2]: http://opensource.org/licenses/MIT
-[3]: {repository}/{name}/issues
-[4]: {repository}/{name}/blob/main/CONTRIBUTING.md
-[5]: {repository}/{name}/graphs/contributors
-[6]: http://semver.org/
-[7]: https://crates.io/crates/{name}
-[8]: https://docs.rs/{name}
-[9]: https://lib.rs/crates/{name}
-[10]: {repository}/{name}/actions
-[11]: https://www.rust-lang.org/policies/code-of-conduct
-[12]: https://www.reddit.com/r/rust/
-[13]: https://www.rust-lang.org/learn/get-started
+[00]: {website} "Website of {name}"
+[01]: https://opensource.org/license/apache-2-0/ "Apache License, Version 2.0"
+[02]: {repository}/{name}/issues "Issues page of {name}"
+[03]: {repository}/{name}/blob/main/CONTRIBUTING.md "Contributing guidelines"
+[04]: {repository}/{name}/graphs/contributors "Contributors of {name}"
+[05]: http://semver.org/ "Semantic Versioning"
+[06]: https://crates.io/crates/{name} "Crates.io page of {name}"
+[07]: https://docs.rs/{name} "Docs.rs page of {name}"
+[08]: https://lib.rs/crates/{name} "Lib.rs page of {name}"
+[09]: {repository}/{name}/actions "GitHub Actions page of {name}"
+[10]: https://www.rust-lang.org/policies/code-of-conduct "Rust's Code of Conduct"
+[11]: https://www.reddit.com/r/rust/ "Rust Reddit community"
+[12]: https://www.rust-lang.org/learn/get-started "Rust installation page"
 
 [crates-badge]: https://img.shields.io/crates/v/{name}.svg?style=for-the-badge 'Crates.io badge'
 [divider]: https://kura.pro/common/images/elements/divider.svg "divider"

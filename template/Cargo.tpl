@@ -1,32 +1,27 @@
 [package]
-authors = ["{author} <{email}>"]
-build = "{build}"
-categories = [{categories}]
-description = "{description}"
-documentation = "{documentation}"
-edition = "{edition}"
-exclude = [
-    "/.git/*",
-    "/.github/*",
-    "/.gitignore",
-    "/.vscode/*"
-    ]
-homepage = "{homepage}"
-keywords = ["{keywords}"]
-license = "{license}"
+authors = [{author}]
+build = {build}
+categories = {categories}
+description = {description}
+documentation = {documentation}
+edition = {edition}
+exclude = ["/.git/*", "/.github/*", "/.gitignore", "/.vscode/*"]
+homepage = {homepage}
+keywords = {keywords}
+license = {license}
 name = "{name}"
-readme = "{readme}"
+readme = {readme}
 repository = "{repository}"
-rust-version = "{rustversion}"
-version = "{version}"
+rust-version = {rustversion}
+version = {version}
 include = [
+    "/CONTRIBUTING.md",
+    "/LICENSE-APACHE",
+    "/LICENSE-MIT",
     "/benches/**",
     "/build.rs",
     "/Cargo.toml",
-    "/CONTRIBUTING.md",
     "/examples/**",
-    "/LICENSE-APACHE",
-    "/LICENSE-MIT",
     "/README.md",
     "/src/**",
     "/tests/**"
@@ -46,7 +41,7 @@ dtt = "0.0.5"
 env_logger = "0.11.3"
 rlg = "0.0.3"
 serde = { version = "1.0.197", features = ["derive"] }
-serde_json = "1.0.114"
+serde_json = "1.0.115"
 serde_yaml = "0.9.33"
 toml = "0.8.12"
 vrd = "0.0.6"

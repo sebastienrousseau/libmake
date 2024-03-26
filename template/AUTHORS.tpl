@@ -1,3 +1,3 @@
 # Authors
 
-* [{author}]({email}) (Original Contributor)
+* {author} ({email}) (Original Contributor)

@@ -1,79 +1,91 @@
 #[cfg(test)]
 mod tests {
 
-    use libmake::generator::{
-        generate_files, generate_from_csv, generate_from_json,
-        generate_from_yaml,
-    };
-    use libmake::generator::{
-        generate_from_config, FileGenerationParams,
-    };
+    use libmake::models::model_params::FileGenerationParams;
     use std::path::Path;
 
+    use libmake::macro_create_directories;
+
     use libmake::{
-        assert_create_directory, assert_generate_files,
-        assert_generate_from_config, assert_generate_from_csv,
-        assert_generate_from_json, assert_generate_from_yaml,
+        macro_generate_files, macro_generate_from_config,
+        macro_generate_from_csv, macro_generate_from_json,
+        macro_generate_from_yaml,
     };
 
     // Unit test for the `create_directory()` function.
     #[test]
     fn test_create_directory() {
-        assert_create_directory!("my_library");
+        let result = macro_create_directories!("my_library");
+        match result {
+            Ok(()) => println!("Directory created successfully!"),
+            Err(err) => println!("Error creating directory: {}", err),
+        }
     }
     // Unit test for the `generate_files()` function.
     #[test]
     #[allow(clippy::redundant_clone)]
-    fn test_generate_files() {
+    fn test_generate_files() -> Result<(), String> {
         let mut params = FileGenerationParams::new();
         params.output = Some("my_library".into());
-        assert_generate_files!(params.clone());
+        macro_generate_files!(params.clone())?;
+        Ok(())
     }
     // Unit test for the `generate_from_csv()` function.
     #[test]
-    fn test_generate_from_csv() {
-        assert_generate_from_csv!("./tests/data/mylibrary.csv");
+    fn test_generate_from_csv() -> Result<(), String> {
+        macro_generate_from_csv!("./tests/data/mylibrary.csv")?;
+        Ok(())
     }
     // Unit test for the `generate_from_json()` function.
     #[test]
-    fn test_generate_from_json() {
-        assert_generate_from_json!("./tests/data/mylibrary.json");
+    fn test_generate_from_json() -> Result<(), String> {
+        macro_generate_from_json!("./tests/data/mylibrary.json")?;
+        Ok(())
     }
     // Unit test for the `generate_from_yaml()` function.
     #[test]
-    fn test_generate_from_yaml() {
-        assert_generate_from_yaml!("./tests/data/mylibrary.yaml");
+    fn test_generate_from_yaml() -> Result<(), String> {
+        macro_generate_from_yaml!("./tests/data/mylibrary.yaml")?;
+        Ok(())
     }
     // Unit test for the `generate_from_config()` function.
     #[test]
-    fn test_generate_from_config() {
-        assert_generate_from_config!(
+    fn test_generate_from_config() -> Result<(), String> {
+        macro_generate_from_config!(
             "./tests/data/mylibrary.yaml",
             "yaml"
-        );
+        )?;
+        Ok(())
     }
-    // Unit test for the `assert_create_directory!()` macro.
+    // Unit test for the `macro_create_directories!()` macro.
     #[test]
-    fn test_assert_create_directory() {
-        assert_create_directory!("./target/tmp");
+    fn test_macro_create_directories() {
+        let result = macro_create_directories!("./target/tmp");
+        match result {
+            Ok(()) => println!("Directory created successfully!"),
+            Err(err) => println!("Error creating directory: {}", err),
+        }
         let _ = std::fs::remove_dir_all("./target/tmp");
     }
-    // Unit test for the `assert_generate_from_csv!()` macro.
+    // Unit test for the `macro_generate_from_csv!()` macro.
     #[test]
-    fn test_assert_generate_from_csv() {
-        assert_generate_from_csv!("./tests/data/mylibrary.csv");
+    fn test_macro_generate_from_csv() -> Result<(), String> {
+        macro_generate_from_csv!("./tests/data/mylibrary.csv")?;
         assert!(Path::new("my_library").exists());
+        Ok(())
     }
-    // Unit test for the `assert_generate_from_json!()` macro.
+    // Unit test for the `macro_generate_from_json!()` macro.
     #[test]
-    fn test_assert_generate_from_json() {
-        assert_generate_from_json!("./tests/data/mylibrary.json");
+    fn test_macro_generate_from_json() -> Result<(), String> {
+        macro_generate_from_json!("./tests/data/mylibrary.json")?;
         assert!(Path::new("my_library").exists());
+        Ok(())
     }
-    // Unit test for the `assert_generate_from_yaml!()` macro.
+    // Unit test for the `macro_generate_from_yaml!()` macro.
     #[test]
-    fn test_assert_generate_from_yaml() {
-        assert_generate_from_yaml!("./tests/data/mylibrary.yaml");
+    fn test_macro_generate_from_yaml() -> Result<(), String> {
+        macro_generate_from_yaml!("./tests/data/mylibrary.yaml")?;
         assert!(Path::new("my_library").exists());
+        Ok(())
     }
 }

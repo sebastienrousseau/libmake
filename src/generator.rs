@@ -3,206 +3,15 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
 // Copyright © 2024 LibMake. All rights reserved.
 
-use super::interface::replace_placeholders;
-use serde::{Deserialize, Serialize};
-use std::{
-    fs, io,
-    path::{Path, PathBuf},
+use crate::{
+    interface::replace_placeholders, macro_generate_from_csv,
+    macro_generate_from_ini, macro_generate_from_json,
+    macro_generate_from_toml, macro_generate_from_yaml,
+    models::model_params::FileGenerationParams,
+    utils::create_directory,
 };
+use std::{fs, io, path::PathBuf};
 
-/// Structure for holding the parameters for generating the project files.
-///
-/// # Description
-///
-/// * The `output` directory is the directory where the project files will be created.
-/// * The other parameters are optional and will be used to replace the placeholders in the template files.
-/// * The template files are located in the template directory of the project.
-/// * The template files are copied to the output directory and the placeholders are replaced with the values of the parameters.
-///
-#[derive(
-    Clone,
-    Debug,
-    Default,
-    Deserialize,
-    Eq,
-    Hash,
-    Ord,
-    PartialEq,
-    PartialOrd,
-    Serialize,
-)]
-pub struct FileGenerationParams {
-    /// The author of the project (optional).
-    pub author: Option<String>,
-    /// The build command to be used for building the project (optional).
-    pub build: Option<String>,
-    /// The categories that the project belongs to (optional).
-    pub categories: Option<String>,
-    /// A short description of the project (optional).
-    pub description: Option<String>,
-    /// The documentation URL of the project (optional).
-    pub documentation: Option<String>,
-    /// The edition of the project (optional).
-    pub edition: Option<String>,
-    /// The email address of the author (optional).
-    pub email: Option<String>,
-    /// The homepage of the project (optional).
-    pub homepage: Option<String>,
-    /// Keywords that describe the project (optional).
-    pub keywords: Option<String>,
-    /// The license under which the project is released (optional).
-    pub license: Option<String>,
-    /// The name of the project (optional).
-    pub name: Option<String>,
-    /// The output directory where the project files will be created (optional).
-    pub output: Option<String>,
-    /// The name of the readme file (optional).
-    pub readme: Option<String>,
-    /// The URL of the project's repository (optional).
-    pub repository: Option<String>,
-    /// The minimum Rust version required by the project (optional).
-    pub rustversion: Option<String>,
-    /// The initial version of the project (optional).
-    pub version: Option<String>,
-    /// The website of the project (optional).
-    pub website: Option<String>,
-}
-
-impl FileGenerationParams {
-    /// Creates a default instance with default values for all fields.
-    /// Fields that are truly optional without a default are initialized as `None`.
-    pub fn default_params() -> Self {
-        Self {
-            author: Some("John Smith".to_string()),
-            build: Some("build.rs".to_string()),
-            categories: Some(
-                "[\"category1\",\"category2\",\"category3\"]"
-                    .to_string(),
-            ),
-            description: Some(
-                "A Rust library for doing cool things".to_string(),
-            ),
-            documentation: Some(
-                "https://docs.rs/my_library".to_string(),
-            ),
-            edition: Some("2021".to_string()),
-            email: Some("john.smith@example.com".to_string()),
-            homepage: Some("https://my_library.rs".to_string()),
-            keywords: Some(
-                "[\"rust\",\"library\",\"cool\"]".to_string(),
-            ),
-            license: Some("MIT".to_string()),
-            name: Some("my_library".to_string()),
-            output: Some("my_library".to_string()),
-            readme: Some("README.md".to_string()),
-            repository: Some(
-                "https://github.com/example/my_library".to_string(),
-            ),
-            rustversion: Some("1.75.0".to_string()),
-            version: Some("0.1.0".to_string()),
-            website: Some("https://example.com/john-smith".to_string()),
-        }
-    }
-    /// Parses the command line arguments and returns a new instance of
-    /// the structure.
-
-    /// Creates a new instance with default values.
-    pub fn new() -> Self {
-        Self::default_params()
-    }
-    /// Parses the command line arguments and returns a new instance of
-    /// the structure.
-    ///
-    /// # Arguments
-    /// * `args_str` - A string slice containing the command line arguments.
-    ///
-    /// # Errors
-    /// Returns an `Err` if the arguments are not in the expected format
-    /// or if mandatory arguments are missing. The error is a `String`
-    /// describing what went wrong.
-    ///
-    pub fn from_args(args_str: &str) -> Result<Self, String> {
-        let mut params = Self::new();
-        let args: Vec<&str> = args_str.split_whitespace().collect();
-        for arg in args {
-            let mut arg_parts = arg.splitn(2, ' ');
-            let arg_name = arg_parts
-                .next()
-                .ok_or_else(|| "Missing argument name".to_string())?;
-            let arg_value = arg_parts
-                .next()
-                .ok_or_else(|| "Missing argument value".to_string())?;
-            match arg_name {
-                "--author" => {
-                    params.author = Some(arg_value.to_string());
-                }
-                "--build" => params.build = Some(arg_value.to_string()),
-                "--categories" => {
-                    params.categories = Some(arg_value.to_string());
-                }
-                "--description" => {
-                    params.description = Some(arg_value.to_string());
-                }
-                "--documentation" => {
-                    params.documentation = Some(arg_value.to_string());
-                }
-                "--edition" => {
-                    params.edition = Some(arg_value.to_string());
-                }
-                "--email" => params.email = Some(arg_value.to_string()),
-                "--homepage" => {
-                    params.homepage = Some(arg_value.to_string());
-                }
-                "--keywords" => {
-                    params.keywords = Some(arg_value.to_string());
-                }
-                "--license" => {
-                    params.license = Some(arg_value.to_string());
-                }
-                "--name" => params.name = Some(arg_value.to_string()),
-                "--output" => {
-                    params.output = Some(arg_value.to_string());
-                }
-                "--readme" => {
-                    params.readme = Some(arg_value.to_string());
-                }
-                "--repository" => {
-                    params.repository = Some(arg_value.to_string());
-                }
-                "--rustversion" => {
-                    params.rustversion = Some(arg_value.to_string());
-                }
-                "--version" => {
-                    params.version = Some(arg_value.to_string());
-                }
-                "--website" => {
-                    params.website = Some(arg_value.to_string());
-                }
-                _ => (),
-            }
-        }
-        Ok(params)
-    }
-}
-
-/// Creates a directory at the specified path.
-///
-/// # Arguments
-///
-/// * `path` - The path where the directory should be created.
-///
-/// # Errors
-///
-/// Returns an `io::Error` if the directory cannot be created. This could be due to
-/// various reasons such as insufficient permissions, the directory already existing,
-/// or other I/O-related errors.
-///
-pub fn create_directory(path: &Path) -> io::Result<()> {
-    fs::create_dir(path).or_else(|e| match e.kind() {
-        io::ErrorKind::AlreadyExists => Ok(()),
-        _ => Err(e),
-    })
-}
 /// Creates the template folder and downloads necessary template files.
 ///
 /// This function attempts to create a template directory in the current working directory
@@ -233,14 +42,12 @@ pub fn create_template_folder() -> io::Result<()> {
         "example.tpl",
         "gitignore.tpl",
         "lib.tpl",
-        "loggers.tpl",
         "macros.tpl",
         "main.tpl",
         "README.tpl",
         "rustfmt.tpl",
         "TEMPLATE.tpl",
         "test.tpl",
-        "test_loggers.tpl",
     ];
     for file in &files {
         let file_path = template_dir_path.join(file);
@@ -294,8 +101,6 @@ pub fn create_template_folder() -> io::Result<()> {
 /// - If the destination file cannot be created or written to.
 /// - If there is an error in replacing placeholders in the destination file.
 ///
-/// The specific error will provide more details about what went wrong.
-///
 pub fn copy_and_replace_template(
     template_file: &str,
     dest_file: &str,
@@ -339,7 +144,10 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         ));
     };
 
-    let project_directory = PathBuf::from(output.clone());
+    // Get the project directory path from the output parameter,
+    // create a PathBuf from it, and assign it to the project_directory variable
+    let project_directory =
+        PathBuf::from(output.clone().trim_matches('\"'));
 
     // Creating the project directory
     create_directory(&project_directory)?;
@@ -376,13 +184,11 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         ("example.tpl", "examples/example.rs"),
         ("gitignore.tpl", ".gitignore"),
         ("lib.tpl", "src/lib.rs"),
-        ("loggers.tpl", "src/loggers.rs"),
         ("macros.tpl", "src/macros.rs"),
         ("main.tpl", "src/main.rs"),
         ("README.tpl", "README.md"),
         ("rustfmt.tpl", "rustfmt.toml"),
         ("TEMPLATE.tpl", "TEMPLATE.md"),
-        ("test_loggers.tpl", "tests/test_loggers.rs"),
         ("test.tpl", "tests/test.rs"),
     ];
 
@@ -451,7 +257,7 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 /// # Arguments
 ///
 /// - `path` - The path to the configuration file.
-/// - `file_type` - The type of the configuration file (e.g., JSON, YAML, CSV).
+/// - `file_type` - The type of the configuration file (e.g., JSON, YAML, CSV, TOML and INI).
 ///
 /// # Errors
 ///
@@ -464,310 +270,20 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 pub fn generate_from_config(
     path: &str,
     file_type: &str,
-) -> io::Result<()> {
+) -> Result<(), String> {
     match file_type {
-        "csv" => generate_from_csv(path),
-        "ini" => generate_from_ini(path),
-        "json" => generate_from_json(path),
-        "yaml" => generate_from_yaml(path),
-        "toml" => generate_from_toml(path),
-        _ => Err(io::Error::new(
-            io::ErrorKind::InvalidInput,
-            "Invalid configuration file format. Supported formats: CSV, INI, JSON, TOML, YAML.",
-        )),
-    }
-}
-
-/// Generates files for a new Rust project based on a CSV file.
-///
-/// # Arguments
-///
-/// The CSV file must contain the following columns:
-///
-/// - `author` - the author of the project (optional).
-/// - `build` - the build command to be used for building the project (optional).
-/// - `categories` - the categories that the project belongs to (optional).
-/// - `description` - a short description of the project (optional).
-/// - `documentation` - the documentation URL of the project (optional).
-/// - `edition` - the edition of the project (optional).
-/// - `email` - the email address of the author (optional).
-/// - `homepage` - the homepage of the project (optional).
-/// - `keywords` - keywords that describe the project (optional).
-/// - `license` - the license under which the project is released (optional).
-/// - `name` - the name of the project (optional).
-/// - `output` - the output directory where the project files will be created (required).
-/// - `readme` - the name of the readme file (optional).
-/// - `repository` - the url of the project's repository (optional).
-/// - `rustversion` - the minimum Rust version required by the project (optional).
-/// - `version` - the initial version of the project (optional).
-/// - `website` - the website of the project (optional).
-///
-/// # Errors
-///
-/// This function will return an error in the following situations:
-///
-/// - If the specified CSV file cannot be found, read, or is not valid CSV.
-/// - If an error occurs while parsing the CSV data into the `FileGenerationParams` struct.
-/// - If there is an error in generating files based on the parameters from each CSV record.
-///
-pub fn generate_from_csv(path: &str) -> io::Result<()> {
-    let mut reader = csv::Reader::from_path(path)?;
-    for result in reader.records() {
-        let record = result?;
-        // println!("{:?}", record);
-        let params = FileGenerationParams {
-            author: record.get(0).map(ToString::to_string),
-            build: record.get(1).map(ToString::to_string),
-            categories: record.get(2).map(ToString::to_string),
-            description: record.get(3).map(ToString::to_string),
-            documentation: record.get(4).map(ToString::to_string),
-            edition: record.get(5).map(ToString::to_string),
-            email: record.get(6).map(ToString::to_string),
-            homepage: record.get(7).map(ToString::to_string),
-            keywords: record.get(8).map(ToString::to_string),
-            license: record.get(9).map(ToString::to_string),
-            name: record.get(10).map(ToString::to_string),
-            output: record.get(11).map(ToString::to_string),
-            readme: record.get(12).map(ToString::to_string),
-            repository: record.get(13).map(ToString::to_string),
-            rustversion: record.get(14).map(ToString::to_string),
-            version: record.get(15).map(ToString::to_string),
-            website: record.get(16).map(ToString::to_string),
-        };
-        // println!("Params: {:?}", params);
-        generate_files(params)?;
-    }
-    Ok(())
-}
-
-/// Generates files for a new Rust project based on a JSON file.
-///
-/// # Arguments
-///
-/// The JSON file must contain a single object with the following
-/// properties:
-///
-/// - `author` - the author of the project (optional).
-/// - `build` - the build command to be used for building the project (optional).
-/// - `categories` - the categories that the project belongs to (optional).
-/// - `description` - a short description of the project (optional).
-/// - `documentation` - the documentation URL of the project (optional).
-/// - `edition` - the edition of the project (optional).
-/// - `email` - the email address of the author (optional).
-/// - `homepage` - the homepage of the project (optional).
-/// - `keywords` - keywords that describe the project (optional).
-/// - `license` - the license under which the project is released (optional).
-/// - `name` - the name of the project (optional).
-/// - `output` - the output directory where the project files will be created (required).
-/// - `readme` - the name of the readme file (optional).
-/// - `repository` - the url of the project's repository (optional).
-/// - `rustversion` - the minimum Rust version required by the project (optional).
-/// - `version` - the initial version of the project (optional).
-/// - `website` - the website of the project (optional).
-///
-/// # Errors
-///
-/// This function will return an error in the following situations:
-///
-/// - If the specified JSON file cannot be found, read, or is not valid UTF-8.
-/// - If the JSON data cannot be deserialized into the `FileGenerationParams` struct.
-/// - If there is an error in generating files based on the parameters.
-///
-pub fn generate_from_json(path: &str) -> io::Result<()> {
-    let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = serde_json::from_str(&contents)?;
-    generate_files(params)?;
-    Ok(())
-}
-
-/// Generates files for a new Rust project based on a YAML file.
-///
-/// The YAML file must contain a single object with the following
-/// properties:
-///
-/// - `author` - the author of the project (optional).
-/// - `build` - the build command to be used for building the project (optional).
-/// - `categories` - the categories that the project belongs to (optional).
-/// - `description` - a short description of the project (optional).
-/// - `documentation` - the documentation URL of the project (optional).
-/// - `edition` - the edition of the project (optional).
-/// - `email` - the email address of the author (optional).
-/// - `homepage` - the homepage of the project (optional).
-/// - `keywords` - keywords that describe the project (optional).
-/// - `license` - the license under which the project is released (optional).
-/// - `name` - the name of the project (optional).
-/// - `output` - the output directory where the project files will be created (required).
-/// - `readme` - the name of the readme file (optional).
-/// - `repository` - the url of the project's repository (optional).
-/// - `rustversion` - the minimum Rust version required by the project (optional).
-/// - `version` - the initial version of the project (optional).
-/// - `website` - the website of the project (optional).
-///
-/// # Errors
-///
-/// This function will return an error in the following situations:
-///
-/// - If the specified YAML file cannot be found, read, or is not valid UTF-8.
-/// - If the YAML data cannot be deserialized into the `FileGenerationParams` struct.
-/// - If there is an error in generating files based on the parameters.
-///
-pub fn generate_from_yaml(path: &str) -> io::Result<()> {
-    let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = serde_yaml::from_str(&contents)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    generate_files(params)?;
-    Ok(())
-}
-
-/// Generates files for a new Rust project based on an INI file.
-///
-/// The INI file must contain a single section with the following
-/// keys:
-/// - `author` - the author of the project (optional).
-/// - `build` - the build command to be used for building the project (optional).
-/// - `categories` - the categories that the project belongs to (optional).
-/// - `description` - a short description of the project (optional).
-/// - `documentation` - the documentation URL of the project (optional).
-/// - `edition` - the edition of the project (optional).
-/// - `email` - the email address of the author (optional).
-/// - `homepage` - the homepage of the project (optional).
-/// - `keywords` - keywords that describe the project (optional).
-/// - `license` - the license under which the project is released (optional).
-/// - `name` - the name of the project (optional).
-/// - `output` - the output directory where the project files will be created (required).
-/// - `readme` - the name of the readme file (optional).
-/// - `repository` - the url of the project's repository (optional).
-/// - `rustversion` - the minimum Rust version required by the project (optional).
-/// - `version` - the initial version of the project (optional).
-/// - `website` - the website of the project (optional).
-///
-/// # Errors
-///
-/// This function will return an error in the following situations:
-///
-/// - If the specified INI file cannot be found, read, or is not valid UTF-8.
-/// - If the INI data cannot be parsed into the `FileGenerationParams` struct.
-/// - If there is an error in generating files based on the parameters.
-///
-pub fn generate_from_ini(path: &str) -> io::Result<()> {
-    let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = toml::from_str(&contents)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    generate_files(params)?;
-    Ok(())
-}
-
-/// Generates files for a new Rust project based on a TOML file.
-///
-/// The TOML file must contain a single object with the following
-/// properties:
-///
-/// - `author` - the author of the project (optional).
-/// - `build` - the build command to be used for building the project (optional).
-/// - `categories` - the categories that the project belongs to (optional).
-/// - `description` - a short description of the project (optional).
-/// - `documentation` - the documentation URL of the project (optional).
-/// - `edition` - the edition of the project (optional).
-/// - `email` - the email address of the author (optional).
-/// - `homepage` - the homepage of the project (optional).
-/// - `keywords` - keywords that describe the project (optional).
-/// - `license` - the license under which the project is released (optional).
-/// - `name` - the name of the project (optional).
-/// - `output` - the output directory where the project files will be created (required).
-/// - `readme` - the name of the readme file (optional).
-/// - `repository` - the url of the project's repository (optional).
-/// - `rustversion` - the minimum Rust version required by the project (optional).
-/// - `version` - the initial version of the project (optional).
-/// - `website` - the website of the project (optional).
-///
-/// # Errors
-///
-/// This function will return an error in the following situations:
-///
-/// - If the specified TOML file cannot be found, read, or is not valid UTF-8.
-/// - If the TOML data cannot be deserialized into the `FileGenerationParams` struct.
-/// - If there is an error in generating files based on the parameters.
-///
-pub fn generate_from_toml(path: &str) -> io::Result<()> {
-    let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = toml::from_str(&contents)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    generate_files(params)?;
-    Ok(())
-}
-
-/// Generates files for a new Rust project based on command line arguments.
-/// The arguments must be in the form `--name=value`.
-/// The following arguments are supported:
-/// - `author` - the author of the project (optional).
-/// - `build` - the build command to be used for building the project (optional).
-/// - `categories` - the categories that the project belongs to (optional).
-/// - `description` - a short description of the project (optional).
-/// - `documentation` - the documentation URL of the project (optional).
-/// - `edition` - the edition of the project (optional).
-/// - `email` - the email address of the author (optional).
-/// - `homepage` - the homepage of the project (optional).
-/// - `keywords` - keywords that describe the project (optional).
-/// - `license` - the license under which the project is released (optional).
-/// - `name` - the name of the project (optional).
-/// - `output` - the output directory where the project files will be created (required).
-/// - `readme` - the name of the readme file (optional).
-/// - `repository` - the url of the project's repository (optional).
-/// - `rustversion` - the minimum Rust version required by the project (optional).
-/// - `version` - the initial version of the project (optional).
-/// - `website` - the website of the project (optional).
-///
-/// # Errors
-///
-/// This function will return an error in the following situations:
-///
-/// - If an invalid argument is provided. Each argument must be in the form `--name=value`.
-/// - If there is an error in generating files based on the parameters derived from the arguments.
-///
-pub fn generate_from_args(args_str: &str) -> io::Result<()> {
-    let args = args_str.split_whitespace();
-    let mut params = FileGenerationParams::default();
-    for arg in args {
-        let mut parts = arg.splitn(2, '=');
-        let name = parts.next().unwrap_or_default();
-        let value = parts.next().unwrap_or_default();
-        match name {
-            "--author" => params.author = Some(value.to_string()),
-            "--build" => params.build = Some(value.to_string()),
-            "--categories" => {
-                params.categories = Some(value.to_string());
-            }
-            "--description" => {
-                params.description = Some(value.to_string());
-            }
-            "--documentation" => {
-                params.documentation = Some(value.to_string());
-            }
-            "--edition" => params.edition = Some(value.to_string()),
-            "--email" => params.email = Some(value.to_string()),
-            "--homepage" => params.homepage = Some(value.to_string()),
-            "--keywords" => params.keywords = Some(value.to_string()),
-            "--license" => params.license = Some(value.to_string()),
-            "--name" => params.name = Some(value.to_string()),
-            "--output" => params.output = Some(value.to_string()),
-            "--readme" => params.readme = Some(value.to_string()),
-            "--repository" => {
-                params.repository = Some(value.to_string());
-            }
-            "--rustversion" => {
-                params.rustversion = Some(value.to_string());
-            }
-            "--version" => params.version = Some(value.to_string()),
-            "--website" => params.website = Some(value.to_string()),
-            _ => {
-                return Err(io::Error::new(
-                    io::ErrorKind::Other,
-                    format!("Invalid argument: {name}"),
-                ))
-            }
+        "csv" => macro_generate_from_csv!(path)?,
+        "ini" => macro_generate_from_ini!(path)?,
+        "json" => macro_generate_from_json!(path)?,
+        "yaml" => macro_generate_from_yaml!(path)?,
+        "toml" => macro_generate_from_toml!(path)?,
+        _ => {
+            return Err(format!(
+                "Unsupported configuration file type: {}",
+                file_type
+            ))
         }
     }
-    println!("{params:?}");
-    generate_files(params)?;
     Ok(())
 }
+

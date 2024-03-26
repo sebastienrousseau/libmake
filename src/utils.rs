@@ -3,14 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
 // Copyright © 2024 LibMake. All rights reserved.
 
-use serde_json::Value;
-use serde_yaml::from_reader;
-use serde_yaml::{from_str, to_string, Value as YamlValue};
-use std::env;
-use std::fs;
-use std::fs::File;
-use std::io::BufReader;
-use std::path::Path;
+use crate::macro_get_field;
+use std::{
+    env,
+    fs::{self, File},
+    io,
+    path::Path,
+};
 
 /// Reads a file and deserializes its content using the specified deserializer function.
 ///
@@ -70,82 +69,16 @@ pub fn get_csv_field(
     })
 }
 
-/// Retrieves a specific field's value from a JSON file.
-///
-/// # Arguments
-///
-/// * `file_path` - An optional reference to the path of the JSON file.
-/// * `field_name` - The name of the field to retrieve the value from.
-///
-/// # Returns
-///
-/// Returns a `Result<String, Box<dyn std::error::Error>>` containing the value of the specified field, or an error if one occurs.
-///
-pub fn get_json_field(
-    file_path: Option<&str>,
-    field_name: &str,
-) -> Result<String, Box<dyn std::error::Error>> {
-    file_path.map_or_else(
-        || Ok(String::new()),
-        |file_path| {
-            let current_dir = env::current_dir()?;
-            let file_path = Path::new(&current_dir).join(file_path);
-            read_file(&file_path, |file| {
-                let json: Value = serde_json::from_reader(file)?;
-                let json_value = json[field_name].clone();
-                let field_value = match json_value.as_str() {
-                    Some(s) => s.to_string(),
-                    None => {
-                        let binding = json_value.to_string();
-                        let trimmed_binding =
-                            binding.trim_matches('"').to_string();
-                        trimmed_binding
-                    }
-                };
-                Ok(field_value)
-            })
-        },
-    )
-}
-
-/// Retrieves a specific field's value from a YAML file.
-///
-/// # Arguments
-///
-/// * `file_path` - An optional reference to the path of the YAML file.
-/// * `field_name` - The name of the field to retrieve the value from.
-///
-/// # Returns
-///
-/// Returns a `Result<String, Box<dyn std::error::Error>>` containing the value of the specified field, or an error if one occurs.
-///
-pub fn get_yaml_field(
-    file_path: Option<&str>,
-    field_name: &str,
-) -> Result<String, Box<dyn std::error::Error>> {
-    file_path.map_or_else(
-        || Ok(String::new()),
-        |file_path| {
-            let current_dir = env::current_dir()?;
-            let file_path = Path::new(&current_dir).join(file_path);
-            read_file(&file_path, |file| {
-                let yaml: serde_yaml::Value = from_reader(file)?;
-                println!("YAML Value: {:?}", yaml);
-                let field_value = &yaml[field_name];
-                println!("Field Value: {:?}", field_value);
-                let field_value_str = to_string(&field_value)?;
-                Ok(field_value_str.trim().to_string())
-            })
-        },
-    )
-}
+macro_get_field!(get_ini_field, serde_ini::from_read);
+macro_get_field!(get_json_field, serde_json::from_reader);
+macro_get_field!(get_yaml_field, serde_yaml::from_reader);
 
 /// Retrieves a specific field's value from a configuration file.
 ///
 /// # Arguments
 ///
 /// * `file_path` - An optional reference to the path of the configuration file.
-/// * `file_format` - The format of the configuration file ("json" or "yaml").
+/// * `file_format` - The format of the configuration file ("json", "yaml", or "ini").
 /// * `field_name` - The name of the field to retrieve the value from.
 ///
 /// # Returns
@@ -160,38 +93,35 @@ pub fn get_config_field(
     // Ensure file_path is provided
     let file_path = file_path.ok_or("File path is not provided")?;
 
-    // Ensure file_format is provided and is either 'json' or 'yaml'
+    // Ensure file_format is provided and is either 'json', 'yaml', or 'ini'
     let format = file_format.ok_or("File format is not provided")?;
     match format {
-        "json" => {
-            // Read JSON file and extract field value
-            let file = File::open(file_path)?;
-            let reader = BufReader::new(file);
-            let json: Value = serde_json::from_reader(reader)?;
-            let field_value = json.get(field_name).ok_or("Field not found in JSON")?;
-
-            // Handle JSON string values to remove surrounding quotes
-            match field_value.as_str() {
-                Some(s) => Ok(s.to_string()),
-                None => {
-                    let s = field_value.to_string();
-                    Ok(s.trim_matches('"').to_string())
-                }
-            }
-        },
-        "yaml" => {
-            let yaml_str = fs::read_to_string(file_path)?;
-            let yaml_value: YamlValue = from_str(&yaml_str)?;
-            let field_value = yaml_value.get(field_name).ok_or("Field not found in YAML")?;
-
-            // Convert the field_value to a string
-            let field_value_str = match field_value {
-                YamlValue::String(s) => s.clone(),
-                _ => to_string(field_value).unwrap(),
-            };
-
-            Ok(field_value_str)
-        }
-        _ => Err(format!("Unsupported file format: {}. Supported formats are 'json' and 'yaml'.", format).into())
+        "ini" => get_ini_field(Some(file_path), field_name),
+        "json" => get_json_field(Some(file_path), field_name),
+        "yaml" => get_yaml_field(Some(file_path), field_name),
+        _ => Err(format!(
+            "Unsupported file format: {}. Supported formats are 'json', 'yaml', and 'ini'.",
+            format
+        )
+        .into()),
     }
+}
+
+/// Creates a directory at the specified path.
+///
+/// # Arguments
+///
+/// * `path` - The path where the directory should be created.
+///
+/// # Errors
+///
+/// Returns an `io::Error` if the directory cannot be created. This could be due to
+/// various reasons such as insufficient permissions, the directory already existing,
+/// or other I/O-related errors.
+///
+pub fn create_directory(path: &Path) -> io::Result<()> {
+    fs::create_dir(path).or_else(|e| match e.kind() {
+        io::ErrorKind::AlreadyExists => Ok(()),
+        _ => Err(e),
+    })
 }
