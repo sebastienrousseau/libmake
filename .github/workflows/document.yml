@@ -3,6 +3,7 @@ name: 🧪 Document
 on:
   push:
     branches:
+      - main
       - feat/libmake
   pull_request:
     branches:
