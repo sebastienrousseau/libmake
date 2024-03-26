@@ -4,12 +4,13 @@
 // Copyright © 2024 LibMake. All rights reserved.
 
 use super::{
-    extract_param,
-    generator::{
-        generate_files, generate_from_csv, generate_from_ini,
-        generate_from_json, generate_from_toml, generate_from_yaml,
-        FileGenerationParams,
-    },
+    extract_param, generator::generate_files,
+    generators::csv::generate_from_csv,
+    generators::ini::generate_from_ini,
+    generators::json::generate_from_json,
+    generators::toml::generate_from_toml,
+    generators::yaml::generate_from_yaml,
+    models::model_params::FileGenerationParams,
 };
 use clap::ArgMatches;
 use std::error::Error;

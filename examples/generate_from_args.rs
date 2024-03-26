@@ -28,7 +28,7 @@
 //! If there is an error, it will print an error message.
 
 // Import the necessary function for generating files from arguments
-use libmake::generator::generate_from_args;
+use libmake::generators::args::generate_from_args;
 
 /// A simple test program for the `generate_from_args` function.
 ///

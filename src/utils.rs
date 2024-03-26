@@ -3,9 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
 // Copyright © 2024 LibMake. All rights reserved.
 
-use std::{env, fs::File, path::Path};
 use crate::macro_get_field;
-
+use std::{
+    env,
+    fs::{self, File},
+    io,
+    path::Path,
+};
 
 /// Reads a file and deserializes its content using the specified deserializer function.
 ///
@@ -101,4 +105,23 @@ pub fn get_config_field(
         )
         .into()),
     }
+}
+
+/// Creates a directory at the specified path.
+///
+/// # Arguments
+///
+/// * `path` - The path where the directory should be created.
+///
+/// # Errors
+///
+/// Returns an `io::Error` if the directory cannot be created. This could be due to
+/// various reasons such as insufficient permissions, the directory already existing,
+/// or other I/O-related errors.
+///
+pub fn create_directory(path: &Path) -> io::Result<()> {
+    fs::create_dir(path).or_else(|e| match e.kind() {
+        io::ErrorKind::AlreadyExists => Ok(()),
+        _ => Err(e),
+    })
 }

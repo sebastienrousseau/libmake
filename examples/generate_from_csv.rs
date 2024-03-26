@@ -31,7 +31,7 @@
 //! ```
 
 // Import the necessary function for generating templates from a CSV file.
-use libmake::generator::generate_from_csv;
+use libmake::generators::csv::generate_from_csv;
 
 /// Attempts to generate template files from the specified CSV file.
 ///
@@ -48,7 +48,7 @@ use libmake::generator::generate_from_csv;
 /// The following example demonstrates how to use the `generate_from_csv` function:
 ///
 /// ```rust
-/// use libmake::generator::generate_from_csv;
+/// use libmake::generators::csv::generate_from_csv;
 ///
 /// let csv_file_path = "./tests/data/mylibrary.csv";
 ///

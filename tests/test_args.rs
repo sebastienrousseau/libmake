@@ -1,8 +1,7 @@
 use clap::{Arg, Command};
-use libmake::args::extract_manual_params;
 use libmake::{
-    args::{process_arguments, validate_params},
-    generator::FileGenerationParams,
+    args::{extract_manual_params, process_arguments, validate_params},
+    models::model_params::FileGenerationParams
 };
 
 // Tests the process_arguments function with valid arguments

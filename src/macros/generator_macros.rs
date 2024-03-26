@@ -46,7 +46,7 @@ macro_rules! macro_generate_files {
 /// If successful, returns `Ok(())`. If an error occurs, returns `Err` with an error message.
 macro_rules! macro_generate_from_csv {
     ($csv_path:expr) => {{
-        use $crate::generator::generate_from_csv;
+        use $crate::generators::csv::generate_from_csv;
         match generate_from_csv($csv_path) {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("Failed to generate files from CSV at: {} - Error: {}", $csv_path, e)),
@@ -67,7 +67,7 @@ macro_rules! macro_generate_from_csv {
 /// If successful, returns `Ok(())`. If an error occurs, returns `Err` with an error message.
 macro_rules! macro_generate_from_ini {
     ($ini_path:expr) => {{
-        use $crate::generator::generate_from_ini;
+        use $crate::generators::ini::generate_from_ini;
         match generate_from_ini($ini_path) {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("Failed to generate files from INI at: {} - Error: {}", $ini_path, e)),
@@ -88,7 +88,7 @@ macro_rules! macro_generate_from_ini {
 /// If successful, returns `Ok(())`. If an error occurs, returns `Err` with an error message.
 macro_rules! macro_generate_from_json {
     ($json_path:expr) => {{
-        use $crate::generator::generate_from_json;
+        use $crate::generators::json::generate_from_json;
         match generate_from_json($json_path) {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("Failed to generate files from JSON at: {} - Error: {}", $json_path, e)),
@@ -109,7 +109,7 @@ macro_rules! macro_generate_from_json {
 /// If successful, returns `Ok(())`. If an error occurs, returns `Err` with an error message.
 macro_rules! macro_generate_from_toml {
     ($toml_path:expr) => {{
-        use $crate::generator::generate_from_toml;
+        use $crate::generators::toml::generate_from_toml;
         match generate_from_toml($toml_path) {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("Failed to generate files from TOML at: {} - Error: {}", $toml_path, e)),
@@ -130,7 +130,7 @@ macro_rules! macro_generate_from_toml {
 /// If successful, returns `Ok(())`. If an error occurs, returns `Err` with an error message.
 macro_rules! macro_generate_from_yaml {
     ($yaml_path:expr) => {{
-        use $crate::generator::generate_from_yaml;
+        use $crate::generators::yaml::generate_from_yaml;
         match generate_from_yaml($yaml_path) {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("Failed to generate files from YAML at: {} - Error: {}", $yaml_path, e)),
@@ -151,7 +151,7 @@ macro_rules! macro_generate_from_yaml {
 /// If successful, returns `Ok(())`. If an error occurs, returns `Err` with an error message.
 macro_rules! macro_generate_from_args {
     ($args:expr) => {{
-        use $crate::generator::generate_from_args;
+        use $crate::generators::args::generate_from_args;
         match generate_from_args($args) {
             Ok(_) => Ok(()),
             Err(e) => Err(format!("Failed to generate files from arguments: {:?} - Error: {}", $args, e)),

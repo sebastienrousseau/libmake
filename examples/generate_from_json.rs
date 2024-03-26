@@ -34,7 +34,7 @@
 //! ```
 
 // Import the necessary function for generating templates from a JSON file.
-use libmake::generator::generate_from_json;
+use libmake::generators::json::generate_from_json;
 
 /// Generate template files based on the data in the JSON file.
 ///

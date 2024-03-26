@@ -29,7 +29,7 @@
 //! ```
 //!
 // Import the necessary function for generating templates from a TOML file.
-use libmake::generator::generate_from_toml;
+use libmake::generators::toml::generate_from_toml;
 
 /// Generate template files based on the configuration in the TOML file.
 ///

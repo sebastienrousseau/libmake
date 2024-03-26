@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
 
-    use libmake::generator::FileGenerationParams;
+    use libmake::models::model_params::FileGenerationParams;
     use std::path::Path;
 
     use libmake::macro_create_directories;

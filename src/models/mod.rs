@@ -5,3 +5,6 @@
 
 /// The `ascii_art_error` module contains the `AsciiArtError` type for ASCII art generation failures.
 pub mod error_ascii_art;
+
+/// The `model_params` module contains the `FileGenerationParams` type for holding the parameters for generating the project files.
+pub mod model_params;

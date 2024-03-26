@@ -8,8 +8,7 @@ use std::{
     io::{BufRead, BufReader, Write},
     path::PathBuf,
 };
-
-use super::generator::FileGenerationParams;
+use crate::models::model_params::FileGenerationParams;
 use crate::macro_replace_placeholder;
 
 /// Replaces placeholders in a template file with values from the provided parameters

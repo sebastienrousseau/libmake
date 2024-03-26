@@ -1,12 +1,11 @@
-use libmake::generator::{
-    create_directory, generate_from_args,
-};
 use libmake::{
+    generator::generate_from_config,
+    generators::{args::generate_from_args, yaml::generate_from_yaml},
     macro_generate_files,
-    generator::{
-        generate_from_config, generate_from_yaml, FileGenerationParams,
+    models::model_params::FileGenerationParams,
+    utils::{
+        create_directory, get_csv_field, get_json_field, get_yaml_field,
     },
-    utils::{get_csv_field, get_json_field, get_yaml_field},
 };
 use tempfile::tempdir;
 
