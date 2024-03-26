@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["libmake"];
+window.ALL_CRATES = ["libmake","xtask"];

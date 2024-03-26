@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {};
+window.SIDEBAR_ITEMS = {"mod":["ascii_macros","directory_macros","file_macros","generator_macros","log_macros","utility_macros"]};

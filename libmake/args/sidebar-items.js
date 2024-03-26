@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["process_arguments"]};
+window.SIDEBAR_ITEMS = {"fn":["extract_manual_params","process_arguments","validate_params"]};

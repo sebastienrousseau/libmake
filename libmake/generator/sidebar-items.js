@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["copy_and_replace_template","create_directory","create_template_folder","generate_files","generate_from_args","generate_from_config","generate_from_csv","generate_from_json","generate_from_toml","generate_from_yaml"],"struct":["FileGenerationParams"]};
+window.SIDEBAR_ITEMS = {"fn":["copy_and_replace_template","create_template_folder","generate_files","generate_from_config"]};

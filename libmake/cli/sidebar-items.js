@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["build_cli"]};
+window.SIDEBAR_ITEMS = {"fn":["build","create_arg"]};

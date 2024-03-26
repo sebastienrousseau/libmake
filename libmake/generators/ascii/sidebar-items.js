@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["generate_ascii_art","load_standard_font"]};

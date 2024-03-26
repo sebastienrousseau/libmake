@@ -1,4 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/utils.rs`."><title>utils.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="libmake" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="icon" href="https://kura.pro/libmake/images/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../libmake/index.html"><img src="https://kura.pro/libmake/images/logos/libmake.svg" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/utils.rs`."><title>utils.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="libmake" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (5f2c7d2bf 2024-03-25)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="icon" href="https://kura.pro/libmake/images/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
+    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../libmake/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -91,12 +93,74 @@
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
-</pre></div><pre class="rust"><code><span class="comment">// Copyright © 2023 LibMake. All rights reserved.
-// SPDX-License-Identifier: Apache-2.0 OR MIT
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+</pre></div><pre class="rust"><code><span class="comment">// Copyright notice and licensing information.
+// These lines indicate the copyright of the software and its licensing terms.
+// SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
+// Copyright © 2024 LibMake. All rights reserved.
 
-</span><span class="kw">use </span>std::env;
-<span class="kw">use </span>std::fs::File;
-<span class="kw">use </span>std::path::Path;
+</span><span class="kw">use </span><span class="kw">crate</span>::macro_get_field;
+<span class="kw">use </span>std::{
+    env,
+    fs::{<span class="self">self</span>, File},
+    io,
+    path::Path,
+};
+
+<span class="doccomment">/// Reads a file and deserializes its content using the specified deserializer function.
+///
+/// # Arguments
+///
+/// * `file_path` - The path of the file to read.
+/// * `deserializer` - A function that takes a `File` and returns a deserialized value of type `T`.
+///
+/// # Returns
+///
+/// Returns a `Result&lt;T, Box&lt;dyn std::error::Error&gt;&gt;` containing the deserialized value, or an error if one occurs.
+///
+</span><span class="kw">fn </span>read_file&lt;T, F&gt;(
+    file_path: <span class="kw-2">&amp;</span>Path,
+    deserializer: F,
+) -&gt; <span class="prelude-ty">Result</span>&lt;T, Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt;
+<span class="kw">where
+    </span>F: FnOnce(File) -&gt; <span class="prelude-ty">Result</span>&lt;T, Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt;,
+{
+    <span class="kw">let </span>file = File::open(file_path)<span class="question-mark">?</span>;
+    deserializer(file)
+}
 
 <span class="doccomment">/// Reads a CSV file at the given file path and returns the value of
 /// the given field.
@@ -104,84 +168,90 @@
 /// # Arguments
 ///
 /// * `file_path` - An optional string slice that holds the file path of the CSV file to read.
-/// * `field_name` - A string slice that holds the name of the field to retrieve.
+/// * `field_index` - The index of the field to retrieve.
 ///
 </span><span class="kw">pub fn </span>get_csv_field(
-    file: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+    file_path: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
     field_index: usize,
 ) -&gt; <span class="prelude-ty">Option</span>&lt;Vec&lt;String&gt;&gt; {
-    <span class="kw">let </span>current_dir = env::current_dir().ok()<span class="question-mark">?</span>;
-    <span class="kw">let </span>file_path = Path::new(<span class="kw-2">&amp;</span>current_dir).join(file<span class="question-mark">?</span>);
-    <span class="kw">let </span>file = File::open(file_path).ok()<span class="question-mark">?</span>;
-    <span class="kw">let </span><span class="kw-2">mut </span>rdr = csv::Reader::from_reader(file);
-    <span class="kw">let </span><span class="kw-2">mut </span>values = Vec::new();
-    <span class="kw">for </span>result <span class="kw">in </span>rdr.records() {
-        <span class="kw">let </span>record = result.ok()<span class="question-mark">?</span>;
-        <span class="kw">let </span>field_value = record.get(field_index).unwrap_or(<span class="string">&quot;&quot;</span>);
-        values.push(field_value.to_string());
-        <span class="macro">println!</span>(<span class="string">&quot;Value: {}&quot;</span>, field_value);
-    }
-    <span class="macro">println!</span>(<span class="string">&quot;Values: {:?}&quot;</span>, values);
-    <span class="prelude-val">Some</span>(values)
+    file_path.and_then(|file_path| {
+        <span class="kw">let </span>current_dir = env::current_dir().ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span>file_path = Path::new(<span class="kw-2">&amp;</span>current_dir).join(file_path);
+        <span class="kw">let </span>file = File::open(file_path).ok()<span class="question-mark">?</span>;
+        <span class="kw">let </span><span class="kw-2">mut </span>rdr = csv::Reader::from_reader(file);
+
+        <span class="kw">let </span><span class="kw-2">mut </span>values = Vec::new();
+        <span class="kw">for </span>result <span class="kw">in </span>rdr.records() {
+            <span class="kw">let </span>record = result.ok()<span class="question-mark">?</span>;
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(field_value) = record.get(field_index) {
+                values.push(field_value.to_string());
+            } <span class="kw">else </span>{
+                <span class="comment">// Field index is out of range
+                </span><span class="kw">return </span><span class="prelude-val">None</span>;
+            }
+        }
+        <span class="kw">if </span>values.is_empty() {
+            <span class="prelude-val">None
+        </span>} <span class="kw">else </span>{
+            <span class="prelude-val">Some</span>(values)
+        }
+    })
 }
 
-<span class="doccomment">/// Reads a JSON file at the given file path and returns the value of
-/// the given field.
+<span class="macro">macro_get_field!</span>(get_ini_field, serde_ini::from_read);
+<span class="macro">macro_get_field!</span>(get_json_field, serde_json::from_reader);
+<span class="macro">macro_get_field!</span>(get_yaml_field, serde_yaml::from_reader);
+
+<span class="doccomment">/// Retrieves a specific field's value from a configuration file.
 ///
 /// # Arguments
 ///
-/// * `file_path` - An optional string slice that holds the file path of the JSON file to read.
-/// * `field_name` - A string slice that holds the name of the field to retrieve.
+/// * `file_path` - An optional reference to the path of the configuration file.
+/// * `file_format` - The format of the configuration file ("json", "yaml", or "ini").
+/// * `field_name` - The name of the field to retrieve the value from.
 ///
-</span><span class="kw">pub fn </span>get_json_field(
-    file_path: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
-    field_name: <span class="kw-2">&amp;</span>str,
-) -&gt; String {
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(file_path) = file_path {
-        <span class="kw">let </span>file = File::open(Path::new(file_path)).unwrap();
-        <span class="kw">let </span>json: serde_json::Value =
-            serde_json::from_reader(file).unwrap();
-        json[field_name].to_string()
-    } <span class="kw">else </span>{
-        <span class="string">&quot;&quot;</span>.to_string()
-    }
-}
-
-<span class="doccomment">/// Reads a YAML file at the given file path and returns the value of
-/// the given field.
+/// # Returns
 ///
-</span><span class="kw">pub fn </span>get_yaml_field(
-    file_path: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
-    field_name: <span class="kw-2">&amp;</span>str,
-) -&gt; String {
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(file_path) = file_path {
-        <span class="kw">let </span>file = File::open(Path::new(file_path)).unwrap();
-        <span class="kw">let </span>yaml: serde_yaml::Value =
-            serde_yaml::from_reader(file).unwrap();
-        <span class="kw">let </span>field_value = <span class="kw-2">&amp;</span>yaml[field_name];
-        <span class="kw">let </span>field_value_str =
-            serde_yaml::to_string(<span class="kw-2">&amp;</span>field_value).unwrap();
-        field_value_str.trim().to_string()
-    } <span class="kw">else </span>{
-        <span class="string">&quot;&quot;</span>.to_string()
-    }
-}
-
-<span class="doccomment">/// Reads as Configuration file at the given file path, file type and
-/// field name and returns the value of the given field.
+/// Returns a `Result&lt;String, Box&lt;dyn std::error::Error&gt;&gt;` containing the value of the specified field, or an error if one occurs.
+///
 </span><span class="kw">pub fn </span>get_config_field(
     file_path: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
-    file_type: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+    file_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
     field_name: <span class="kw-2">&amp;</span>str,
-) -&gt; String {
-    <span class="kw">if let </span><span class="prelude-val">Some</span>(file_type) = file_type {
-        <span class="kw">match </span>file_type {
-            <span class="string">&quot;json&quot; </span>=&gt; get_json_field(file_path, field_name),
-            <span class="string">&quot;yaml&quot; </span>=&gt; get_yaml_field(file_path, field_name),
-            <span class="kw">_ </span>=&gt; <span class="string">&quot;&quot;</span>.to_string(),
-        }
-    } <span class="kw">else </span>{
-        <span class="string">&quot;&quot;</span>.to_string()
+) -&gt; <span class="prelude-ty">Result</span>&lt;String, Box&lt;<span class="kw">dyn </span>std::error::Error&gt;&gt; {
+    <span class="comment">// Ensure file_path is provided
+    </span><span class="kw">let </span>file_path = file_path.ok_or(<span class="string">"File path is not provided"</span>)<span class="question-mark">?</span>;
+
+    <span class="comment">// Ensure file_format is provided and is either 'json', 'yaml', or 'ini'
+    </span><span class="kw">let </span>format = file_format.ok_or(<span class="string">"File format is not provided"</span>)<span class="question-mark">?</span>;
+    <span class="kw">match </span>format {
+        <span class="string">"ini" </span>=&gt; get_ini_field(<span class="prelude-val">Some</span>(file_path), field_name),
+        <span class="string">"json" </span>=&gt; get_json_field(<span class="prelude-val">Some</span>(file_path), field_name),
+        <span class="string">"yaml" </span>=&gt; get_yaml_field(<span class="prelude-val">Some</span>(file_path), field_name),
+        <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format!</span>(
+            <span class="string">"Unsupported file format: {}. Supported formats are 'json', 'yaml', and 'ini'."</span>,
+            format
+        )
+        .into()),
     }
+}
+
+<span class="doccomment">/// Creates a directory at the specified path.
+///
+/// # Arguments
+///
+/// * `path` - The path where the directory should be created.
+///
+/// # Errors
+///
+/// Returns an `io::Error` if the directory cannot be created. This could be due to
+/// various reasons such as insufficient permissions, the directory already existing,
+/// or other I/O-related errors.
+///
+</span><span class="kw">pub fn </span>create_directory(path: <span class="kw-2">&amp;</span>Path) -&gt; io::Result&lt;()&gt; {
+    fs::create_dir(path).or_else(|e| <span class="kw">match </span>e.kind() {
+        io::ErrorKind::AlreadyExists =&gt; <span class="prelude-val">Ok</span>(()),
+        <span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(e),
+    })
 }
 </code></pre></div></section></main></body></html>

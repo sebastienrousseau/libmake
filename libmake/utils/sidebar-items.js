@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["get_config_field","get_csv_field","get_json_field","get_yaml_field"]};
+window.SIDEBAR_ITEMS = {"fn":["create_directory","get_config_field","get_csv_field","get_ini_field","get_json_field","get_yaml_field"]};
