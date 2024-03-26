@@ -1,3 +1,6 @@
+/// A macro for generating ASCII art from text.
+pub mod ascii_macros;
+
 /// The `directory_macros` module contains macros related to directory
 /// operations.
 pub mod directory_macros;

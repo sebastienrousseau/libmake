@@ -80,7 +80,6 @@
 
 // Import necessary dependencies
 use crate::args::process_arguments;
-use crate::ascii::generate_ascii_art;
 use crate::cli::build;
 use dtt::DateTime;
 use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
@@ -90,8 +89,8 @@ use crate::utilities::uuid::generate_unique_string;
 /// The `args` module contains functions for processing command-line
 /// arguments.
 pub mod args;
-/// The `ascii` module contains functions for generating ASCII art.
-pub mod ascii;
+/// The `generators` module contains functions for generating code.
+pub mod generators;
 /// The `cli` module contains functions for processing command-line
 /// input.
 pub mod cli;
@@ -103,6 +102,8 @@ pub mod generator;
 pub mod interface;
 /// The `macros` module contains functions for generating macros.
 pub mod macros;
+/// The `models` module contains the models for the library.
+pub mod models;
 /// The `utils` module contains a function for reading a CSV file at the
 /// given file path and returns the value of the given field.
 pub mod utils;
@@ -140,10 +141,9 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     // Write the log to both the console and the file
     writeln!(log_file, "{}", log)?;
 
-    match generate_ascii_art("LibMake") {
-        Ok(ascii_art) => println!("{}", ascii_art),
-        Err(e) => eprintln!("Error generating ASCII art: {:?}", e),
-    }
+    // Printing the ASCII art to the console
+    println!("{}", macro_ascii!("LibMake"));
+
     let log = macro_log!(
         &generate_unique_string(),
         &iso,
