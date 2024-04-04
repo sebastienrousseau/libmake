@@ -1,0 +1,1 @@
+searchState.loadedDescShard("xtask", 0, "This is the main entry point for the xtask crate.")
