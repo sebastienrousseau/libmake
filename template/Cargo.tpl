@@ -42,7 +42,7 @@ env_logger = "0.11.3"
 rlg = "0.0.3"
 serde = { version = "1.0.197", features = ["derive"] }
 serde_json = "1.0.115"
-serde_yml = "0.0.1"
+serde_yml = "0.0.4"
 toml = "0.8.12"
 vrd = "0.0.6"
 
