@@ -4,11 +4,11 @@ on:
   pull_request:
     branches:
       - main
-      - 'feat/*'
+      - feat/{name}
   push:
     branches:
       - main
-      - 'feat/*'
+      - feat/{name}
 
 jobs:
   # This job checks a local package and all of its dependencies for
