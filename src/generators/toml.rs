@@ -1,7 +1,7 @@
+use crate::macro_generate_files;
+use crate::models::model_params::FileGenerationParams;
 use std::fs;
 use std::io;
-use crate::models::model_params::FileGenerationParams;
-use crate::macro_generate_files;
 
 /// Generates files for a new Rust project based on a TOML file.
 ///
@@ -38,8 +38,7 @@ pub fn generate_from_toml(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = toml::from_str(&contents)
         .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    macro_generate_files!(params.clone()).map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, e)
-    })?;
+    macro_generate_files!(params.clone())
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
     Ok(())
 }

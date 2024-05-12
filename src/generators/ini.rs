@@ -1,8 +1,8 @@
+use crate::macro_generate_files;
+use crate::models::model_params::FileGenerationParams;
+use serde_ini::from_str;
 use std::fs;
 use std::io;
-use serde_ini::from_str;
-use crate::models::model_params::FileGenerationParams;
-use crate::macro_generate_files;
 
 /// Generates files for a new Rust project based on an INI file.
 ///
@@ -36,10 +36,11 @@ use crate::macro_generate_files;
 ///
 pub fn generate_from_ini(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = from_str(&contents)
-        .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e.to_string()))?;
-    macro_generate_files!(params.clone()).map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, e)
-    })?;
+    let params: FileGenerationParams =
+        from_str(&contents).map_err(|e| {
+            io::Error::new(io::ErrorKind::InvalidData, e.to_string())
+        })?;
+    macro_generate_files!(params.clone())
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
     Ok(())
 }

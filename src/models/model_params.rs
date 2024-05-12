@@ -1,18 +1,19 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2023-2024 LibMake. All rights reserved.
 
 use serde::{Deserialize, Serialize};
 
-fn deserialize_name<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+fn deserialize_name<'de, D>(
+    deserializer: D,
+) -> Result<Option<String>, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
     let name = String::deserialize(deserializer)?;
     Ok(Some(name.trim_matches('"').to_string()))
 }
-
 
 /// Structure for holding the parameters for generating the project files.
 ///
@@ -104,7 +105,7 @@ impl FileGenerationParams {
             repository: Some(
                 "https://github.com/example/my_library".to_string(),
             ),
-            rustversion: Some("1.75.0".to_string()),
+            rustversion: Some("1.60".to_string()),
             version: Some("0.1.0".to_string()),
             website: Some("https://example.com/john-smith".to_string()),
         }

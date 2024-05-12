@@ -1,7 +1,7 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2023-2024 LibMake. All rights reserved.
 
 /// Replaces placeholders in a given line with corresponding values from the provided parameters.
 ///
@@ -58,14 +58,24 @@ macro_rules! macro_get_field {
                 || Ok(String::new()),
                 |file_path| {
                     let current_dir = env::current_dir()?;
-                    let file_path = Path::new(&current_dir).join(file_path);
+                    let file_path =
+                        Path::new(&current_dir).join(file_path);
                     read_file(&file_path, |file| {
-                        let value: serde_json::Value = $deserializer(file)?;
-                        let field_value = value.get(field_name)
-                            .ok_or_else(|| format!("Field '{}' not found", field_name))?
+                        let value: serde_json::Value =
+                            $deserializer(file)?;
+                        let field_value = value
+                            .get(field_name)
+                            .ok_or_else(|| {
+                                format!(
+                                    "Field '{}' not found",
+                                    field_name
+                                )
+                            })?
                             .as_str()
                             .map(|s| s.to_string())
-                            .unwrap_or_else(|| value[field_name].to_string());
+                            .unwrap_or_else(|| {
+                                value[field_name].to_string()
+                            });
                         Ok(field_value)
                     })
                 },

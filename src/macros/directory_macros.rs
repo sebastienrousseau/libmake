@@ -1,7 +1,7 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2023-2024 LibMake. All rights reserved.
 
 //! This module provides macros for directory operations, including checking directory existence,
 //! creating multiple directories at once, and cleaning up directories.

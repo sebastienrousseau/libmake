@@ -101,7 +101,7 @@ libmake --help
 
 ### Requirements
 
-The minimum supported Rust toolchain version is currently Rust `1.75.0` or later (stable).
+The minimum supported Rust toolchain version is currently Rust `1.60` or later (stable).
 
 `LibMake` is supported and has been tested on the following platforms:
 
@@ -259,7 +259,7 @@ libmake manual\
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.75.0" \
+    --rustversion "1.60" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
@@ -281,7 +281,7 @@ cargo run -- manual --author "John Smith" \
     --output "my_library" \
     --readme "README.md" \
     --repository "https://github.com/example/my_library" \
-    --rustversion "1.75.0" \
+    --rustversion "1.60" \
     --version "0.1.0" \
     --website "https://example.com/john-smith"
 ```
@@ -356,6 +356,6 @@ providing a lot of useful suggestions on how to improve this project.
 [crates-badge]: https://img.shields.io/crates/v/libmake.svg?style=for-the-badge "Crates.io Badge"
 [divider]: https://kura.pro/common/images/elements/divider.svg "divider"
 [docs-badge]: https://img.shields.io/docsrs/libmake.svg?style=for-the-badge "Docs.rs Badge"
-[libs-badge]: https://img.shields.io/badge/lib.rs-v0.2.5-orange.svg?style=for-the-badge "Lib.rs Badge"
+[libs-badge]: https://img.shields.io/badge/lib.rs-v0.2.6-orange.svg?style=for-the-badge "Lib.rs Badge"
 [license-badge]: https://img.shields.io/crates/l/libmake.svg?style=for-the-badge "License Badge"
 [made-with-rust-badge]: https://img.shields.io/badge/rust-f04041?style=for-the-badge&labelColor=c0282d&logo=rust "Made With Rust Badge"

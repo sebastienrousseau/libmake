@@ -1,7 +1,7 @@
+use crate::macro_generate_files;
+use crate::models::model_params::FileGenerationParams;
 use std::fs;
 use std::io;
-use crate::models::model_params::FileGenerationParams;
-use crate::macro_generate_files;
 
 /// Generates files for a new Rust project based on a JSON file.
 ///
@@ -39,9 +39,10 @@ use crate::macro_generate_files;
 pub fn generate_from_json(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_json::from_str(&contents)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e.to_string()))?;
-    macro_generate_files!(params.clone()).map_err(|e| {
-        io::Error::new(io::ErrorKind::Other, e)
-    })?;
+        .map_err(|e| {
+            io::Error::new(io::ErrorKind::Other, e.to_string())
+        })?;
+    macro_generate_files!(params.clone())
+        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
     Ok(())
 }
