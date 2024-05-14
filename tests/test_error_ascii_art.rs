@@ -27,7 +27,7 @@ mod tests {
     #[test]
     fn test_ascii_art_error_source() {
         let error = AsciiArtError::FontLoadError;
-        assert_eq!(error.source().is_none(), true);
+        assert!(error.source().is_none());
     }
 
     #[test]
@@ -40,7 +40,7 @@ mod tests {
     #[test]
     fn test_ascii_art_error_clone() {
         let error = AsciiArtError::FontLoadError;
-        let cloned_error = error.clone();
+        let cloned_error = error;
         assert_eq!(error, cloned_error);
     }
 }
