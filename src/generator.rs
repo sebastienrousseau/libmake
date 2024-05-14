@@ -180,13 +180,22 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
         // Add check GitHub Actions workflows template
         ("github/workflows/check.tpl", ".github/workflows/check.yml"),
         // Add coverage GitHub Actions workflows template
-        ("github/workflows/coverage.tpl", ".github/workflows/coverage.yml"),
+        (
+            "github/workflows/coverage.tpl",
+            ".github/workflows/coverage.yml",
+        ),
         // Add document GitHub Actions workflows template
-        ("github/workflows/document.tpl", ".github/workflows/document.yml"),
+        (
+            "github/workflows/document.tpl",
+            ".github/workflows/document.yml",
+        ),
         // Add lint GitHub Actions workflows template
         ("github/workflows/lint.tpl", ".github/workflows/lint.yml"),
         // Add release GitHub Actions workflows template
-        ("github/workflows/release.tpl", ".github/workflows/release.yml"),
+        (
+            "github/workflows/release.tpl",
+            ".github/workflows/release.yml",
+        ),
         // Add test GitHub Actions workflows template
         ("github/workflows/test.tpl", ".github/workflows/test.yml"),
         // --- #End GitHub Actions workflows ---

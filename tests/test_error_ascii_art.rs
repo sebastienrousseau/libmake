@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
-    use std::error::Error;
     use libmake::models::error_ascii_art::AsciiArtError;
+    use std::error::Error;
 
     #[test]
     fn test_ascii_art_error_font_load_error() {
@@ -12,7 +12,10 @@ mod tests {
     #[test]
     fn test_ascii_art_error_conversion_error() {
         let error = AsciiArtError::ConversionError;
-        assert_eq!(error.to_string(), "Failed to convert text to ASCII art");
+        assert_eq!(
+            error.to_string(),
+            "Failed to convert text to ASCII art"
+        );
     }
 
     #[test]
