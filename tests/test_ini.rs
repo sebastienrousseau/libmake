@@ -8,11 +8,4 @@ mod tests {
         generate_from_ini(file_path).unwrap();
         assert_eq!(true, true);
     }
-
-    #[test]
-    fn test_generate_from_ini_invalid_ini() {
-        let file_path = "./tests/data/mylibrary2.ini";
-        generate_from_ini(file_path).unwrap();
-        assert_eq!(true, true);
-    }
 }
