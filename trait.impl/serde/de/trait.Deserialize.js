@@ -1,3 +1,3 @@
 (function() {var implementors = {
-"libmake":[["impl&lt;'de&gt; <a class=\"trait\" href=\"https://docs.rs/serde/1.0.197/serde/de/trait.Deserialize.html\" title=\"trait serde::de::Deserialize\">Deserialize</a>&lt;'de&gt; for <a class=\"struct\" href=\"libmake/models/model_params/struct.FileGenerationParams.html\" title=\"struct libmake::models::model_params::FileGenerationParams\">FileGenerationParams</a>"]]
+"libmake":[["impl&lt;'de&gt; <a class=\"trait\" href=\"https://docs.rs/serde/1.0.202/serde/de/trait.Deserialize.html\" title=\"trait serde::de::Deserialize\">Deserialize</a>&lt;'de&gt; for <a class=\"struct\" href=\"libmake/models/model_params/struct.FileGenerationParams.html\" title=\"struct libmake::models::model_params::FileGenerationParams\">FileGenerationParams</a>"]]
 };if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

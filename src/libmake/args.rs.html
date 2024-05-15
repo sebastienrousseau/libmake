@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/args.rs`."><title>args.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="libmake" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (4fd4797c2 2024-04-03)" data-channel="nightly" data-search-js="search-ffac13a0df2b1870.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-c97aec732c613ca4.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="icon" href="https://kura.pro/libmake/images/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../libmake/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/args.rs`."><title>args.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="libmake" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.0-nightly (8387315ab 2024-05-14)" data-channel="nightly" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="icon" href="https://kura.pro/libmake/images/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -169,15 +167,27 @@
 <a href="#167" id="167">167</a>
 <a href="#168" id="168">168</a>
 <a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2023-2024 LibMake. All rights reserved.
 
 </span><span class="kw">use super</span>::{
-    generate_file,
-    extract_param,
-    generator::generate_files,
+    extract_param, generate_file, generator::generate_files,
     generators::csv::generate_from_csv,
     generators::ini::generate_from_ini,
     generators::json::generate_from_json,
@@ -200,7 +210,9 @@
 /// # Errors
 ///
 /// This function will return an error if there is an issue with processing the command line arguments or generating files.
-</span><span class="kw">pub fn </span>process_arguments(matches: <span class="kw-2">&amp;</span>ArgMatches) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+</span><span class="kw">pub fn </span>process_arguments(
+    matches: <span class="kw-2">&amp;</span>ArgMatches,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
     <span class="kw">match </span>matches.subcommand() {
         <span class="prelude-val">Some</span>((<span class="string">"file"</span>, file_matches)) =&gt; {
             <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"csv"</span>) {
@@ -209,13 +221,16 @@
             <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"ini"</span>) {
                 <span class="macro">generate_file!</span>(<span class="string">"ini"</span>, value, generate_from_ini);
             }
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"json"</span>) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"json"</span>)
+            {
                 <span class="macro">generate_file!</span>(<span class="string">"json"</span>, value, generate_from_json);
             }
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"yaml"</span>) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"yaml"</span>)
+            {
                 <span class="macro">generate_file!</span>(<span class="string">"yaml"</span>, value, generate_from_yaml);
             }
-            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"toml"</span>) {
+            <span class="kw">if let </span><span class="prelude-val">Some</span>(value) = file_matches.get_one::&lt;String&gt;(<span class="string">"toml"</span>)
+            {
                 <span class="macro">generate_file!</span>(<span class="string">"toml"</span>, value, generate_from_toml);
             }
         }
@@ -263,13 +278,18 @@
 }
 
 <span class="doccomment">/// Validates the manual generation parameters.
-</span><span class="kw">pub fn </span>validate_params(params: <span class="kw-2">&amp;</span>FileGenerationParams) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
+</span><span class="kw">pub fn </span>validate_params(
+    params: <span class="kw-2">&amp;</span>FileGenerationParams,
+) -&gt; <span class="prelude-ty">Result</span>&lt;(), Box&lt;<span class="kw">dyn </span>Error&gt;&gt; {
     <span class="kw">if </span>params.name.is_none() {
         <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"The name of the library is required for manual generation."</span>.into());
     }
 
     <span class="kw">if </span>params.output.is_none() {
-        <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="string">"The output directory is required for manual generation."</span>.into());
+        <span class="kw">return </span><span class="prelude-val">Err</span>(
+            <span class="string">"The output directory is required for manual generation."
+                </span>.into(),
+        );
     }
 
     <span class="kw">if let </span><span class="prelude-val">Some</span>(edition) = <span class="kw-2">&amp;</span>params.edition {
@@ -296,15 +316,21 @@
     }
 
     <span class="kw">if let </span><span class="prelude-val">Some</span>(email) = <span class="kw-2">&amp;</span>params.email {
-        <span class="kw">let </span>email_regex = Regex::new(<span class="string">r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$"</span>).unwrap();
+        <span class="kw">let </span>email_regex = Regex::new(
+            <span class="string">r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$"</span>,
+        )
+        .unwrap();
         <span class="kw">if </span>!email_regex.is_match(email) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format!</span>(<span class="string">"Invalid email address: {}."</span>, email).into());
+            <span class="kw">return </span><span class="prelude-val">Err</span>(
+                <span class="macro">format!</span>(<span class="string">"Invalid email address: {}."</span>, email).into()
+            );
         }
     }
 
     <span class="kw">if let </span><span class="prelude-val">Some</span>(repository) = <span class="kw-2">&amp;</span>params.repository {
         <span class="kw">let </span>repo_regex =
-            Regex::new(<span class="string">r"^(https://|git://|ssh://|git@).+\.git$"</span>).unwrap();
+            Regex::new(<span class="string">r"^(https://|git://|ssh://|git@).+\.git$"</span>)
+                .unwrap();
         <span class="kw">if </span>!repo_regex.is_match(repository) {
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format!</span>(
                 <span class="string">"Invalid repository URL: {}. Repository URL should be a valid Git URL."</span>,

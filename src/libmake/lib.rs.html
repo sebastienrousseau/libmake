@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/lib.rs`."><title>lib.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="libmake" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (4fd4797c2 2024-04-03)" data-channel="nightly" data-search-js="search-ffac13a0df2b1870.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-c97aec732c613ca4.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="icon" href="https://kura.pro/libmake/images/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../libmake/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src/lib.rs`."><title>lib.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="libmake" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.0-nightly (8387315ab 2024-05-14)" data-channel="nightly" data-search-js="search-d52510db62a78183.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../src-files.js"></script><script defer src="../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="icon" href="https://kura.pro/libmake/images/favicon.ico"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -179,7 +177,7 @@
 </pre></div><pre class="rust"><code><span class="comment">// Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2023-2024 LibMake. All rights reserved.
 
 </span><span class="doccomment">//! # `LibMake`
 //!
@@ -193,7 +191,7 @@
 //!
 //! [![Rust](https://img.shields.io/badge/rust-f04041?style=for-the-badge&amp;labelColor=c0282d&amp;logo=rust)](https://www.rust-lang.org)
 //! [![Crates.io](https://img.shields.io/crates/v/libmake.svg?style=for-the-badge&amp;color=success&amp;labelColor=27A006)](https://crates.io/crates/libmake)
-//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.5-success.svg?style=for-the-badge&amp;color=8A48FF&amp;labelColor=6F36E4)](https://lib.rs/crates/libmake)
+//! [![Lib.rs](https://img.shields.io/badge/lib.rs-v0.2.6-success.svg?style=for-the-badge&amp;color=8A48FF&amp;labelColor=6F36E4)](https://lib.rs/crates/libmake)
 //! [![GitHub](https://img.shields.io/badge/github-555555?style=for-the-badge&amp;labelColor=000000&amp;logo=github)](https://github.com/sebastienrousseau/libmake)
 //! [![License](https://img.shields.io/crates/l/libmake.svg?style=for-the-badge&amp;color=007EC6&amp;labelColor=03589B)](http://opensource.org/licenses/MIT)
 //!
@@ -259,22 +257,22 @@
 </span><span class="comment">// Import necessary dependencies
 </span><span class="kw">use </span><span class="kw">crate</span>::args::process_arguments;
 <span class="kw">use </span><span class="kw">crate</span>::cli::build;
+<span class="kw">use </span><span class="kw">crate</span>::utilities::uuid::generate_unique_string;
 <span class="kw">use </span>dtt::DateTime;
 <span class="kw">use </span>rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
 <span class="kw">use </span>std::{error::Error, fs::File, io::Write};
-<span class="kw">use </span><span class="kw">crate</span>::utilities::uuid::generate_unique_string;
 
 <span class="doccomment">/// The `args` module contains functions for processing command-line
 /// arguments.
 </span><span class="kw">pub mod </span>args;
-<span class="doccomment">/// The `generators` module contains functions for generating code.
-</span><span class="kw">pub mod </span>generators;
 <span class="doccomment">/// The `cli` module contains functions for processing command-line
 /// input.
 </span><span class="kw">pub mod </span>cli;
 <span class="doccomment">/// The `generator` module contains functions for generating the new
 /// library.
 </span><span class="kw">pub mod </span>generator;
+<span class="doccomment">/// The `generators` module contains functions for generating code.
+</span><span class="kw">pub mod </span>generators;
 <span class="doccomment">/// The `interface` module contains functions for displaying the
 /// interface.
 </span><span class="kw">pub mod </span>interface;
