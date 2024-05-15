@@ -1,14 +1,17 @@
 #[cfg(test)]
 mod tests {
     use libmake::macro_get_field;
+    use serde_json::from_reader;
     use std::env;
-    use std::path::Path;
     use std::fs::File;
     use std::io::Write;
+    use std::path::Path;
     use tempfile::tempdir;
-    use serde_json::from_reader;
 
-    fn read_file<F, R>(file_path: &Path, f: F) -> Result<R, Box<dyn std::error::Error>>
+    fn read_file<F, R>(
+        file_path: &Path,
+        f: F,
+    ) -> Result<R, Box<dyn std::error::Error>>
     where
         F: FnOnce(File) -> Result<R, Box<dyn std::error::Error>>,
     {
@@ -33,10 +36,12 @@ mod tests {
         let mut file = File::create(&file_path).unwrap();
         file.write_all(json_data.as_bytes()).unwrap();
 
-        let result = get_field(Some(file_path.to_str().unwrap()), "name");
+        let result =
+            get_field(Some(file_path.to_str().unwrap()), "name");
         assert_eq!(result.unwrap(), "Alice");
 
-        let result = get_field(Some(file_path.to_str().unwrap()), "age");
+        let result =
+            get_field(Some(file_path.to_str().unwrap()), "age");
         assert_eq!(result.unwrap(), "30");
     }
 
@@ -55,9 +60,13 @@ mod tests {
         let mut file = File::create(&file_path).unwrap();
         file.write_all(json_data.as_bytes()).unwrap();
 
-        let result = get_field(Some(file_path.to_str().unwrap()), "address");
+        let result =
+            get_field(Some(file_path.to_str().unwrap()), "address");
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err().to_string(), "Field 'address' not found");
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Field 'address' not found"
+        );
     }
 
     #[test]

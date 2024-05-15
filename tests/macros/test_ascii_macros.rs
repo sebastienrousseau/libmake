@@ -9,13 +9,17 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "Failed to generate ASCII art: Failed to convert text to ASCII art")]
+    #[should_panic(
+        expected = "Failed to generate ASCII art: Failed to convert text to ASCII art"
+    )]
     fn test_macro_ascii_empty_input() {
         let _art = macro_ascii!("");
     }
 
     #[test]
-    #[should_panic(expected = "Failed to generate ASCII art: Failed to convert text to ASCII art")]
+    #[should_panic(
+        expected = "Failed to generate ASCII art: Failed to convert text to ASCII art"
+    )]
     fn test_macro_ascii_invalid_input() {
         let _art = macro_ascii!("🦀");
     }
