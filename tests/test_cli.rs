@@ -72,5 +72,4 @@ mod tests {
         let arg = create_arg(arg_info);
         assert_eq!(arg.get_id(), "very-long-argument-name");
     }
-
 }

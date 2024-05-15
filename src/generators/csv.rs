@@ -1,7 +1,7 @@
-use std::io;
-use csv::Reader;
-use crate::models::model_params::FileGenerationParams;
 use crate::macro_generate_files;
+use crate::models::model_params::FileGenerationParams;
+use csv::Reader;
+use std::io;
 
 /// Generates files for a new Rust project based on a CSV file.
 ///

@@ -1,15 +1,15 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2023-2024 LibMake. All rights reserved.
 
+use crate::macro_replace_placeholder;
+use crate::models::model_params::FileGenerationParams;
 use std::{
     fs::File,
     io::{BufRead, BufReader, Write},
     path::PathBuf,
 };
-use crate::models::model_params::FileGenerationParams;
-use crate::macro_replace_placeholder;
 
 /// Replaces placeholders in a template file with values from the provided parameters
 /// and writes the result to an output file.

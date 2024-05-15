@@ -41,6 +41,7 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use libmake::run;
 
+#[allow(unused_results)]
 fn libmake_benchmark(c: &mut Criterion) {
     c.bench_function("libmake", |b| b.iter(run));
 }

@@ -1,7 +1,7 @@
 // Copyright notice and licensing information.
 // These lines indicate the copyright of the software and its licensing terms.
 // SPDX-License-Identifier: Apache-2.0 OR MIT indicates dual licensing under Apache 2.0 or MIT licenses.
-// Copyright © 2024 LibMake. All rights reserved.
+// Copyright © 2023-2024 LibMake. All rights reserved.
 
 use crate::{
     interface::replace_placeholders, macro_generate_from_csv,
@@ -101,6 +101,7 @@ pub fn create_template_folder() -> io::Result<()> {
 /// - If the destination file cannot be created or written to.
 /// - If there is an error in replacing placeholders in the destination file.
 ///
+#[allow(unused_results)]
 pub fn copy_and_replace_template(
     template_file: &str,
     dest_file: &str,
@@ -173,23 +174,63 @@ pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
 
     // Copying the template files to the new library directory
     let templates = [
+        // --- #Start GitHub Actions workflows ---
+        // Add audit GitHub Actions workflows template
+        ("github/workflows/audit.tpl", ".github/workflows/audit.yml"),
+        // Add check GitHub Actions workflows template
+        ("github/workflows/check.tpl", ".github/workflows/check.yml"),
+        // Add coverage GitHub Actions workflows template
+        (
+            "github/workflows/coverage.tpl",
+            ".github/workflows/coverage.yml",
+        ),
+        // Add document GitHub Actions workflows template
+        (
+            "github/workflows/document.tpl",
+            ".github/workflows/document.yml",
+        ),
+        // Add lint GitHub Actions workflows template
+        ("github/workflows/lint.tpl", ".github/workflows/lint.yml"),
+        // Add release GitHub Actions workflows template
+        (
+            "github/workflows/release.tpl",
+            ".github/workflows/release.yml",
+        ),
+        // Add test GitHub Actions workflows template
+        ("github/workflows/test.tpl", ".github/workflows/test.yml"),
+        // --- #End GitHub Actions workflows ---
+        // Add Authors template
         ("AUTHORS.tpl", "AUTHORS.md"),
+        // Add build template
         ("build.tpl", "build.rs"),
+        // Add Cargo template
         ("Cargo.tpl", "Cargo.toml"),
-        ("ci.tpl", ".github/workflows/ci.yml"),
+        // Add Contributing template
         ("CONTRIBUTING.tpl", "CONTRIBUTING.md"),
+        // Add Criterion template
         ("criterion.tpl", "benches/criterion.rs"),
+        // Add Deepsource template
         ("deepsource.tpl", ".deepsource.toml"),
+        // Add Deny template
         ("deny.tpl", "deny.toml"),
+        // Add Example template
         ("example.tpl", "examples/example.rs"),
+        // Add Gitignore template
         ("gitignore.tpl", ".gitignore"),
+        // Add Lib template
         ("lib.tpl", "src/lib.rs"),
+        // Add Macros template
         ("macros.tpl", "src/macros.rs"),
+        // Add Main template
         ("main.tpl", "src/main.rs"),
+        // Add Readme template
         ("README.tpl", "README.md"),
+        // Add Rustfmt template
         ("rustfmt.tpl", "rustfmt.toml"),
+        // Add Template template
         ("TEMPLATE.tpl", "TEMPLATE.md"),
-        ("test.tpl", "tests/test.rs"),
+        // Add Test template
+        ("test_test.tpl", "tests/test_test.rs"),
     ];
 
     for (template, target) in templates {
@@ -286,4 +327,3 @@ pub fn generate_from_config(
     }
     Ok(())
 }
-
