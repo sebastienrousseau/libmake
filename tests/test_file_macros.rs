@@ -14,7 +14,7 @@ mod tests {
     }
 
     thread_local! {
-        static LAST_ERROR: RefCell<Option<String>> = RefCell::new(None);
+        static LAST_ERROR: RefCell<Option<String>> = const { RefCell::new(None) };
     }
 
     // Mock eprintln! macro to capture the error messages
