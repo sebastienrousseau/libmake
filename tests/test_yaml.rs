@@ -1,24 +1,15 @@
 #[cfg(test)]
 mod tests {
     use libmake::generators::yaml::generate_from_yaml;
-    use std::io::{self, Write};
+    use std::io::Write;
     use std::fs::File;
     use tempfile::tempdir;
 
     #[test]
     fn test_generate_from_yaml_success() {
-        let dir = tempdir().unwrap();
         let file_path = "./tests/data/mylibrary.yaml";
-
-        let yaml_data = r#"
-            output: test_output_dir
-        "#;
-
-        let mut file = File::create(&file_path).unwrap();
-        file.write_all(yaml_data.as_bytes()).unwrap();
-
-        let result = generate_from_yaml(file_path.to_str().unwrap());
-        assert!(result.is_ok());
+        generate_from_yaml(file_path).unwrap();
+        assert_eq!(true, true);
     }
 
     #[test]
