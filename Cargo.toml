@@ -59,7 +59,7 @@ path = "examples/example.rs"
 
 [dependencies]
 # The dependencies of the package.
-anyhow = "1.0.83"
+anyhow = "1.0.95"
 assert_cmd = "2.0.14"
 clap = "4.5.4"
 configparser = "3.0.4"
@@ -77,8 +77,9 @@ serde_json = "1.0.117"
 serde_yml = "0.0.7"
 tempfile = "3.10.1"
 toml = "0.8.13"
-uuid = { version = "1.8.0", features = ["v4"] }
+uuid = { version = "1.15", features = ["v4"] }
 vrd = "0.0.7"
+commons = { package = "euxis-commons", git = "https://github.com/sebastienrousseau/commons", tag = "v0.0.3", default-features = false, features = ["error", "config", "logging", "env"] }
 
 [dev-dependencies]
 # The dev-dependencies of the package.
