@@ -54,7 +54,7 @@ jobs:
       # Check out the repository code.
       - name: Checkout sources
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Install the stable Rust toolchain.
       - name: Install stable toolchain
@@ -67,7 +67,7 @@ jobs:
       # Cache dependencies to speed up subsequent builds.
       - name: Cache dependencies
         id: cache-dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -97,7 +97,7 @@ jobs:
       # Upload the binary for each target
       - name: Upload the binary
         id: upload-binary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.TARGET }}.tar.gz
           path: target/package/${{ env.TARGET }}.tar.gz
@@ -111,7 +111,7 @@ jobs:
     steps:
       # Check out the repository code
       - name: Checkout sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
@@ -129,7 +129,7 @@ jobs:
 
       # Cache dependencies to speed up subsequent builds
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cargo
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -207,7 +207,7 @@ jobs:
     steps:
       # Check out the repository code
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
@@ -220,7 +220,7 @@ jobs:
       # Cache dependencies to speed up subsequent builds
       - name: Cache dependencies
         id: cache-dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: /home/runner/.cargo/registry/index/
           key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
