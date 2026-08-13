@@ -64,7 +64,7 @@ assert_cmd = "2.0.14"
 clap = "4.5.4"
 configparser = "3.0.4"
 csv = "1.3.0"
-dtt = "0.0.6"
+dtt = "0.0.11"
 env_logger = "0.11.3"
 figlet-rs = "1.0.0"
 log = {version="0.4.21", features = ["std"] }
