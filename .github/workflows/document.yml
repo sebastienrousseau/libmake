@@ -22,7 +22,7 @@ jobs:
         with:
           rust-version: nightly
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Update libssl
         run: |
@@ -37,7 +37,7 @@ jobs:
             echo '<html><head><meta http-equiv="refresh" content="0; url=/libmake/"></head><body></body></html>' > ./target/doc/index.html
 
       - name: Deploy
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: documentation
           path: target/doc
