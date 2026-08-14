@@ -83,7 +83,7 @@ commons = { package = "euxis-commons", git = "https://github.com/sebastienrousse
 
 [dev-dependencies]
 # The dev-dependencies of the package.
-criterion = "0.5.1"
+criterion = "0.8.2"
 predicates = "3.1.0"
 
 [lib]
