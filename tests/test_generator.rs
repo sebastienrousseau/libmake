@@ -1,3 +1,5 @@
+//! Integration tests: test generator.
+
 use libmake::{
     generator::generate_from_config,
     generators::{args::generate_from_args, yaml::generate_from_yaml},

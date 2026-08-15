@@ -64,7 +64,6 @@ use libmake::run;
 ///
 /// # License
 /// This code is dual-licensed under the Apache License 2.0 and the MIT License.
-
 fn main() {
     // Call the `run()` function from the `LibMake (LM)` module.
     if let Err(err) = run() {

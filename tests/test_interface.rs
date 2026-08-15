@@ -1,3 +1,5 @@
+//! Integration tests for the public `libmake` interface.
+
 #[cfg(test)]
 mod tests {
     use libmake::{

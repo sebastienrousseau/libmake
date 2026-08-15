@@ -63,7 +63,6 @@
 //! [0]: https://minifunctions.com/libmake "Mini Functions"
 //!
 #![allow(clippy::must_use_candidate)]
-#![cfg_attr(feature = "bench", feature(test))]
 #![deny(dead_code)]
 #![deny(rustc::existing_doc_keyword)]
 #![doc(
@@ -81,9 +80,8 @@
 // Import necessary dependencies
 use crate::args::process_arguments;
 use crate::cli::build;
-use crate::utilities::uuid::generate_unique_string;
 use dtt::DateTime;
-use rlg::{log_format::LogFormat, log_level::LogLevel, macro_log};
+use rlg::{Log, LogFormat, LogLevel};
 use std::{error::Error, fs::File, io::Write};
 
 /// The `args` module contains functions for processing command-line
@@ -124,34 +122,38 @@ pub mod utilities;
 ///
 pub fn run() -> Result<(), Box<dyn Error>> {
     let date = DateTime::new();
-    let iso = date.iso_8601;
+    // dtt 0.0.11 made the struct fields pub(crate); the public
+    // accessor is format_rfc3339(), which is ISO 8601 compatible.
+    let iso = date.format_rfc3339()?;
 
     // Open the log file for appending
     let mut log_file = File::create("./libmake.log")?;
 
     // Generate ASCII art for the tool's CLI
-    let log = macro_log!(
-        &generate_unique_string(),
-        &iso,
-        &LogLevel::INFO,
-        "deps",
-        "ASCII art generation event started.",
-        &LogFormat::CLF
-    );
+    let log = Log {
+        format: LogFormat::CLF,
+        ..Log::build(
+            LogLevel::INFO,
+            "ASCII art generation event started.",
+        )
+        .time(&iso)
+        .component("deps")
+    };
     // Write the log to both the console and the file
     writeln!(log_file, "{}", log)?;
 
     // Printing the ASCII art to the console
     println!("{}", macro_ascii!("LibMake"));
 
-    let log = macro_log!(
-        &generate_unique_string(),
-        &iso,
-        &LogLevel::INFO,
-        "deps",
-        "ASCII art generation event completed.",
-        &LogFormat::CLF
-    );
+    let log = Log {
+        format: LogFormat::CLF,
+        ..Log::build(
+            LogLevel::INFO,
+            "ASCII art generation event completed.",
+        )
+        .time(&iso)
+        .component("deps")
+    };
     // Write the log to both the console and the file
     writeln!(log_file, "{}", log)?;
 
@@ -160,14 +162,19 @@ pub fn run() -> Result<(), Box<dyn Error>> {
     process_arguments(&matches)?;
 
     // Check the number of arguments, provide a welcome message if no arguments were passed
-    macro_log!(
-        &generate_unique_string(),
-        &iso,
-        &LogLevel::INFO,
-        "cli",
-        "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.",
-        &LogFormat::CLF
-    );
+    // The old `macro_log!` emitted as a side effect; `Log::build` only
+    // constructs, so this entry has to be emitted explicitly or it is
+    // silently dropped.
+    Log {
+        format: LogFormat::CLF,
+        ..Log::build(
+            LogLevel::INFO,
+            "Welcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.",
+        )
+        .time(&iso)
+        .component("cli")
+    }
+    .log();
     eprintln!(
         "\n\nWelcome to LibMake! 👋\n\nLet's get started! Please, run `libmake --help` for more information.\n"
     );

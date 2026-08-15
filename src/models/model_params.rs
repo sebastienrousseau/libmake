@@ -110,9 +110,6 @@ impl FileGenerationParams {
             website: Some("https://example.com/john-smith".to_string()),
         }
     }
-    /// Parses the command line arguments and returns a new instance of
-    /// the structure.
-
     /// Creates a new instance with default values.
     pub fn new() -> Self {
         Self::default_params()

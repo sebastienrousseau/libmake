@@ -6,9 +6,9 @@
 //! This module provides functionality for generating ASCII art from text using the FIGlet library.
 
 use crate::models::error_ascii_art::AsciiArtError;
-use figlet_rs::FIGfont;
+use figlet_rs::FIGlet;
 
-/// Generates ASCII art from the given text using the standard `FIGfont`.
+/// Generates ASCII art from the given text using the standard `FIGlet`.
 ///
 /// # Arguments
 ///
@@ -19,7 +19,7 @@ use figlet_rs::FIGfont;
 /// This function returns an `Err` in the following situations:
 ///
 /// - If the input `text` is empty (`ConversionError`).
-/// - If the standard `FIGfont` fails to load (`FontLoadError`).
+/// - If the standard `FIGlet` fails to load (`FontLoadError`).
 /// - If the text cannot be converted to ASCII art (`ConversionError`).
 ///
 /// # Examples
@@ -44,11 +44,11 @@ pub fn generate_ascii_art(text: &str) -> Result<String, AsciiArtError> {
     Ok(figure.to_string())
 }
 
-/// Loads the standard FIGfont.
+/// Loads the standard FIGlet.
 ///
 /// # Errors
 ///
-/// This function returns an `Err` if the standard `FIGfont` fails to load (`FontLoadError`).
+/// This function returns an `Err` if the standard `FIGlet` fails to load (`FontLoadError`).
 ///
 /// # Examples
 ///
@@ -58,6 +58,6 @@ pub fn generate_ascii_art(text: &str) -> Result<String, AsciiArtError> {
 /// let result = load_standard_font();
 /// assert!(result.is_ok());
 /// ```
-pub fn load_standard_font() -> Result<FIGfont, AsciiArtError> {
-    FIGfont::standard().map_err(|_| AsciiArtError::FontLoadError)
+pub fn load_standard_font() -> Result<FIGlet, AsciiArtError> {
+    FIGlet::standard().map_err(|_| AsciiArtError::FontLoadError)
 }

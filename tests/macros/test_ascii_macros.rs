@@ -5,7 +5,9 @@ mod tests {
     #[test]
     fn test_macro_ascii_success() {
         let art = macro_ascii!("Hi");
-        assert_eq!(art, "  _   _   _ \n | | | | (_)\n | |_| | | |\n |  _  | | |\n |_| |_| |_|\n            \n");
+        // figlet-rs 1.0.0 kerns more tightly than 0.1.x: the leading
+        // column of padding each glyph used to carry is gone.
+        assert_eq!(art, " _   _ _ \n| | | (_)\n| |_| | |\n|  _  | |\n|_| |_|_|\n         \n");
     }
 
     #[test]

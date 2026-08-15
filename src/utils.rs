@@ -54,12 +54,8 @@ pub fn get_csv_field(
         let mut values = Vec::new();
         for result in rdr.records() {
             let record = result.ok()?;
-            if let Some(field_value) = record.get(field_index) {
-                values.push(field_value.to_string());
-            } else {
-                // Field index is out of range
-                return None;
-            }
+            // `?` propagates the out-of-range field index as None.
+            values.push(record.get(field_index)?.to_string());
         }
         if values.is_empty() {
             None
