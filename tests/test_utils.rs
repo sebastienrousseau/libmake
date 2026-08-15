@@ -1,3 +1,5 @@
+//! Integration tests: test utils.
+
 #[cfg(test)]
 mod tests {
 

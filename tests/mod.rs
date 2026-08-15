@@ -1,3 +1,5 @@
+//! Integration-test crate root: declares the test modules below.
+
 /// This module contains the tests for the `macros` module.
 pub mod macros;
 

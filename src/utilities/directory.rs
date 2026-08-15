@@ -109,7 +109,7 @@ pub fn move_output_directory(
 /// # Arguments
 ///
 /// * `directories` - An array of references to `Path` objects representing the
-///    directories to be cleaned up.
+///   directories to be cleaned up.
 ///
 /// # Returns
 ///
@@ -142,7 +142,7 @@ pub fn cleanup_directory(
 /// # Arguments
 ///
 /// * `directories` - An array of references to `Path` objects representing the
-///    directories to be created.
+///   directories to be created.
 ///
 /// # Returns
 ///

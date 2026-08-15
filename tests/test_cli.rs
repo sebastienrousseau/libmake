@@ -1,3 +1,5 @@
+//! Integration tests: test cli.
+
 #[cfg(test)]
 mod tests {
     use libmake::cli::{build, create_arg};
