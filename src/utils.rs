@@ -67,7 +67,7 @@ pub fn get_csv_field(
 
 macro_get_field!(get_ini_field, serde_ini::from_read);
 macro_get_field!(get_json_field, serde_json::from_reader);
-macro_get_field!(get_yaml_field, serde_yml::from_reader);
+macro_get_field!(get_yaml_field, noyalib::from_reader);
 
 /// Retrieves a specific field's value from a configuration file.
 ///
