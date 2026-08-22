@@ -7,21 +7,45 @@
 
 use clap::{error::Error, Arg, ArgMatches, Command};
 
-/// Constructs the command-line interface for the application using Clap,
-/// including all necessary arguments.
+/// Constructs the command-line interface and parses the arguments this
+/// process was started with.
+///
+/// This is a thin wrapper over [`build_from`] that reads
+/// [`std::env::args_os`]. Prefer [`build_from`] anywhere the arguments
+/// should not depend on how the process was launched — tests and
+/// doctests especially, since there the arguments belong to the test
+/// harness rather than to this CLI.
+///
+/// # Errors
+///
+/// Returns an error if parsing the process arguments fails.
+pub fn build() -> Result<ArgMatches, Error> {
+    build_from(std::env::args_os())
+}
+
+/// Constructs the command-line interface and parses `args`.
+///
+/// `args` follows the usual convention: the first element is the
+/// program name and is ignored for matching purposes.
 ///
 /// # Examples
 ///
 /// ```
 /// use libmake::cli;
-/// let matches = cli::build().expect("CLI parsing failed");
+///
+/// // Deterministic: does not inherit the caller's arguments.
+/// let matches = cli::build_from(["libmake"]).expect("CLI parsing failed");
+/// assert!(matches.subcommand_name().is_none());
 /// ```
 ///
 /// # Errors
 ///
-/// This function will return an error if the command-line argument parsing fails.
-///
-pub fn build() -> Result<ArgMatches, Error> {
+/// Returns an error if the supplied arguments fail to parse.
+pub fn build_from<I, T>(args: I) -> Result<ArgMatches, Error>
+where
+    I: IntoIterator<Item = T>,
+    T: Into<std::ffi::OsString> + Clone,
+{
     let manual_args = vec![
             create_arg_info("author", Some("Me"), "Sets the author of the library", 'a', "author", "AUTHOR"),
             create_arg_info("build", Some("build.rs"), "Sets the build script that is used to perform additional build-time operations.", 'b', "build", "BUILD"),
@@ -101,7 +125,7 @@ pub fn build() -> Result<ArgMatches, Error> {
         );
 
     // Assuming validate_args is a custom function that you have implemented
-    let matches = command.clone().try_get_matches()?;
+    let matches = command.clone().try_get_matches_from(args)?;
 
     Ok(matches)
 }

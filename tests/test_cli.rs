@@ -2,12 +2,46 @@
 
 #[cfg(test)]
 mod tests {
-    use libmake::cli::{build, create_arg};
+    use libmake::cli::{build_from, create_arg};
+
+    // These use `build_from` rather than `build`. `build` parses
+    // `std::env::args_os()`, which inside a test binary belongs to the
+    // test harness — so `cargo test -- --nocapture` made clap reject
+    // `--nocapture` and this assertion failed, even though nothing about
+    // the CLI had changed.
+    #[test]
+    fn test_build_no_subcommand() {
+        let matches = build_from(["libmake"]);
+        assert!(matches.is_ok());
+        assert!(matches.unwrap().subcommand_name().is_none());
+    }
 
     #[test]
     fn test_build_manual_subcommand() {
-        let matches = build();
+        let matches = build_from(["libmake", "manual", "--name", "demo"]);
         assert!(matches.is_ok());
+        let matches = matches.unwrap();
+        assert_eq!(matches.subcommand_name(), Some("manual"));
+        let sub = matches.subcommand_matches("manual").unwrap();
+        assert_eq!(
+            sub.get_one::<String>("name").map(String::as_str),
+            Some("demo")
+        );
+    }
+
+    #[test]
+    fn test_build_file_subcommand() {
+        let matches =
+            build_from(["libmake", "file", "--toml", "cfg.toml"]);
+        assert!(matches.is_ok());
+        assert_eq!(matches.unwrap().subcommand_name(), Some("file"));
+    }
+
+    #[test]
+    fn test_build_rejects_unknown_argument() {
+        // The exact shape that broke the suite under `--nocapture`.
+        let matches = build_from(["libmake", "--nocapture"]);
+        assert!(matches.is_err());
     }
 
     #[test]
