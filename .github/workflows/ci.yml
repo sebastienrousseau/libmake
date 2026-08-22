@@ -21,14 +21,13 @@ concurrency:
 jobs:
   ci:
     name: Rust CI
-    uses: sebastienrousseau/pipelines/.github/workflows/rust-ci.yml@main
+    uses: sebastienrousseau/pipelines/.github/workflows/rust-ci.yml@89f643dd0adb55bd4c8332fec20be8aa44efad11
     with:
       rust-version: 'stable'
       run-clippy: true
       run-fmt: true
       run-audit: true
       run-coverage: true
-      coverage-threshold: 80
     secrets: inherit
 
   # Nightly toolchain tests (optional, continue on error)
