@@ -26,7 +26,12 @@ jobs:
       rust-version: 'stable'
       run-clippy: true
       run-fmt: true
-      run-audit: true
+      # The reusable audit uses rustsec/audit-check, which requires a
+      # committed Cargo.lock. This repo gitignores it, so that job can
+      # only ever fail with "Couldn\'t load ./Cargo.lock". The local
+      # cargo-audit job below supersedes it — the CLI generates the
+      # lockfile itself.
+      run-audit: false
       run-coverage: true
     secrets: inherit
 
@@ -46,3 +51,15 @@ jobs:
 
       - name: Run tests
         run: cargo test --all-features
+
+  cargo-audit:
+    name: cargo-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install --locked cargo-audit
+      # No --deny warnings: unmaintained notices for transitive crates
+      # are not actionable from here. Vulnerabilities still fail the job.
+      - run: cargo audit
