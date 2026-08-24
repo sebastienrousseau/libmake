@@ -18,7 +18,8 @@ mod tests {
 
     #[test]
     fn test_build_manual_subcommand() {
-        let matches = build_from(["libmake", "manual", "--name", "demo"]);
+        let matches =
+            build_from(["libmake", "manual", "--name", "demo"]);
         assert!(matches.is_ok());
         let matches = matches.unwrap();
         assert_eq!(matches.subcommand_name(), Some("manual"));
