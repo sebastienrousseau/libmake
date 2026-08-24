@@ -74,7 +74,7 @@ rlg = "0.0.11"
 serde = { version = "1.0.202", features = ["derive"] }
 serde_ini = "0.2.0"
 serde_json = "1.0.117"
-serde_yml = "0.0.13"
+noyalib = { version = "0.0.27", default-features = false, features = ["std"] }
 tempfile = "3.10.1"
 toml = "1.1.4"
 uuid = { version = "1.15", features = ["v4"] }
