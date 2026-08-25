@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"fn":["build","create_arg"]};
+window.SIDEBAR_ITEMS = {"fn":["build","build_from","create_arg"]};
