@@ -1,29 +1,107 @@
 name: 🧪 Release
 
+# Releases are cut by pushing a version tag. This workflow used to run on
+# every push to a branch, which meant a full build matrix and a crates.io
+# publish attempt per commit -- the publish necessarily failing once that
+# version was already uploaded.
 on:
   push:
-    branches:
-      - main
-      - feat/libmake
-  pull_request:
-    branches:
-      - feat/libmake
-  release:
-    types: [created]
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  # Manual runs are a smoke test by default: guard + build + a
+  # trusted-publishing handshake, with no release and no publish.
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Create the GitHub release and publish to crates.io"
+        type: boolean
+        default: false
 
 concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: true
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
+  # Resolve the version once and decide whether crates.io already has it,
+  # so re-running an existing tag is a no-op rather than a hard failure.
+  guard:
+    name: ❯ Verify 🔍
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+      published: ${{ steps.resolve.outputs.published }}
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v7
+
+      - name: Resolve version and publication state
+        id: resolve
+        run: |
+          set -euo pipefail
+          version=$(cargo metadata --no-deps --format-version 1 \
+            | jq -r '.packages[] | select(.name == "libmake") | .version')
+          echo "Cargo.toml version: ${version}"
+
+          # On a tag push the tag is authoritative; refuse to release when
+          # it disagrees with the manifest.
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            tag="${GITHUB_REF_NAME#v}"
+            if [ "${tag}" != "${version}" ]; then
+              echo "::error::tag v${tag} does not match Cargo.toml version ${version}"
+              exit 1
+            fi
+          fi
+
+          # crates.io returns 404 for a version that was never uploaded.
+          code=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H 'User-Agent: libmake-release (github.com/sebastienrousseau/libmake)' \
+            "https://crates.io/api/v1/crates/libmake/${version}")
+          if [ "${code}" = "200" ]; then
+            published=true
+          elif [ "${code}" = "404" ]; then
+            published=false
+          else
+            echo "::error::unexpected crates.io status ${code} for libmake ${version}"
+            exit 1
+          fi
+          echo "already on crates.io: ${published}"
+
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "published=${published}" >> "$GITHUB_OUTPUT"
+
+  # A dispatch with publish=false never reaches the crate job, so the
+  # trusted-publishing config would otherwise go untested until a real
+  # release. This exercises the OIDC exchange alone and publishes nothing.
+  auth-check:
+    name: ❯ Auth check 🔑
+    needs: guard
+    if: github.event_name == 'workflow_dispatch' && !inputs.publish
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Authenticate with crates.io
+        id: auth
+        uses: rust-lang/crates-io-auth-action@v1
+
+      - name: Confirm a token was issued
+        env:
+          CRATES_TOKEN: ${{ steps.auth.outputs.token }}
+        run: |
+          if [ -z "${CRATES_TOKEN}" ]; then
+            echo "::error::crates.io returned no token"
+            exit 1
+          fi
+          echo "Trusted publishing is configured correctly for this repo."
+
   # Build the project for all the targets and generate artifacts.
   build:
     # This job builds the project for all the targets and generates a
     # release artifact that contains the binaries for all the targets.
     name: ❯ Build 🛠
 
-    # Only run this job on the main branch when a commit is pushed.
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: guard
 
     # Set up the job environment variables.
     env:
@@ -58,10 +136,7 @@ jobs:
       # Install the stable Rust toolchain.
       - name: Install stable toolchain
         id: install-toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+        uses: dtolnay/rust-toolchain@stable
 
       # Cache dependencies to speed up subsequent builds.
       - name: Cache dependencies
@@ -77,21 +152,21 @@ jobs:
         id: install-target
         run: rustup target add ${{ env.TARGET }}
 
-      # Build the targets
+      # Build the targets. actions-rs/cargo is archived and actionlint
+      # reports its runner as too old to run; this is the same invocation
+      # it made, as a plain run step.
       - name: Build targets
         id: build-targets
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --verbose --workspace --release --target ${{ env.TARGET }}
+        run: cargo build --verbose --workspace --release --target "$TARGET"
+        shell: bash
 
       # Package the binary for each target
       - name: Package the binary
         id: package-binary
         run: |
           mkdir -p target/package
-          tar czf target/package/${{ env.TARGET }}.tar.gz -C target/${{ env.TARGET }}/release .
-          echo "${{ env.TARGET }}.tar.gz=target/package/${{ env.TARGET }}.tar.gz" >> $GITHUB_ENV
+          tar czf "target/package/${TARGET}.tar.gz" -C "target/${TARGET}/release" .
+          echo "${TARGET}.tar.gz=target/package/${TARGET}.tar.gz" >> "$GITHUB_ENV"
 
       # Upload the binary for each target
       - name: Upload the binary
@@ -104,8 +179,8 @@ jobs:
   # Release the binary to GitHub Releases
   release:
     name: ❯ Release 🚀
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: build
+    if: github.event_name == 'push' || inputs.publish
+    needs: [guard, build]
     runs-on: ubuntu-latest
     steps:
       # Check out the repository code
@@ -114,93 +189,53 @@ jobs:
 
       # Install the stable Rust toolchain
       - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+        uses: dtolnay/rust-toolchain@stable
 
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
-        shell: /bin/bash -e {0}
-
-      # Cache dependencies to speed up subsequent builds
-      - name: Cache dependencies
-        uses: actions/cache@v6
-        with:
-          path: ~/.cargo
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-
-      # Download the artifacts from the build job
+      # Pull down every artifact the build matrix uploaded.
+      # merge-multiple flattens them into one directory rather than one
+      # folder per artifact.
+      #
+      # The previous implementation curl'd
+      # `actions/runs/${BUILD_ID}/artifacts/${name}` -- but neither
+      # BUILD_ID nor TARGET is set in this job, so the loop iterated over
+      # an empty list and, when it did run, wrote an unauthenticated API
+      # error body into a .tar.gz. No release ever carried real binaries.
       - name: Download artifacts
-        run: |
-          for target in ${{ env.TARGET }}; do
-            echo "Downloading $target artifact"
-            name="${target}.tar.gz"
-            echo "Artifact name: $name"
-            mkdir -p target/package
-            curl -sSL -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" -L "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/actions/runs/${BUILD_ID}/artifacts/${name}" -o "target/package/${name}"
-          done
-
-        env:
-          VERSION: ${{ env.VERSION }}
-          TARGET: ${{ env.TARGET }}
-          OS: ${{ env.OS }}
-
-      # Generate the changelog based on the git log
-      - name: Generate Changelog
-        id: generate-changelog
-        env:
-          BUILD_ID: ${{ github.run_id }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_URL: https://github.com/sebastienrousseau/libmake/releases
-          TARGET: ${{ env.TARGET }}
-
-        run: |
-          if [[ ! -f CHANGELOG.md ]]; then
-            # Set path to changelog file
-            changelog_file="${{ github.workspace }}/CHANGELOG.md"
-
-            # Get version from Cargo.toml
-            version=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-
-            # Append version information to changelog
-            echo "## Release v${version} - $(date +'%Y-%m-%d')" >> "${changelog_file}"
-
-            # Copy content of template file to changelog
-            cat TEMPLATE.md >> "${changelog_file}"
-
-            # Append git log to changelog
-            echo "$(git log --pretty=format:'%s' --reverse HEAD)" >> "${changelog_file}"
-
-            # Append empty line to changelog
-            echo "" >> "${changelog_file}"
-
-          fi
-        shell: bash
-
-      # Create the release on GitHub releases
-      - name: Create Release
-        id: create-release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION: ${{ env.VERSION }}
+        uses: actions/download-artifact@v7
         with:
-          tag_name: v${{ env.VERSION }}
-          release_name: Libmake 🦀 v${{ env.VERSION }}
-          body_path: ${{ github.workspace }}/CHANGELOG.md
-          draft: true
-          prerelease: false
+          path: dist
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum ./*.tar.gz > SHA256SUMS
+          cat SHA256SUMS
+
+      # gh is preinstalled on the runner, so this replaces the archived
+      # actions/create-release@v1 without adding a third-party dependency.
+      # The version comes from the guard job, which reads it with
+      # `cargo metadata` rather than `grep version Cargo.toml | sed -n 2p`
+      # -- that picked the second line matching "version" anywhere in the
+      # manifest, dependency pins included.
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.guard.outputs.version }}
+        run: |
+          gh release create "v${VERSION}" \
+            --title "Libmake 🦀 v${VERSION}" \
+            --generate-notes \
+            --draft \
+            dist/*.tar.gz dist/SHA256SUMS
 
   # Publish the release to Crates.io automatically
   crate:
     name: ❯ Crate.io 🦀
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: release
+    if: |
+      (github.event_name == 'push' || inputs.publish)
+      && needs.guard.outputs.published == 'false'
+    needs: [guard, release]
     runs-on: ubuntu-latest
 
     permissions:
@@ -215,10 +250,7 @@ jobs:
       # Install the stable Rust toolchain
       - name: Install stable toolchain
         id: install-toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
+        uses: dtolnay/rust-toolchain@stable
 
       # Cache dependencies to speed up subsequent builds
       - name: Cache dependencies
@@ -228,14 +260,6 @@ jobs:
           path: /home/runner/.cargo/registry/index/
           key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-index-
-
-      # Update the version number based on the Cargo.toml file
-      - name: Update version number
-        id: update-version
-        run: |
-          NEW_VERSION=$(grep version Cargo.toml | sed -n 2p | cut -d '"' -f 2)
-          echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
-        shell: /bin/bash -e {0}
 
       # Trusted publishing: swaps this job's GitHub OIDC identity for a
       # temporary crates.io token, revoked by the action's post step when
