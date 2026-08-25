@@ -28,7 +28,6 @@ jobs:
     # Set up the job environment variables.
     env:
       BUILD_ID: ${{ github.run_id }}
-      CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       OS: ${{ matrix.platform.os }}
       TARGET: ${{ matrix.platform.target }}
@@ -204,6 +203,10 @@ jobs:
     needs: release
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      # OIDC token for crates.io trusted publishing.
+      id-token: write
     steps:
       # Check out the repository code
       - name: Checkout
@@ -234,18 +237,22 @@ jobs:
           echo "VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
         shell: /bin/bash -e {0}
 
-      # Log in to crates.io
-      - name: Log in to crates.io
-        id: login-crate-io
-        run: cargo login ${{ secrets.CARGO_API_TOKEN }}
+      # Trusted publishing: swaps this job's GitHub OIDC identity for a
+      # temporary crates.io token, revoked by the action's post step when
+      # the job ends. Needs a trusted publisher on crates.io for this
+      # crate (repo + release.yml).
+      #
+      # The old `cargo login` step is gone: it installed a stored secret
+      # that no longer exists, and cargo reads CARGO_REGISTRY_TOKEN
+      # directly. actions-rs/cargo is archived and actionlint reports its
+      # runner as too old to run, so the publish is a plain `run`. The
+      # publish arguments are unchanged.
+      - name: Authenticate with crates.io
+        id: auth
+        uses: rust-lang/crates-io-auth-action@v1
 
-      # Publish the Rust library to Crate.io
       - name: Publish Library to Crate.io
         id: publish-library
-        uses: actions-rs/cargo@v1
         env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_API_TOKEN }}
-        with:
-          command: publish
-          args: "--no-verify --allow-dirty"
-          use-cross: false
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}
+        run: cargo publish --no-verify --allow-dirty
