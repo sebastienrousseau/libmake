@@ -1,0 +1,4 @@
+[codespell]
+# British spellings are house style; crate/tech names are not typos.
+ignore-words-list = crate,ser,de,deser,serde,noyalib,noya,anc,nd,alo,ba,fo,te,hel,ans,behaviour,behavioural,colour,favour,honour,licence,serialise,serialised,serialiser,serialisation,deserialise,deserialised,deserialiser,deserialisation,normalise,normalised,organisation,minimise,maximise,artefact,artefacts,recognise,initialise,initialised,analyse,fibre,ther,iff,unparseable,implementors,re-uses,pre-emptive,timout,caf,struc,pre-emptively,re-declares
+skip = ./target,./fuzz/target,./fuzz/corpus,./fuzz/regressions,./fuzz/artifacts,./crates/noyalib/tests/yaml-test-suite,./supply-chain,./Cargo.lock,./fuzz/Cargo.lock,./LICENSES,./KEYS.asc,./about.hbs

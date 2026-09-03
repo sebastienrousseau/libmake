@@ -1,0 +1,27 @@
+# markdownlint config — structural rules only. Line length and
+# style-taste rules stay off: the repo's Markdown is hand-wrapped
+# and a mass reformat would bury real history.
+default: true
+MD013: false  # line length — hand-wrapped prose
+MD033: false  # inline HTML — README uses centered header markup
+MD041: false  # first line heading — files open with SPDX comments
+MD024:
+  siblings_only: true  # CHANGELOG repeats ### Added etc. per release
+MD010:
+  code_blocks: false  # Makefile snippets need hard tabs
+MD036: false  # emphasis-as-heading — used deliberately in tables
+MD052: false  # reference-style links inside code spans trip this
+# Cosmetic classes, off to avoid a mass reformat of hand-written
+# history. The gate exists to stop structural drift (broken headings,
+# duplicate anchors, malformed lists), not to repaint every table.
+MD060: false  # table pipe spacing
+MD004: false  # list marker style
+MD034: false  # bare URLs — used deliberately in reference sections
+MD032: false  # blanks around lists
+MD040: false  # fenced-code language tags
+MD029: false  # ordered-list numbering style
+MD038: false  # spaces in code spans — YAML examples need them
+MD012: false  # consecutive blank lines
+MD053: false  # unused link definitions — used as footnote stores
+MD031: false  # blanks around fences
+MD028: false  # blank lines between adjacent, deliberately-separate blockquotes
