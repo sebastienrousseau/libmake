@@ -203,10 +203,16 @@ macro_rules! macro_execute_and_log {
         // crate::log with your actual logging implementation.
         $crate::log::info!("Starting operation: {}", $start_message);
 
-        std::process::Command::new("sh")
-            .arg("-c")
-            .arg($command)
-            .output()
+        #[cfg(windows)]
+        let mut child = std::process::Command::new("cmd");
+        #[cfg(windows)]
+        child.args(["/C", $command]);
+        #[cfg(not(windows))]
+        let mut child = std::process::Command::new("sh");
+        #[cfg(not(windows))]
+        child.args(["-c", $command]);
+
+        child.output()
             .map(|output| {
                 if output.status.success() {
                     $crate::log::info!("Operation completed successfully: {}", $complete_message);
