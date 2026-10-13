@@ -40,7 +40,6 @@ pub fn generate_from_ini(path: &str) -> io::Result<()> {
         from_str(&contents).map_err(|e| {
             io::Error::new(io::ErrorKind::InvalidData, e.to_string())
         })?;
-    macro_generate_files!(params.clone())
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+    macro_generate_files!(params.clone()).map_err(io::Error::other)?;
     Ok(())
 }

@@ -101,7 +101,7 @@ libmake --help
 
 ### Requirements
 
-The minimum supported Rust toolchain version is currently Rust `1.60` or later (stable).
+The minimum supported Rust toolchain version is currently Rust `1.89` or later (stable).
 
 `LibMake` is supported and has been tested on the following platforms:
 

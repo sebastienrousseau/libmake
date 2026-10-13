@@ -59,7 +59,7 @@ pub fn generate_from_csv(path: &str) -> io::Result<()> {
             website: record.get(16).map(ToString::to_string),
         };
         macro_generate_files!(params.clone())
-            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+            .map_err(io::Error::other)?;
     }
     Ok(())
 }

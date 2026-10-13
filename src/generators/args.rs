@@ -68,10 +68,9 @@ pub fn generate_from_args(args_str: &str) -> io::Result<()> {
             "--version" => params.version = Some(value.to_string()),
             "--website" => params.website = Some(value.to_string()),
             _ => {
-                return Err(io::Error::new(
-                    io::ErrorKind::Other,
-                    format!("Invalid argument: {name}"),
-                ))
+                return Err(io::Error::other(format!(
+                    "Invalid argument: {name}"
+                )))
             }
         }
     }
