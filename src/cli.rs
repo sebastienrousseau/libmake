@@ -61,7 +61,7 @@ where
             create_arg_info("output", Some("my_library"), "Sets the output directory for the library", 'o', "output", "OUTPUT"),
             create_arg_info("readme", Some("README.md"), "Sets the README file for the library", 'm', "readme", "README"),
             create_arg_info("repository", Some("https://github.com/example/my_library"), "Sets the repository URL of the library", 'g', "repository", "REPOSITORY"),
-            create_arg_info("rustversion", Some("1.60"), "Sets the Rust version of the library", 'r', "rustversion", "RUSTVERSION"),
+            create_arg_info("rustversion", Some("1.89"), "Sets the Rust version of the library", 'r', "rustversion", "RUSTVERSION"),
             create_arg_info("version", Some("0.2.6"), "Sets the version of the library", 'v', "version", "VERSION"),
             create_arg_info("website", Some("https://test.com"), "Sets the website of the library author", 'w', "website", "WEBSITE"),
         ];

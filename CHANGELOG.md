@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   maintainer's Rust crates. With the floor past 1.74, clippy asks for
   `io::Error::other(..)` over `io::Error::new(ErrorKind::Other, ..)`;
   the generators now use it, with the same errors.
+- Generated libraries default to `--rustversion 1.89`, libmake's own
+  floor, instead of 1.60.
 
 ## [Unreleased]
 
