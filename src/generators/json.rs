@@ -39,10 +39,7 @@ use std::io;
 pub fn generate_from_json(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
     let params: FileGenerationParams = serde_json::from_str(&contents)
-        .map_err(|e| {
-            io::Error::new(io::ErrorKind::Other, e.to_string())
-        })?;
-    macro_generate_files!(params.clone())
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+        .map_err(|e| io::Error::other(e.to_string()))?;
+    macro_generate_files!(params.clone()).map_err(io::Error::other)?;
     Ok(())
 }
