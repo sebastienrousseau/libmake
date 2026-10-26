@@ -39,8 +39,6 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      - name: Write CNAME file
-        run: echo 'doc.libmake.com' > ./target/doc/CNAME
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
@@ -52,3 +50,15 @@ jobs:
           publish_dir: ./target/doc
           user_email: actions@users.noreply.github.com
           user_name: github-actions
+
+  # Deploys the gh-pages branch just published, with GitHub Actions
+  # (see pages.yml).
+  pages:
+    name: Deploy Pages
+    needs: all
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml

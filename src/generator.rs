@@ -56,19 +56,15 @@ pub fn create_template_folder() -> io::Result<()> {
             let file_url = format!("{url}{file}");
             let response =
                 reqwest::blocking::get(&file_url).map_err(|e| {
-                    io::Error::new(
-                        io::ErrorKind::Other,
-                        format!(
-                            "Failed to download template file: {e}"
-                        ),
-                    )
+                    io::Error::other(format!(
+                        "Failed to download template file: {e}"
+                    ))
                 })?;
 
             let file_contents = response.text().map_err(|e| {
-                io::Error::new(
-                    io::ErrorKind::Other,
-                    format!("Failed to read response body: {e}"),
-                )
+                io::Error::other(format!(
+                    "Failed to read response body: {e}"
+                ))
             })?;
 
             // Write the file contents, trimming any leading or trailing newline characters
@@ -139,8 +135,7 @@ pub fn copy_and_replace_template(
 ///
 pub fn generate_files(params: FileGenerationParams) -> io::Result<()> {
     let Some(ref output) = params.output else {
-        return Err(io::Error::new(
-            io::ErrorKind::Other,
+        return Err(io::Error::other(
             "Output directory is not specified",
         ));
     };
