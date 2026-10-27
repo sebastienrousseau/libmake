@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"mod":["args","ascii","csv","ini","json","toml","yaml"]};
+window.SIDEBAR_ITEMS = {"mod":["args","ascii","csv","figlet","ini","json","toml","yaml"]};

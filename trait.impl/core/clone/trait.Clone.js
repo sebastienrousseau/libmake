@@ -1,9 +1,9 @@
 (function() {
-    const implementors = Object.fromEntries([["libmake",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html\" title=\"trait core::clone::Clone\">Clone</a> for <a class=\"enum\" href=\"libmake/models/error_ascii_art/enum.AsciiArtError.html\" title=\"enum libmake::models::error_ascii_art::AsciiArtError\">AsciiArtError</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html\" title=\"trait core::clone::Clone\">Clone</a> for <a class=\"struct\" href=\"libmake/models/model_params/struct.FileGenerationParams.html\" title=\"struct libmake::models::model_params::FileGenerationParams\">FileGenerationParams</a>",0]]]]);
+    const implementors = Object.fromEntries([["libmake",[["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html\" title=\"trait core::clone::Clone\">Clone</a> for <a class=\"enum\" href=\"libmake/models/error_ascii_art/enum.AsciiArtError.html\" title=\"enum libmake::models::error_ascii_art::AsciiArtError\">AsciiArtError</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html\" title=\"trait core::clone::Clone\">Clone</a> for <a class=\"struct\" href=\"libmake/generators/figlet/struct.FIGlet.html\" title=\"struct libmake::generators::figlet::FIGlet\">FIGlet</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html\" title=\"trait core::clone::Clone\">Clone</a> for <a class=\"struct\" href=\"libmake/generators/figlet/struct.FIGure.html\" title=\"struct libmake::generators::figlet::FIGure\">FIGure</a>",0],["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html\" title=\"trait core::clone::Clone\">Clone</a> for <a class=\"struct\" href=\"libmake/models/model_params/struct.FileGenerationParams.html\" title=\"struct libmake::models::model_params::FileGenerationParams\">FileGenerationParams</a>",0]]]]);
     if (window.register_implementors) {
         window.register_implementors(implementors);
     } else {
         window.pending_implementors = implementors;
     }
 })()
-//{"start":59,"fragment_lengths":[660]}
+//{"start":59,"fragment_lengths":[1236]}
