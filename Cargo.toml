@@ -76,7 +76,7 @@ noyalib = { version = "0.0.57", default-features = false, features = ["std"] }
 toml = "1.1.4"
 uuid = { version = "1.15", features = ["v4"] }
 vrd = "0.0.12"
-commons = { package = "euxis-commons", git = "https://github.com/sebastienrousseau/commons", tag = "v0.0.3", default-features = false, features = ["error", "config", "logging", "env"] }
+commons = { package = "euxis-commons", git = "https://github.com/sebastienrousseau/commons", tag = "v0.0.5", default-features = false, features = ["error", "config", "logging", "env"] }
 
 [dev-dependencies]
 # The dev-dependencies of the package.
