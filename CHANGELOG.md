@@ -7,6 +7,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Security
+
+- ASCII art no longer depends on figlet-rs, whose every release requires
+  zip 0.6 (RUSTSEC-2026-0367, RUSTSEC-2026-0368 and RUSTSEC-2026-0369,
+  fixed only in zip 9): `generators::figlet` renders the bundled FIGlet
+  `standard` font itself, with output identical to figlet-rs 1.0.0's.
+  `load_standard_font()` now returns `generators::figlet::FIGlet`, which
+  keeps `convert()`.
+
 ### Added
 
 - Repository baseline per the Repository Gold Standard template:
