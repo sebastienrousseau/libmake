@@ -244,7 +244,7 @@ fn read_codetagged(
         return Ok(());
     }
     let block = header.height + 1;
-    if (lines.len() - offset) % block != 0 {
+    if !(lines.len() - offset).is_multiple_of(block) {
         return Err("code-tagged characters do not fill whole blocks"
             .to_string());
     }
@@ -427,7 +427,7 @@ impl Layout<'_> {
             return None;
         }
         let both = left == hardblank && right == hardblank;
-        Some((both && layout & SM_HARDBLANK != 0).then(|| left))
+        Some((both && layout & SM_HARDBLANK != 0).then_some(left))
     }
 }
 
@@ -436,7 +436,7 @@ fn rule_on(
     rule: i32,
     result: Option<char>,
 ) -> Option<char> {
-    (layout & rule != 0).then(|| result).flatten()
+    (layout & rule != 0).then_some(result).flatten()
 }
 
 /// An underscore gives way to a border character.
@@ -477,7 +477,7 @@ fn opposite_pair(left: char, right: char) -> Option<char> {
     let opposite = [['[', ']'], ['{', '}'], ['(', ')']]
         .iter()
         .any(|p| pair == *p || pair == [p[1], p[0]]);
-    opposite.then(|| '|')
+    opposite.then_some('|')
 }
 
 /// `/\` becomes `|`, `\/` becomes `Y` and `><` becomes `X`.
