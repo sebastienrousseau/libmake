@@ -4,8 +4,11 @@
 // Copyright © 2023-2024 LibMake. All rights reserved.
 
 /// The `ascii` module contains functionality for generating ASCII art from
-/// text using the FIGlet library.
+/// text with the bundled FIGlet `standard` font.
 pub mod ascii;
+
+/// The `figlet` module reads FIGlet fonts and renders text with them.
+pub mod figlet;
 
 /// The `args` module contains functionality for parsing command-line arguments.
 pub mod args;
