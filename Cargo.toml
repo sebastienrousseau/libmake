@@ -40,7 +40,7 @@ license = "MIT OR Apache-2.0"
 name = "libmake"
 readme = "README.md"
 repository = "https://github.com/sebastienrousseau/libmake.git"
-rust-version = "1.60"
+rust-version = "1.89"
 version = "0.2.6"
 
 [[bench]]
@@ -72,7 +72,7 @@ rlg = "0.0.15"
 serde = { version = "1.0.202", features = ["derive"] }
 serde_ini = "0.2.0"
 serde_json = "1.0.117"
-noyalib = { version = "0.0.57", default-features = false, features = ["std"] }
+noyalib = { version = "0.0.58", default-features = false, features = ["std"] }
 toml = "1.1.4"
 uuid = { version = "1.15", features = ["v4"] }
 vrd = "0.0.12"
@@ -134,9 +134,7 @@ future_incompatible = { level = "deny", priority = -1 }
 keyword_idents = { level = "deny", priority = -1 }
 macro_use_extern_crate = "deny"
 meta_variable_misuse = "deny"
-missing_fragment_specifier = "deny"
 noop_method_call = "deny"
-pointer_structural_match = "deny"
 rust_2018_idioms = { level = "deny", priority = -1 }
 rust_2021_compatibility = { level = "deny", priority = -1 }
 single_use_lifetimes = "deny"

@@ -64,8 +64,8 @@
 //! use libmake::{macro_create_directories, macro_cleanup_directories};
 //! use std::path::Path;
 //!
-//! macro_create_directories!("logs", "logs1", "logs2");
-//! macro_cleanup_directories!(Path::new("./logs"), Path::new("./logs1"), Path::new("./logs2"));
+//! macro_create_directories!("doc_usage_a", "doc_usage_b", "doc_usage_c");
+//! macro_cleanup_directories!(Path::new("./doc_usage_a"), Path::new("./doc_usage_b"), Path::new("./doc_usage_c"));
 //! ```
 //!
 //! ## Arguments
@@ -83,8 +83,8 @@
 //! use std::path::Path;
 //!
 //! fn main() -> Result<(), Box<dyn std::error::Error>> {
-//!     let test = Path::new("logs");
-//!     let test2  = Path::new("logs1");
+//!     let test = Path::new("doc_module_example");
+//!     let test2  = Path::new("doc_module_example1");
 //!     macro_create_directories!(test, test2)?;
 //!     macro_cleanup_directories!(test, test2);
 //!     Ok(())
@@ -236,8 +236,8 @@ macro_rules! macro_cleanup_directories {
 /// use std::path::Path;
 ///
 /// fn main() -> Result<(), Box<dyn std::error::Error>> {
-///     let test = Path::new("logs");
-///     let test2  = Path::new("logs1");
+///     let test = Path::new("doc_macro_example");
+///     let test2  = Path::new("doc_macro_example1");
 ///     macro_create_directories!(test, test2)?;
 ///     macro_cleanup_directories!(test, test2);
 ///     Ok(())

@@ -31,6 +31,18 @@ mod tests {
     }
 
     #[test]
+    fn test_manual_rustversion_defaults_to_libmake_msrv() {
+        // A generated library starts on the same floor libmake itself
+        // declares, not on a toolchain its dependencies cannot build.
+        let matches = build_from(["libmake", "manual"]).unwrap();
+        let sub = matches.subcommand_matches("manual").unwrap();
+        assert_eq!(
+            sub.get_one::<String>("rustversion").map(String::as_str),
+            Some("1.89")
+        );
+    }
+
+    #[test]
     fn test_build_file_subcommand() {
         let matches =
             build_from(["libmake", "file", "--toml", "cfg.toml"]);

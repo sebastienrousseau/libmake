@@ -43,7 +43,7 @@ mod tests {
             params.repository,
             Some("https://github.com/example/my_library".to_string())
         );
-        assert_eq!(params.rustversion, Some("1.60".to_string()));
+        assert_eq!(params.rustversion, Some("1.89".to_string()));
         assert_eq!(params.version, Some("0.1.0".to_string()));
         assert_eq!(
             params.website,
@@ -92,7 +92,7 @@ mod tests {
             params.repository,
             Some("https://github.com/example/my_library".to_string())
         );
-        assert_eq!(params.rustversion, Some("1.60".to_string()));
+        assert_eq!(params.rustversion, Some("1.89".to_string()));
         assert_eq!(params.version, Some("0.1.0".to_string()));
         assert_eq!(
             params.website,

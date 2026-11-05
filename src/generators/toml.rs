@@ -36,9 +36,8 @@ use std::io;
 ///
 pub fn generate_from_toml(path: &str) -> io::Result<()> {
     let contents = fs::read_to_string(path)?;
-    let params: FileGenerationParams = toml::from_str(&contents)
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
-    macro_generate_files!(params.clone())
-        .map_err(|e| io::Error::new(io::ErrorKind::Other, e))?;
+    let params: FileGenerationParams =
+        toml::from_str(&contents).map_err(io::Error::other)?;
+    macro_generate_files!(params.clone()).map_err(io::Error::other)?;
     Ok(())
 }

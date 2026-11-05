@@ -1,0 +1,76 @@
+# Deploys the site to GitHub Pages with GitHub Actions.
+#
+# The committed output in the gh-pages branch is uploaded unchanged;
+# this workflow does not regenerate it. This follows the exception in
+# AGENTS.md section 7.1.3 (GitHub Pages: deployed by GitHub Actions
+# only) for a site whose committed output its generator can no longer
+# rebuild. Porting the site to the current generator is a separate,
+# reviewed change.
+#
+# The gh-pages branch remains the content source until the site is
+# ported: this workflow, on the default branch, checks it out and
+# uploads it as committed. Do not delete the gh-pages branch. The
+# "Document" workflow (document.yml), which publishes to gh-pages, calls
+# this one (workflow_call) once it has pushed, so each new gh-pages
+# commit is deployed.
+#
+# The folder carries .nojekyll, so the legacy build served its dotfiles;
+# include-hidden-files keeps that (.git and .github are always excluded
+# by actions/upload-pages-artifact).
+#
+# A custom domain, if any, is kept in the repository's Pages settings
+# (cname), which a workflow deployment uses, so no CNAME file is needed;
+# an existing CNAME file is left in place.
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/pages.yml]
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Upload site
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: gh-pages
+          path: site
+          persist-credentials: false
+      - name: Configure Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - name: Upload committed site
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: site
+          include-hidden-files: true
+
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
