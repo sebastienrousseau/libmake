@@ -124,8 +124,8 @@
 ///
 /// # See Also
 ///
-/// - [`macro_create_directories`] for creating multiple directories
-/// - [`macro_cleanup_directories`] for cleaning up directories
+/// - [`macro_create_directories`](crate::macro_create_directories) for creating multiple directories
+/// - [`macro_cleanup_directories`](crate::macro_cleanup_directories) for cleaning up directories
 ///
 #[macro_export]
 macro_rules! macro_check_directory {
@@ -185,7 +185,7 @@ macro_rules! macro_check_directory {
 /// # See Also
 ///
 /// - [`macro_check_directory`] for checking and creating a single directory
-/// - [`macro_create_directories`] for creating multiple directories
+/// - [`macro_create_directories`](crate::macro_create_directories) for creating multiple directories
 ///
 #[macro_export]
 macro_rules! macro_cleanup_directories {
@@ -247,7 +247,7 @@ macro_rules! macro_cleanup_directories {
 /// # See Also
 ///
 /// - [`macro_check_directory`] for checking and creating a single directory
-/// - [`macro_cleanup_directories`] for cleaning up directories
+/// - [`macro_cleanup_directories`](crate::macro_cleanup_directories) for cleaning up directories
 ///
 #[macro_export]
 macro_rules! macro_create_directories {
