@@ -16,6 +16,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Generated libraries default to `--rustversion 1.89`, libmake's own
   floor, instead of 1.60.
 
+### Removed
+
+- The euxis-commons git dependency (tag v0.0.5). No libmake code used
+  it, and with it go 25 crates only it pulled in (among them json5,
+  ron, rust-ini, yaml-rust2 and the pest parser family). A git
+  dependency also cannot be published to crates.io.
+
 ## [Unreleased]
 
 ### Security
