@@ -5,25 +5,25 @@
 
 //! # Libmake Application
 //!
-//! This is the main entry point for the cmn application.
+//! This is the main entry point for the libmake application.
 //! Call the `run()` function from the `LibMake (LM)` module.
 //!
 //! # Purpose
-//! The purpose of this function is to serve as the entry point for the `cmn` application.
+//! The purpose of this function is to serve as the entry point for the `libmake` application.
 //! It calls the `run` function from the `LibMake (LM)` crate to execute the desired tasks.
 //!
 //! # Usage
-//! To use the `cmn` application, you can include it as part of your Rust project.
+//! To use the `libmake` application, you can include it as part of your Rust project.
 //! The `main` function of the application calls the `run` function from the `LibMake (LM)` module.
 //! If an error occurs during execution, it prints an error message and exits with a non-zero status code.
 //!
 //! ```rust
 //! use libmake::run;
 //!
-//!/ This is the main entry point for the cmn application.
+//!/ This is the main entry point for the libmake application.
 //! Call the `run()` function from the `LibMake (LM)` module.
 //! if let Err(ref e) = run() {
-//!     eprintln!("Error running cmn: {}", e);
+//!     eprintln!("Error running libmake: {}", e);
 //!     std::process::exit(1);
 //! }
 //! ```
@@ -32,7 +32,7 @@
 
 use libmake::run;
 
-/// This is the main entry point for the cmn application.
+/// This is the main entry point for the libmake application.
 /// Call the `run()` function from the `LibMake (LM)` module.
 ///
 /// # Parameters
@@ -48,10 +48,10 @@ use libmake::run;
 /// ```rust
 /// use libmake::run;
 ///
-/// This is the main entry point for the cmn application.
+/// This is the main entry point for the libmake application.
 /// Call the `run()` function from the `LibMake (LM)` module.
 /// if let Err(err) = run() {
-///     eprintln!("Error running cmn: {}", err);
+///     eprintln!("Error running libmake: {}", err);
 ///     std::process::exit(1);
 /// }
 /// ```
@@ -67,7 +67,7 @@ use libmake::run;
 fn main() {
     // Call the `run()` function from the `LibMake (LM)` module.
     if let Err(err) = run() {
-        eprintln!("Error running cmn: {}", err);
+        eprintln!("Error running libmake: {}", err);
         std::process::exit(1);
     }
 }

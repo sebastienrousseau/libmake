@@ -121,4 +121,25 @@ mod tests {
         let arg = create_arg(arg_info);
         assert_eq!(arg.get_id(), "very-long-argument-name");
     }
+
+    #[test]
+    fn test_binary_error_names_libmake() {
+        // An unknown flag makes `run()` fail, so `main` prints its
+        // error line. It must name this tool, not the `cmn` crate the
+        // message was copied from. The binary writes ./libmake.log, so
+        // run it in a scratch directory.
+        let dir = tempfile::tempdir().unwrap();
+        let output =
+            std::process::Command::new(env!("CARGO_BIN_EXE_libmake"))
+                .arg("--no-such-flag")
+                .current_dir(dir.path())
+                .output()
+                .unwrap();
+        assert!(!output.status.success());
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert!(
+            stderr.starts_with("Error running libmake: "),
+            "unexpected stderr: {stderr}"
+        );
+    }
 }
