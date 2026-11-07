@@ -181,58 +181,6 @@ macro_rules! macro_generate_from_config {
     }};
 }
 
-#[macro_export]
-/// Executes a shell command and logs the start, completion, and any errors.
-///
-/// # Parameters
-///
-/// * `$command` - The shell command to execute as a string slice.
-/// * `$package` - The name of the package being operated on as a string slice.
-/// * `$operation` - A description of the operation as a string slice.
-/// * `$start_message` - The message to log at the start of the operation as a string slice.
-/// * `$complete_message` - The message to log upon successful completion as a string slice.
-/// * `$error_message` - The message to log in case of an error as a string slice.
-///
-/// # Returns
-///
-/// Returns a `Result<(), anyhow::Error>` to indicate the success or failure of the command execution.
-macro_rules! macro_execute_and_log {
-    ($command:expr, $package:expr, $operation:expr, $start_message:expr, $complete_message:expr, $error_message:expr) => {{
-        use anyhow::{Context, Result as AnyResult};
-        // Using a fictional logging framework for demonstration purposes. You'll need to replace
-        // crate::log with your actual logging implementation.
-        $crate::log::info!("Starting operation: {}", $start_message);
-
-        #[cfg(windows)]
-        let mut child = std::process::Command::new("cmd");
-        #[cfg(windows)]
-        child.args(["/C", $command]);
-        #[cfg(not(windows))]
-        let mut child = std::process::Command::new("sh");
-        #[cfg(not(windows))]
-        child.args(["-c", $command]);
-
-        child.output()
-            .map(|output| {
-                if output.status.success() {
-                    $crate::log::info!("Operation completed successfully: {}", $complete_message);
-                    Ok(())
-                } else {
-                    $crate::log::error!("Operation failed: {} - Error: {}", $error_message, String::from_utf8_lossy(&output.stderr));
-                    Err(std::io::Error::new(std::io::ErrorKind::Other, "Command execution failed").into())
-                }
-            })
-            .with_context(|| {
-                format!(
-                    "Failed to execute '{}' for {} on package '{}'",
-                    stringify!($command),
-                    $operation,
-                    $package
-                )
-            })
-    }};
-}
-
 /// Extracts a parameter from a `Matches` object.
 ///
 /// This macro takes two arguments: `$matches` and `$name`. It attempts to retrieve the value

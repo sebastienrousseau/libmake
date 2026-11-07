@@ -16,6 +16,22 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Generated libraries default to `--rustversion 1.89`, libmake's own
   floor, instead of 1.60.
 
+### Fixed
+
+- When it fails, the `libmake` binary now reports
+  `Error running libmake: ...` instead of `Error running cmn: ...`, a
+  message copied from another project.
+
+### Removed
+
+- The euxis-commons git dependency (tag v0.0.5). No libmake code used
+  it, and with it go 25 crates only it pulled in (among them json5,
+  ron, rust-ini, yaml-rust2 and the pest parser family). A git
+  dependency also cannot be published to crates.io.
+- The exported `macro_execute_and_log!` macro. Nothing in libmake used
+  it, and no caller could: it expands to `$crate::log::info!`, which
+  libmake does not export, so every use failed to compile (E0433).
+
 ## [Unreleased]
 
 ### Security
