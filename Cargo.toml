@@ -41,7 +41,7 @@ name = "libmake"
 readme = "README.md"
 repository = "https://github.com/sebastienrousseau/libmake.git"
 rust-version = "1.89"
-version = "0.2.6"
+version = "0.2.8"
 
 [[bench]]
 # Benchmarking configuration.

@@ -5,10 +5,19 @@ All notable changes to this project are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.8] - Unreleased
+## [0.2.8] - 2026-11-22
 
 ### Changed
 
+- The package version is 0.2.8. The v0.2.7 tag was cut while
+  `Cargo.toml` still said 0.2.6, so its release workflow
+  stopped at the version guard and 0.2.7 never reached crates.io.
+- Dependencies: rlg 0.0.18 (#86) and noyalib 0.0.60 (#89); the shared
+  `rust-ci.yml` pipeline moves to pipelines 0.0.4 (#87).
+- CI, documentation and release workflows default to a read-only
+  `GITHUB_TOKEN`; only the jobs that push docs or create the draft
+  release get `contents: write`. This closes seven CodeQL
+  `actions/missing-workflow-permissions` alerts.
 - **The MSRV is now Rust 1.89** (was 1.60), the floor shared by the
   maintainer's Rust crates. With the floor past 1.74, clippy asks for
   `io::Error::other(..)` over `io::Error::new(ErrorKind::Other, ..)`;
