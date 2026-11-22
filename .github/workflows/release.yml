@@ -17,6 +17,9 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: read
+
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
@@ -182,6 +185,9 @@ jobs:
     if: github.event_name == 'push' || inputs.publish
     needs: [guard, build]
     runs-on: ubuntu-latest
+    # Creates the draft GitHub release and uploads its assets.
+    permissions:
+      contents: write
     steps:
       # Check out the repository code
       - name: Checkout sources
