@@ -18,6 +18,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `GITHUB_TOKEN`; only the jobs that push docs or create the draft
   release get `contents: write`. This closes seven CodeQL
   `actions/missing-workflow-permissions` alerts.
+- Removed the unused anyhow, configparser, env_logger and vrd
+  dependencies flagged by Cargo's `unused_dependencies` lint.
+- `deny.toml` uses the current cargo-deny schema, so `cargo deny check`
+  runs again; the policy is unchanged.
 - **The MSRV is now Rust 1.89** (was 1.60), the floor shared by the
   maintainer's Rust crates. With the floor past 1.74, clippy asks for
   `io::Error::other(..)` over `io::Error::new(ErrorKind::Other, ..)`;
