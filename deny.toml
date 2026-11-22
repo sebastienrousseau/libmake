@@ -1,6 +1,7 @@
 [licenses]
-# The lint level for crates which do not have a detectable license
-unlicensed = "deny"
+# cargo-deny 0.16 removed `unlicensed`, `copyleft` and
+# `allow-osi-fsf-free`: a crate with no detectable license, or any
+# license not listed below, is now always denied.
 
 # List of explicitly allowed licenses
 # See https://spdx.org/licenses/ for list of possible licenses
@@ -17,27 +18,15 @@ allow = [
     "Unicode-DFS-2016",
 ]
 
-# List of banned licenses
-[bans]
-multiple-versions = "deny"
-
-
-# The lint level for licenses considered copyleft
-copyleft = "deny"
-
-# Blanket approval or denial for OSI-approved or FSF Free/Libre licenses
-# * both - The license will only be approved if it is both OSI-approved *AND* FSF/Free
-# * either - The license will be approved if it is either OSI-approved *OR* FSF/Free
-# * osi-only - The license will be approved if is OSI-approved *AND NOT* FSF/Free
-# * fsf-only - The license will be approved if is FSF/Free *AND NOT* OSI-approved
-# * neither - The license will be denied if is FSF/Free *OR* OSI-approved
-allow-osi-fsf-free = "either"
-
 # The confidence threshold for detecting a license from license text.
 # The higher the value, the more closely the license text must be to the
 # canonical license text of a valid SPDX license file.
 # [possible values: any between 0.0 and 1.0].
 confidence-threshold = 0.8
+
+[bans]
+multiple-versions = "deny"
+
 
 # The graph highlighting used when creating dotgraphs for crates
 # with multiple versions
@@ -65,7 +54,8 @@ skip-tree = []
 
 
 [advisories]
-notice = "deny"
-unmaintained = "deny"
-unsound = "deny"
-vulnerability = "deny"
+# cargo-deny 0.16 denies vulnerabilities and notices unconditionally and
+# replaced the per-kind lint levels with a scope. "all" keeps the old
+# policy: unmaintained and unsound crates fail anywhere in the graph.
+unmaintained = "all"
+unsound = "all"
